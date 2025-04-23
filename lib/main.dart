@@ -4,15 +4,15 @@ import 'SignUpPage.dart';
 import 'HomePage.dart';
 
 void main() {
-  runApp(LoginApp());
+  runApp(WikiApp());
 }
 
 // ignore: use_key_in_widget_constructors
-class LoginApp extends StatelessWidget {
+class WikiApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Login',
+      title: 'Wiki Appunti',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -30,17 +30,17 @@ void navigateToPage(BuildContext context, String pageName, bool replace) {
       page = SignInPage();
       break;
     case 'signup':
-      page = SignUpPage(); // Ensure you have a SignUpPage widget defined
+      page = SignUpPage();
       break;
     case 'home':
-      page = Homepage(); // Ensure you have a Homepage widget defined
+      page = Homepage();
       break;
     default:
       throw Exception('Invalid page name: $pageName');
   }
   if (replace) {
     Navigator.pushAndRemoveUntil(
-      context, 
+      context,
       MaterialPageRoute(builder: (context) => page),
       (Route<dynamic> route) => false, // Remove all previous routes
     );
