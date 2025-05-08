@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'SignInPage.dart';
-import 'SignUpPage.dart';
-import 'HomePage.dart';
+import 'routes/SignInPage.dart';
+import 'routes/SignUpPage.dart';
+import 'routes/HomePage.dart';
 
 void main() {
   runApp(WikiApp());
@@ -12,13 +12,13 @@ class WikiApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Wiki Appunti',
+      title: 'Wiki Appunti',      
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
       color: Colors.blue,
-      home: SignInPage(),
+      home: Homepage(),
     );
   }
 }

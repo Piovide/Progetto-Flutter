@@ -1,3 +1,16 @@
+-- utenti: contiene le informazioni principali dell’account. Relazionata con appunti, commenti, revisioni, notifiche, sessioni_login e amici.
+-- utenti_temporanei: gestisce gli utenti non ancora verificati. Dopo la conferma via mail, i dati vengono trasferiti su utenti.
+-- appunti: ogni appunto è associato a un utente e a una materia. Può avere revisioni e commenti.
+-- appunti_condivisi: permette di condividere appunti con altri utenti, mantenendo la tracciabilità.
+-- storico_modifiche: memorizza le versioni precedenti degli appunti, utile per il ripristino o la revisione.
+-- appunti_tag: tabella ponte per associare più tag agli appunti, permettendo una ricerca più flessibile.
+-- revisioni: contiene le revisioni effettuate da revisori su appunti, collegate sia a utenti (revisore) che a appunti.
+-- commenti: legati a utenti e appunti, permettono di discutere pubblicamente sotto gli appunti, oppure lasciare una valutazione agli appunti.
+-- materie: contiene l’elenco delle materie disponibili, collegate agli appunti.
+-- tag: sistema flessibile per associare più tag agli appunti tramite una tabella ponte (es. appunti_tag).
+-- notifiche: inviate agli utenti in seguito a revisioni, commenti, richieste amicizia, ecc.
+-- sessioni_login: memorizza i token attivi per login persistente e tracciamento.
+-- amici: sistema base per le relazioni sociali tra utenti (richieste, accettazioni, ecc).
 
 CREATE TABLE utenti (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -65,6 +78,16 @@ CREATE TABLE appunti (
     FOREIGN KEY (materia_id) REFERENCES materie(id) ON DELETE SET NULL
 );
 
+CREATE TABLE storico_modifiche (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titolo VARCHAR(255) NOT NULL,
+    contenuto TEXT NOT NULL,
+    markdown BOOLEAN DEFAULT TRUE,
+    visibilita ENUM('pubblico', 'privato'),
+    stato ENUM('bozza', 'pubblicato', 'in_revisione'),
+    data_modifica TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+)
+
 CREATE TABLE appunti_condivisi (
     id INT AUTO_INCREMENT PRIMARY KEY,
     appunto_id INT NOT NULL,
@@ -107,6 +130,7 @@ CREATE TABLE notifiche (
     utente_id INT NOT NULL,
     messaggio TEXT NOT NULL,
     letta BOOLEAN DEFAULT FALSE,
+    tipo ENUM('commento', 'revisione', 'richiesta_amicizia', 'condivisione_appunto', 'aggiornamento', 'miscellanea') NOT NULL,
     data_invio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (utente_id) REFERENCES utenti(id) ON DELETE CASCADE
 );

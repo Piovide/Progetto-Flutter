@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../component/HeaderComp.dart';
 
 class Homepage extends StatefulWidget {
   @override
@@ -9,11 +10,7 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home Page'),
-        backgroundColor: Colors.blue,
-        centerTitle: true,
-      ),
+      appBar: HeaderComp(context),
       body: Center(
         child: Text(
           'Welcome to the Home Page!',
