@@ -137,30 +137,42 @@ class _SignInPageState extends State<SignInPage> {
   void checkInputsAndLogin() {
     String email = emailController.text;
     String password = passwordController.text;
-    bool result = false;
+    bool success = false;
     if (email.isEmpty || password.isEmpty) {
       setErrorMessage('Please fill in all fields');
     } else {
       setErrorMessage('');
+      final api = WebUtilz();
 
-      WebUtilz.postRequest('login', {'email': email, 'password': password})
-          .then((response) {
-        if (response.statusCode == 200) {
-          result = true;
-        } else if (response.statusCode == 401) {
-          setErrorMessage('Invalid email or password');
-        } else if (response.statusCode == 500) {
-          setErrorMessage('Server error. Please try again later.');
-        } else {;
-          setErrorMessage(
-              'Login failed. Please try again. Status code: ${response.statusCode}');
+      void loginUser() async {
+        final result = await api.request(
+          endpoint: 'LOGIN',
+          method: 'POST',
+          body: {
+            'email': email,
+            'password': password,
+          },
+        );
+        if (result['status'] == 200) {
+          success = true;
+        } else {
+          success = false;
+          if (result['status'] == 401) {
+            setErrorMessage("Invalid email or password");
+          } else if (result['status'] == 500) {
+            setErrorMessage("Server error. Please try again later.");
+          } else {
+            setErrorMessage("Login failed. Please try again.");
+          }
+          setErrorMessage(result['message']);
         }
-      }).catchError((error) {
-        setErrorMessage('An error occurred: $error');
-      });
-      if (result) {
-        navigateToPage(context, 'home', true);
+        if (success) {
+          // ignore: use_build_context_synchronously
+          navigateToPage(context, 'home', true);
+        }
       }
+
+      loginUser();
     }
   }
 

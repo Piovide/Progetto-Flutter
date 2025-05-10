@@ -12,7 +12,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController repeatPasswordController = TextEditingController();
+  final TextEditingController repeatPasswordController =
+      TextEditingController();
   String errorMessage = '';
   bool _isObscure = true;
 
@@ -249,8 +250,7 @@ class _SignUpPageState extends State<SignUpPage> {
     String email = emailController.text;
     String password = passwordController.text;
     String repeatPassword = repeatPasswordController.text;
-    bool result = false;
-
+    bool success = false;
     if (surname.isEmpty ||
         name.isEmpty ||
         email.isEmpty ||
@@ -260,33 +260,60 @@ class _SignUpPageState extends State<SignUpPage> {
     } else if (password != repeatPassword) {
       setErrorMessage('Passwords do not match');
     } else if (password.length < 6) {
-        setErrorMessage('Password must be at least 6 characters long');
-        return;
-      }else{
+      setErrorMessage('Password must be at least 6 characters long');
+      return;
+    } else {
       setErrorMessage('');
-      // Perform the sign-up request
-      WebUtilz.postRequest('register', {
-        'surname': surname,
-        'name': name,
-        'email': email,
-        'password': password,
-      }).then((response) {
-        if (response.statusCode == 200) {
-          result = true;
-        } else if (response.statusCode == 401) {
-          setErrorMessage('Email already exists');
-        } else if (response.statusCode == 500) {
-          setErrorMessage('Server error. Please try again later.');
+      final api = WebUtilz();
+      //TODO: fare l'hash della password e testare la risposta dal server
+      void registerUser() async {
+        final result = await api.request(
+          endpoint: 'register',
+          method: 'POST',
+          body: {
+            'surname': surname,
+            'name': name,
+            'email': email,
+            'password': password,
+          },
+        );
+        if (result['status'] == 200) {
+          success = true;
         } else {
-          setErrorMessage('Sign-up failed. Please try again.');
+          success = false;
+          if (result['status'] == 500) {
+            setErrorMessage("Server error. Please try again later.");
+          } else {
+            setErrorMessage("Login failed. Please try again.");
+          }
+          setErrorMessage(result['message']);
         }
-      }).catchError((error) {
-        setErrorMessage('An error occurred: $error');
-      });
-
-      if (result) {
-        navigateToPage(context, 'signin', true);
+        if (success) {}
       }
+
+      // // Perform the sign-up request
+      // WebUtilz.postRequest('register', {
+      //   'surname': surname,
+      //   'name': name,
+      //   'email': email,
+      //   'password': password,
+      // }).then((response) {
+      //   if (response.statusCode == 200) {
+      //     result = true;
+      //   } else if (response.statusCode == 401) {
+      //     setErrorMessage('Email already exists');
+      //   } else if (response.statusCode == 500) {
+      //     setErrorMessage('Server error. Please try again later.');
+      //   } else {
+      //     setErrorMessage('Sign-up failed. Please try again.');
+      //   }
+      // }).catchError((error) {
+      //   setErrorMessage('An error occurred: $error');
+      // });
+
+      // if (result) {
+      //   navigateToPage(context, 'signin', true);
+      // }
     }
   }
 

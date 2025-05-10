@@ -17,7 +17,7 @@ CREATE TABLE utenti (
     username VARCHAR(50) UNIQUE NOT NULL,
     nome VARCHAR(50) NOT NULL,
     cognome VARCHAR(50) NOT NULL,
-    data_nascita DATE NOT NULL,
+    data_nascita DATE,
     sesso ENUM('maschio', 'femmina', 'altro'),
     data_ultimo_accesso TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     email VARCHAR(100) UNIQUE NOT NULL,

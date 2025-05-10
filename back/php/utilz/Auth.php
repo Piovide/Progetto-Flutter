@@ -1,10 +1,13 @@
 <?php
+define('ROOT', __DIR__);
+require_once ROOT . '/Database.php';
+require_once ROOT . '/Response.php';
 
 class Auth {
     private $conn;
 
     public function __construct() {
-        $this->conn = Database::getConnection();
+        // $this->conn = Database::getConnection();
     }
 
     public function register($username, $nome, $cognome, $dataNascita, $sesso, $email, $password) {
@@ -84,7 +87,10 @@ class Auth {
         //     $this->conn->close();
         // }
 
-        $response = new Response(200, "Login avvenuto con successo.");
+        $response = new Response(200, "Login avvenuto con successo.", [
+            // 'username' => $username,
+            // 'password' => $password
+        ]);
         $response->send();
         // $response = new Response(401, "Credenziali non valide.");
         // $response->send();

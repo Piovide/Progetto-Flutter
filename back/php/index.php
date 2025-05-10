@@ -1,57 +1,78 @@
 <?php
-// index.php
+// login.php
 
-require_once 'utilz/database.php';
-require_once 'utilz/Response.php';
-require_once 'utilz/Auth.php';
+// Abilita CORS per tutti i domini (solo per test, poi limita con l'IP o dominio)
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, X-Endpoint");
+// Gestisce preflight OPTIONS per richieste CORS
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+header('Content-Type: application/json');
+
+$endpoint = $_SERVER['HTTP_X_ENDPOINT'] ?? '';
+
+if (!$endpoint) {
+    echo json_encode(['success' => false, 'message' => 'Missing X-Endpoint header']);
+    exit;
+}
+
+$endpoint = strtoupper($endpoint);
+
+// Verifica se l'endpoint è valido
+$validEndpoints = [
+    'LOGIN',
+    'REGISTER',
+    'FORGOT_PASSWORD',
+    'CHANGE_PASSWORD', 
+    'UPDATE_PROFILE', 
+    'DELETE_ACCOUNT'
+];
+
+if (!in_array($endpoint, $validEndpoints)) {
+    echo json_encode(['success' => false, 'message' => 'Invalid endpoint - ' . $endpoint]);
+    exit;
+}
+
+switch ($endpoint) {
+    case 'LOGIN':
+        include_once './utilz/Auth.php';
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $auth = new Auth();
+        $auth->login($email, $password);
+        break;
+    case 'REGISTER':
+        include_once './utilz/Auth.php';
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $username = $_POST['username'] ?? '';
+        $nome = $_POST['nome'] ?? '';
+        $cognome = $_POST['cognome'] ?? '';
+        $auth = new Auth();
+        $auth->register($username, $nome, $cognome, $dataNascita, $sesso, $email, $password);
+        break;
+    default:
+        echo json_encode(['success' => false, 'message' => 'Invalid endpoint']);
+        exit;
+}
+
+
+
+if ($email === 'test@example.com' && $password === '1234') {
+    echo json_encode(['success' => true, 'message' => 'Login ok']);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Credenziali errate']);
+}
 
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $endpoint = $_SERVER['HTTP_X_ENDPOINT'] ?? null;
 
-if (!$endpoint) {
-    (new Response(400, "Missing X-Endpoint header"))->send();
-    exit;
-}
-echo $endpoint;
-if ($requestMethod === 'POST') {
-    if ($endpoint === 'login') {
-        $inputData = file_get_contents('php://input');
-        $data = json_decode($inputData, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $response = new Response(400, "Invalid JSON");
-            $response->send();
-            exit;
-        }
-
-        if (!isset($data['username']) || !isset($data['password'])) {
-            $response = new Response(400, "Missing required fields");
-            $response->send();
-            exit;
-        }
-        $auth = new Auth();
-        $auth->login($data['username'], $data['password']);
-
-    } elseif ($endpoint === 'register') {
-        $inputData = file_get_contents('php://input');
-        $data = json_decode($inputData, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $response = new Response(400, "Invalid JSON");
-            $response->send();
-            exit;
-        }
-
-        if (!isset($data['username']) || !isset($data['nome']) || !isset($data['cognome']) || !isset($data['dataNascita']) || !isset($data['sesso']) || !isset($data['email']) || !isset($data['password'])) {
-            $response = new Response(400, "Missing required fields");
-            $response->send();
-            exit;
-        }
-        $auth = new Auth();
-        $auth->register($data['username'], $data['nome'], $data['cognome'], $data['dataNascita'], $data['sesso'], $data['email'], $data['password']);
-    }
-} else {
-    $response = new Response(405, "Method Not Allowed");
-    $response->send();
-}
+// if (!$endpoint) {
+//     (new Response(400, "Missing X-Endpoint header"))->send();
+//     exit;
+// }
 ?>
