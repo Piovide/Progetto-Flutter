@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../main.dart';
+import '../utilz/WebUtilz.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -248,6 +249,8 @@ class _SignUpPageState extends State<SignUpPage> {
     String email = emailController.text;
     String password = passwordController.text;
     String repeatPassword = repeatPasswordController.text;
+    bool result = false;
+
     if (surname.isEmpty ||
         name.isEmpty ||
         email.isEmpty ||
@@ -256,14 +259,34 @@ class _SignUpPageState extends State<SignUpPage> {
       setErrorMessage('Please fill in all fields');
     } else if (password != repeatPassword) {
       setErrorMessage('Passwords do not match');
-    } else {
-      if (password.length < 6) {
+    } else if (password.length < 6) {
         setErrorMessage('Password must be at least 6 characters long');
         return;
-      }
+      }else{
+      setErrorMessage('');
+      // Perform the sign-up request
+      WebUtilz.postRequest('register', {
+        'surname': surname,
+        'name': name,
+        'email': email,
+        'password': password,
+      }).then((response) {
+        if (response.statusCode == 200) {
+          result = true;
+        } else if (response.statusCode == 401) {
+          setErrorMessage('Email already exists');
+        } else if (response.statusCode == 500) {
+          setErrorMessage('Server error. Please try again later.');
+        } else {
+          setErrorMessage('Sign-up failed. Please try again.');
+        }
+      }).catchError((error) {
+        setErrorMessage('An error occurred: $error');
+      });
 
-      // Navigate to the home page
-      navigateToPage(context, 'home', true);
+      if (result) {
+        navigateToPage(context, 'signin', true);
+      }
     }
   }
 

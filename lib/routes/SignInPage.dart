@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../main.dart';
+import '../utilz/WebUtilz.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -136,13 +137,30 @@ class _SignInPageState extends State<SignInPage> {
   void checkInputsAndLogin() {
     String email = emailController.text;
     String password = passwordController.text;
-
+    bool result = false;
     if (email.isEmpty || password.isEmpty) {
       setErrorMessage('Please fill in all fields');
     } else {
       setErrorMessage('');
-      // Navigate to the home page
-      navigateToPage(context, 'home', true);
+
+      WebUtilz.postRequest('login', {'email': email, 'password': password})
+          .then((response) {
+        if (response.statusCode == 200) {
+          result = true;
+        } else if (response.statusCode == 401) {
+          setErrorMessage('Invalid email or password');
+        } else if (response.statusCode == 500) {
+          setErrorMessage('Server error. Please try again later.');
+        } else {;
+          setErrorMessage(
+              'Login failed. Please try again. Status code: ${response.statusCode}');
+        }
+      }).catchError((error) {
+        setErrorMessage('An error occurred: $error');
+      });
+      if (result) {
+        navigateToPage(context, 'home', true);
+      }
     }
   }
 

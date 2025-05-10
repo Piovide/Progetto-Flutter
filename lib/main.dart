@@ -18,7 +18,7 @@ class WikiApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       color: Colors.blue,
-      home: Homepage(),
+      home: SignInPage(),
     );
   }
 }
