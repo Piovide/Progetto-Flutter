@@ -269,10 +269,10 @@ class _SignUpPageState extends State<SignUpPage> {
     } else {
       setErrorMessage('');
       final api = WebUtilz();
-      //TODO: fare l'hash della password e testare la risposta dal server
+      
       Future<bool> registerUser() async {
         final result = await api.request(
-          endpoint: 'register',
+          endpoint: 'REGISTER',
           method: 'POST',
           body: {
             'surname': surname,
