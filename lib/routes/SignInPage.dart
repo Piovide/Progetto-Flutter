@@ -137,14 +137,16 @@ class _SignInPageState extends State<SignInPage> {
   void checkInputsAndLogin() {
     String email = emailController.text;
     String password = passwordController.text;
-    bool success = false;
+    Future<bool> result = Future.value(false);
+
     if (email.isEmpty || password.isEmpty) {
       setErrorMessage('Please fill in all fields');
     } else {
       setErrorMessage('');
       final api = WebUtilz();
 
-      void loginUser() async {
+      Future<bool> loginUser() async {
+        bool success = false;
         final result = await api.request(
           endpoint: 'LOGIN',
           method: 'POST',
@@ -164,15 +166,21 @@ class _SignInPageState extends State<SignInPage> {
           } else {
             setErrorMessage("Login failed. Please try again.");
           }
-          setErrorMessage(result['message']);
         }
-        if (success) {
-          // ignore: use_build_context_synchronously
-          navigateToPage(context, 'home', true);
-        }
+
+        return success;
       }
 
-      loginUser();
+      result = loginUser();
+
+      result.then((value) {
+        if (value) {
+          // ignore: use_build_context_synchronously
+          navigateToPage(context, 'home', true);
+        } else {
+          setErrorMessage('Login failed. Please try again.');
+        }
+      });
     }
   }
 

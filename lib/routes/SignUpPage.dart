@@ -15,6 +15,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController repeatPasswordController =
       TextEditingController();
   String errorMessage = '';
+  Color errorColor = Colors.red;
   bool _isObscure = true;
 
   @override
@@ -221,7 +222,10 @@ class _SignUpPageState extends State<SignUpPage> {
             //Error Message
             Text(
               getErrorMessage(),
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(
+                color: errorColor,
+                fontSize: 16,
+              ),
             ),
           ],
         ),
@@ -266,7 +270,7 @@ class _SignUpPageState extends State<SignUpPage> {
       setErrorMessage('');
       final api = WebUtilz();
       //TODO: fare l'hash della password e testare la risposta dal server
-      void registerUser() async {
+      Future<bool> registerUser() async {
         final result = await api.request(
           endpoint: 'register',
           method: 'POST',
@@ -288,32 +292,16 @@ class _SignUpPageState extends State<SignUpPage> {
           }
           setErrorMessage(result['message']);
         }
-        if (success) {}
+        if (success) {
+          setErrorMessage(
+              'Registration successful. Please check your email.',
+              color: Colors.green
+            );
+        }
+        return success;
       }
-
-      // // Perform the sign-up request
-      // WebUtilz.postRequest('register', {
-      //   'surname': surname,
-      //   'name': name,
-      //   'email': email,
-      //   'password': password,
-      // }).then((response) {
-      //   if (response.statusCode == 200) {
-      //     result = true;
-      //   } else if (response.statusCode == 401) {
-      //     setErrorMessage('Email already exists');
-      //   } else if (response.statusCode == 500) {
-      //     setErrorMessage('Server error. Please try again later.');
-      //   } else {
-      //     setErrorMessage('Sign-up failed. Please try again.');
-      //   }
-      // }).catchError((error) {
-      //   setErrorMessage('An error occurred: $error');
-      // });
-
-      // if (result) {
-      //   navigateToPage(context, 'signin', true);
-      // }
+      
+      registerUser();
     }
   }
 
@@ -322,9 +310,10 @@ class _SignUpPageState extends State<SignUpPage> {
     return errorMessage;
   }
 
-  void setErrorMessage(String message) {
+  void setErrorMessage(String message, {Color color = Colors.red}) {
     setState(() {
       errorMessage = message;
+      errorColor = color;
     });
   }
 }
