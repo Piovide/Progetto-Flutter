@@ -269,7 +269,7 @@ class _SignUpPageState extends State<SignUpPage> {
     } else {
       setErrorMessage('');
       final api = WebUtilz();
-      
+
       Future<bool> registerUser() async {
         final result = await api.request(
           endpoint: 'REGISTER',
@@ -293,14 +293,12 @@ class _SignUpPageState extends State<SignUpPage> {
           setErrorMessage(result['message']);
         }
         if (success) {
-          setErrorMessage(
-              'Registration successful. Please check your email.',
-              color: Colors.green
-            );
+          setErrorMessage('Registration successful. Please check your email.',
+              color: Colors.green);
         }
         return success;
       }
-      
+
       registerUser();
     }
   }
