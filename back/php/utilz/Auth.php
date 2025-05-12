@@ -10,16 +10,14 @@ class Auth {
         // $this->conn = Database::getConnection();
     }
 
-    public function register($username, $nome, $cognome, $dataNascita, $sesso, $email, $password) {
-        $utente = new Utente();
-        $utente->createTempUser($username, $nome, $cognome, $dataNascita, $sesso, $email, $password);
+    public function register($username, $nome, $cognome, $email, $password) {
+        // $utente = new Utente();
+        // $utente->createTempUser($username, $nome, $cognome, $dataNascita, $sesso, $email, $password);
         $response = new Response(200, "Registrazione avvenuta con successo. Controlla la tua email per confermare l'account.");
         $response->setData([
             'username' => $username,
             'nome' => $nome,
             'cognome' => $cognome,
-            'dataNascita' => $dataNascita,
-            'sesso' => $sesso,
             'email' => $email
         ]);
         $response->send();

@@ -14,7 +14,7 @@ class Utente {
     private $bio;
     private $URI_immagineProfilo;
 
-    public function createTempUser($username, $nome, $cognome, $dataNascita, $sesso, $email, $password) {
+    public function createTempUser($username, $nome, $cognome, $email, $password) {
         $conn = Database::getConnection();
         $query = "INSERT INTO utenti_temporanei (username, nome, cognome, data_nascita, sesso, email, password, token_verifica) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
@@ -22,7 +22,7 @@ class Utente {
             die("Errore preparazione query: " . $conn->error);
         }
         $token = bin2hex(random_bytes(16));
-        $stmt->bind_param("ssssssss", $username, $nome, $cognome, $dataNascita, $sesso, $email, $password, $token);
+        $stmt->bind_param("ssssssss", $username, $nome, $cognome, $email, $password, $token);
         $stmt->execute();
         if ($stmt->error) {
             die("Errore esecuzione query: " . $stmt->error);

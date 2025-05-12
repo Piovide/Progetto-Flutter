@@ -8,6 +8,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController surnameController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -36,6 +37,27 @@ class _SignUpPageState extends State<SignUpPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            //Username TextField
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: TextField(
+                controller: usernameController,
+                keyboardType: TextInputType.name,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                  hintText: 'Username',
+                ),
+              ),
+            ),
+
+            //SizedBox for spacing
+            SizedBox(
+              height: 16,
+            ),
+
             //Surname TextField
             Container(
               decoration: BoxDecoration(
@@ -43,9 +65,9 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               child: TextField(
                 controller: surnameController,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.name,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email),
+                  prefixIcon: Icon(Icons.badge),
                   border: OutlineInputBorder(),
                   hintText: 'Surname',
                 ),
@@ -57,16 +79,16 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 16,
             ),
 
-            //Email TextField
+            //Name TextField
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
               ),
               child: TextField(
                 controller: nameController,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.name,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email),
+                  prefixIcon: Icon(Icons.badge),
                   border: OutlineInputBorder(),
                   hintText: 'Name',
                 ),
@@ -249,14 +271,18 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void checkInputsAndLogin() {
+    String username = usernameController.text;
     String surname = surnameController.text;
     String name = nameController.text;
     String email = emailController.text;
     String password = passwordController.text;
     String repeatPassword = repeatPasswordController.text;
     bool success = false;
+
+
     if (surname.isEmpty ||
         name.isEmpty ||
+        surname.isEmpty ||
         email.isEmpty ||
         password.isEmpty ||
         repeatPassword.isEmpty) {
@@ -274,9 +300,10 @@ class _SignUpPageState extends State<SignUpPage> {
         final result = await api.request(
           endpoint: 'REGISTER',
           method: 'POST',
-          body: {
-            'surname': surname,
+            body: {
+            'username': username,
             'name': name,
+            'surname': surname,
             'email': email,
             'password': password,
           },

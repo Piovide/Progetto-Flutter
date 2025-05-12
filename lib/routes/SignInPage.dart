@@ -164,7 +164,8 @@ class _SignInPageState extends State<SignInPage> {
           } else if (result['status'] == 500) {
             setErrorMessage("Server error. Please try again later.");
           } else {
-            setErrorMessage("Login failed. Please try again.");
+            setErrorMessage(result['message']);
+            // setErrorMessage("Login failed. Please try again.");
           }
         }
 
@@ -176,9 +177,7 @@ class _SignInPageState extends State<SignInPage> {
       result.then((value) {
         if (value) {
           // ignore: use_build_context_synchronously
-          navigateToPage(context, 'home', true);
-        } else {
-          setErrorMessage('Login failed. Please try again.');
+          // navigateToPage(context, 'home', true);
         }
       });
     }

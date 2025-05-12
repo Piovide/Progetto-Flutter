@@ -4,7 +4,8 @@
 // Abilita CORS per tutti i domini (solo per test, poi limita con l'IP o dominio)
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type, X-Endpoint");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Headers: *");
 // Gestisce preflight OPTIONS per richieste CORS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -47,13 +48,14 @@ switch ($endpoint) {
         break;
     case 'REGISTER':
         include_once './utilz/Auth.php';
-        $email = $_POST['email'] ?? '';
-        $password = $_POST['password'] ?? '';
+        
         $username = $_POST['username'] ?? '';
-        $nome = $_POST['nome'] ?? '';
-        $cognome = $_POST['cognome'] ?? '';
+        $nome = $_POST['name'] ?? '';
+        $cognome = $_POST['surname'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $password = password_hash($_POST['password'], PASSWORD_BCRYPT) ?? '';
         $auth = new Auth();
-        $auth->register($username, $nome, $cognome, $dataNascita, $sesso, $email, $password);
+        $auth->register($username, $nome, $cognome, $email, $password);
         break;
     default:
         echo json_encode(['success' => false, 'message' => 'Invalid endpoint']);
