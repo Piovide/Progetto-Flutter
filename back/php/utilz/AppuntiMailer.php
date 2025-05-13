@@ -29,10 +29,10 @@ class AppuntiMailer{
     public function sendConfirmationEmail($toEmail, $toName, $token) {
         global $config;
         // Controllo spam
-        if ($this->spamCheck()) {
-            new Response(429, "Hai raggiunto il limite di invii. Riprova più tardi.")->send();
-            return false;
-        }
+        // if ($this->spamCheck()) {
+        //     new Response(429, "Hai raggiunto il limite di invii. Riprova più tardi.")->send();
+        //     return false;
+        // }
         $confirmationLink = 'https://tuosito.it/verify.php?token=' . urlencode($token);
 
         $email = (new Email())
@@ -72,7 +72,7 @@ class AppuntiMailer{
         // if ($count >= 5) {
         //     $stmt->close();
         //     $conn->close();
-        //     return false;
+        //     return true; // Limite raggiunto
         // }
 
         // // Altrimenti salva la richiesta
@@ -81,9 +81,9 @@ class AppuntiMailer{
         // $stmt->execute();
         // $stmt->close();
         // $conn->close();
-        // return true;
+        // return false;
 
-        
+
         return false; // Disabilitato per test
     }
 }
