@@ -100,7 +100,7 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                         title: Text('Profilo'),
                         onTap: () {
                           // Handle profile action
-                          navigateToPage(context, 'home', true);
+                          navigateToPage(context, 'profile', true);
                           Navigator.pop(context);
                         },
                       ),
