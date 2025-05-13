@@ -34,16 +34,16 @@ class _SignInPageState extends State<SignInPage> {
             //Email TextField
             Container(
               decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: TextField(
-              controller: emailUsernameController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.email),
-                border: OutlineInputBorder(),
-                hintText: 'Email or Username',
-              ),
+                controller: emailUsernameController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.email),
+                  border: OutlineInputBorder(),
+                  hintText: 'Email or Username',
+                ),
               ),
             ),
 
@@ -144,31 +144,52 @@ class _SignInPageState extends State<SignInPage> {
       setErrorMessage('Please fill in all fields');
     } else {
       setErrorMessage('');
-      if(emailOrUsername.contains('@')) {
-        isUsername = false;
+      if (emailOrUsername.contains('@')) {
+        if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                .hasMatch(emailOrUsername) &&
+            !isUsername) {
+          setErrorMessage('Please enter a valid email address');
+          return;
+        }
       } else {
         isUsername = true;
-      }
-      if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-          .hasMatch(emailOrUsername) && !isUsername) {
-        setErrorMessage('Please enter a valid email address');
-        return;
       }
 
       final api = WebUtilz();
 
       Future<bool> loginUser() async {
         bool success = false;
+        Map<String, dynamic> dati = {};
+        saveSessionToken('dffdsgfddsfsafdfasdfdsf');
+        String? token = await getSessionToken();
+
         final result = await api.request(
           endpoint: 'LOGIN',
           method: 'POST',
           body: {
-            (isUsername ? 'Username' : 'email') : emailOrUsername,
+            (isUsername ? 'username' : 'email'): emailOrUsername,
             'password': password,
+            if (token != null) 'token': token,
           },
         );
         if (result['status'] == 200) {
           success = true;
+          // if (result['UUID'] != null) {
+          //   saveUUID(result['UUID']);
+          // }
+          dati = result['data'];
+          // TODO: Delete this when sql is implemented
+          if (dati['username'] != null) {
+            saveUUID(dati['username']);
+            String? username = await getUUID();
+            print("questo é lo username: " + username.toString());
+          }
+
+          if (dati['token'] != null) {
+            saveSessionToken(dati['token']);
+            token = await getSessionToken();
+            print("questo é il token: " + token.toString());
+          }
         } else {
           success = false;
           if (result['status'] == 401) {
