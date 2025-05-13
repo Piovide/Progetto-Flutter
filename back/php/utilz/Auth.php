@@ -16,9 +16,9 @@ class Auth {
         // $utente->createTempUser($username, $nome, $cognome, $dataNascita, $sesso, $email, $password);
         $mailer = new AppuntiMailer();
         $token = bin2hex(random_bytes(16));
-        $mailresult = $mailer->sendConfirmationEmail($email, $nome, $token);
-        if (!$mailresult) {
-            $response = new Response(500, "Errore invio email.");
+        $mailResult = $mailer->sendConfirmationEmail($email, $nome, $token);
+        if (!$mailResult) {
+            $response = new Response(500, "Errore durante l'invio dell'email di conferma.");
             $response->send();
             return;
         }

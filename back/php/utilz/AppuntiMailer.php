@@ -3,8 +3,7 @@ use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
 
-//require '../../../vendor/autoload.php';
-require 'Progetto-TPS-Flutter/Progetto-Flutter/vendor/autoload.php';
+require './vendor/autoload.php';
 
 
 $config = require 'config.php';
@@ -29,7 +28,11 @@ class AppuntiMailer{
     }
     public function sendConfirmationEmail($toEmail, $toName, $token) {
         global $config;
-
+        // Controllo spam
+        if ($this->spamCheck()) {
+            new Response(429, "Hai raggiunto il limite di invii. Riprova più tardi.")->send();
+            return false;
+        }
         $confirmationLink = 'https://tuosito.it/verify.php?token=' . urlencode($token);
 
         $email = (new Email())
@@ -48,8 +51,37 @@ class AppuntiMailer{
             $this->mailer->send($email);
             return true;
         } catch (\Throwable $e) {
-            error_log('Errore invio email: ' . $e->getMessage());
+            error_log( 'Errore:' . $e->getMessage());
             return false;
         }
+    }
+
+    private function spamCheck() {
+        // // IP dell'utente
+        // $ip = $_SERVER['REMOTE_ADDR'];
+
+        // $conn = Database::getConnection();
+
+        // // Conta quante richieste ha fatto oggi
+        // $stmt = $conn->prepare("SELECT COUNT(*) FROM invii_email WHERE ip = ? AND data > NOW() - INTERVAL 1 HOUR");
+        // $stmt->bind_param("s", $ip);
+        // $stmt->execute();
+        // $stmt->bind_result($count);
+        // $stmt->fetch();
+
+        // if ($count >= 5) {
+        //     $stmt->close();
+        //     $conn->close();
+        //     return false;
+        // }
+
+        // // Altrimenti salva la richiesta
+        // $stmt = $conn->prepare("INSERT INTO invii_email (ip, data) VALUES (?, NOW())");
+        // $stmt->bind_param("s", $ip);
+        // $stmt->execute();
+        // $stmt->close();
+        // $conn->close();
+        // return true;
+
     }
 }
