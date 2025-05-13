@@ -41,10 +41,18 @@ if (!in_array($endpoint, $validEndpoints)) {
 switch ($endpoint) {
     case 'LOGIN':
         include_once './utilz/Auth.php';
-        $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
         $auth = new Auth();
-        $auth->login($email, $password);
+        if(isset($_POST['email'])){
+            $email = $_POST['email'] ?? '';
+            $auth->login($email, $password, 'email');
+        }else if(isset($_POST['username'])){
+            $username = $_POST['username'] ?? '';
+            $auth->login($username, $password, 'username');
+        }else{
+            echo json_encode(['success' => false, 'message' => 'Missing email or username']);
+            exit;
+        }
         break;
     case 'REGISTER':
         include_once './utilz/Auth.php';

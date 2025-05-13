@@ -23,7 +23,7 @@ class Auth {
         $response->send();
     }
 
-    public function login($username, $password) {
+    public function login($username, $password, $type) {
         //controllo se l'utente è già loggato in sessione
         // $query = "SELECT * FROM sessioni_login WHERE token = ? AND data_accesso > NOW() - INTERVAL 8 HOUR";
         // $stmt = $this->conn->prepare($query);
@@ -45,44 +45,54 @@ class Auth {
         //     $response = new Response(200, "Utente già loggato.");
         //     $response->send();
         // }else{
-        //     $query = "SELECT * FROM utenti WHERE username = ? AND password_hash = ?";
-        //     $stmt = $this->conn->prepare($query);
-        //     if ($stmt === false) {
-        //         die("Errore preparazione query: " . $this->conn->error);
-        //     }
-        //     $stmt->bind_param("ss", $username, $password);
-        //     $stmt->execute();
-        //     if ($stmt->error) {
-        //         die("Errore esecuzione query: " . $stmt->error);
-        //     }
-        //     $result = $stmt->get_result();
-        //     if ($result->num_rows > 0) {
-        //         // Login avvenuto con successo
-        //         $response = new Response(200, "Login avvenuto con successo.");
-        //         $response->send();
-        //         $utente = $result->fetch_assoc();
-        //         $token = bin2hex(random_bytes(16));
-        //         $query = "INSERT INTO sessioni_login (utente_id, token) VALUES (?, ?)";
-        //         $stmt = $this->conn->prepare($query);
-        //         if ($stmt === false) {
-        //             $response = new Response(500, "Errore interno del server.");
-        //             $response->send();
-        //             die("Errore preparazione query: " . $this->conn->error);
-        //         }
-        //         $stmt->bind_param("is", $utente['id'], $token);
-        //         $stmt->execute();
-        //         if ($stmt->error) {
-        //             $response = new Response(500, "Errore interno del server.");
-        //             $response->send();
-        //             die("Errore esecuzione query: " . $stmt->error);
-        //         }
-        //     } else {
-        //         // Credenziali non valide
-        //         $response = new Response(401, "Credenziali non valide.");
-        //         $response->send();
-        //     }
-        //     $stmt->close();
-        //     $this->conn->close();
+            
+            // if($type == 'email'){
+            //     $query = "SELECT * FROM utenti WHERE email = ?";
+            
+            // }else if($type == 'username'){
+            //     $query = "SELECT * FROM utenti WHERE username = ?";
+            // }else{
+            //     $response = new Response(400, "Tipo di login non valido.");
+            //     $response->send();
+            //     return;
+            // }
+            // $stmt = $this->conn->prepare($query);
+            // if ($stmt === false) {
+            //     die("Errore preparazione query: " . $this->conn->error);
+            // }
+            // $stmt->bind_param("ss", $username, $password);
+            // $stmt->execute();
+            // if ($stmt->error) {
+            //     die("Errore esecuzione query: " . $stmt->error);
+            // }
+            // $result = $stmt->get_result();
+            // if ($result->num_rows > 0) {
+            //     // Login avvenuto con successo
+            //     $response = new Response(200, "Login avvenuto con successo.");
+            //     $response->send();
+            //     $utente = $result->fetch_assoc();
+            //     $token = bin2hex(random_bytes(16));
+            //     $query = "INSERT INTO sessioni_login (utente_id, token) VALUES (?, ?)";
+            //     $stmt = $this->conn->prepare($query);
+            //     if ($stmt === false) {
+            //         $response = new Response(500, "Errore interno del server.");
+            //         $response->send();
+            //         die("Errore preparazione query: " . $this->conn->error);
+            //     }
+            //     $stmt->bind_param("is", $utente['id'], $token);
+            //     $stmt->execute();
+            //     if ($stmt->error) {
+            //         $response = new Response(500, "Errore interno del server.");
+            //         $response->send();
+            //         die("Errore esecuzione query: " . $stmt->error);
+            //     }
+            // } else {
+            //     // Credenziali non valide
+            //     $response = new Response(401, "Credenziali non valide.");
+            //     $response->send();
+            // }
+            // $stmt->close();
+            // $this->conn->close();
         // }
 
         $response = new Response(200, "Login avvenuto con successo.", [
