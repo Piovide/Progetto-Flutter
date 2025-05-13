@@ -83,5 +83,7 @@ class AppuntiMailer{
         // $conn->close();
         // return true;
 
+        
+        return false; // Disabilitato per test
     }
 }
