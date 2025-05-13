@@ -35,6 +35,9 @@ class appunti{
         if(!$stmt->error === false){
             die("Errore lato server". $stmt->error ."");
         }
+
+        $stmt->close();
+        $conn->close();
     }
 }
 
