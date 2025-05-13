@@ -26,3 +26,4 @@ doc/api/
 .flutter-plugins
 .flutter-plugins-dependencies
 macos/Flutter/GeneratedPluginRegistrant.swift
+config.php

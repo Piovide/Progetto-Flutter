@@ -2,6 +2,7 @@
 define('ROOT', __DIR__);
 require_once ROOT . '/Database.php';
 require_once ROOT . '/Response.php';
+require_once ROOT . '/AppuntiMailer.php';
 
 class Auth {
     private $conn;
@@ -13,6 +14,14 @@ class Auth {
     public function register($username, $nome, $cognome, $email, $password) {
         // $utente = new Utente();
         // $utente->createTempUser($username, $nome, $cognome, $dataNascita, $sesso, $email, $password);
+        $mailer = new AppuntiMailer();
+        $token = bin2hex(random_bytes(16));
+        $mailresult = $mailer->sendConfirmationEmail($email, $nome, $token);
+        if (!$mailresult) {
+            $response = new Response(500, "Errore invio email.");
+            $response->send();
+            return;
+        }
         $response = new Response(200, "Registrazione avvenuta con successo. Controlla la tua email per confermare l'account.");
         $response->setData([
             'username' => $username,
