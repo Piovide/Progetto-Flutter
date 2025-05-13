@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'routes/SignInPage.dart';
 import 'routes/SignUpPage.dart';
 import 'routes/HomePage.dart';
+import 'routes/ProfilePage.dart';
 
 void main() {
   runApp(WikiApp());
