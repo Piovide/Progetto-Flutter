@@ -140,3 +140,19 @@ CREATE TABLE sessioni_login (
     data_accesso TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (utente_id) REFERENCES utenti(id) ON DELETE CASCADE
 );
+
+CREATE TABLE invii_email (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ip VARCHAR(45) NOT NULL,
+    data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX (data)
+);
+
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT IF NOT EXISTS delete_old_notifications
+ON SCHEDULE EVERY 1 DAY
+DO
+BEGIN
+    DELETE FROM notifiche WHERE data_invio < NOW() - INTERVAL 30 DAY;
+END;

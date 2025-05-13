@@ -43,12 +43,13 @@ switch ($endpoint) {
         include_once './utilz/Auth.php';
         $password = $_POST['password'] ?? '';
         $auth = new Auth();
+        $token = $_POST['token'] ?? null;
         if(isset($_POST['email'])){
             $email = $_POST['email'] ?? '';
-            $auth->login($email, $password, 'email');
+            $auth->login($email, $password, 'email', $token);
         }else if(isset($_POST['username'])){
             $username = $_POST['username'] ?? '';
-            $auth->login($username, $password, 'username');
+            $auth->login($username, $password, 'username', $token);
         }else{
             echo json_encode(['success' => false, 'message' => 'Missing email or username']);
             exit;

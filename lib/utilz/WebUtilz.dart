@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class WebUtilz {
-  final String baseUrl = 'http://localhost/Progetto-TPS-Flutter/Progetto-Flutter/back/php/index.php';
+  final String baseUrl = 'http://localhost/Progetto-Flutter/back/php/index.php';
 
   Future<Map<String, dynamic>> request({
     required String endpoint,
@@ -30,10 +30,10 @@ class WebUtilz {
         case 'POST':
           response =
               await http.post(url, headers: defaultHeaders, body: encodedBody);
-            print('POST: $encodedBody');
-            print('Headers: $defaultHeaders');
-            print('Response status: ${response.statusCode}');
-            print('Response: ${response.body}');
+            // print('POST: $encodedBody');
+            // print('Headers: $defaultHeaders');
+            // print('Response status: ${response.statusCode}');
+            // print('Response: ${response.body}');
           break;
         case 'PUT':
           response =
