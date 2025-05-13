@@ -33,3 +33,4 @@ back/php/composer.json
 .env
 .DS_Store
 *.log
+*.cc
