@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class WebUtilz {
-  final String baseUrl = 'http://localhost/Progetto-TPS-Flutter/Progetto-Flutter/back/php/index.php';
+  final String baseUrl = 'http://localhost/Progetto-Flutter/back/php/index.php';
 
   Future<Map<String, dynamic>> request({
     required String endpoint,
