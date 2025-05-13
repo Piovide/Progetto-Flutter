@@ -13,7 +13,7 @@
 -- amici: sistema base per le relazioni sociali tra utenti (richieste, accettazioni, ecc).
 
 CREATE TABLE utenti (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    uuid CHAR(36) PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     nome VARCHAR(50) NOT NULL,
     cognome VARCHAR(50) NOT NULL,
@@ -28,12 +28,10 @@ CREATE TABLE utenti (
 );
 
 CREATE TABLE utenti_temporanei (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    uuid CHAR(36) PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
     nome VARCHAR(50) NOT NULL,
     cognome VARCHAR(50) NOT NULL,
-    data_nascita DATE NOT NULL,
-    sesso ENUM('maschio', 'femmina', 'altro'),
     email VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     token_verifica VARCHAR(64) NOT NULL,
@@ -41,104 +39,120 @@ CREATE TABLE utenti_temporanei (
 );
 
 CREATE TABLE amici (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    utente_id INT NOT NULL,
-    amico_id INT NOT NULL,
+    uuid CHAR(36) PRIMARY KEY,
+    utente_uuid CHAR(36) NOT NULL,
+    amico_uuid CHAR(36) NOT NULL,
     stato ENUM('inviata', 'accettato', 'rifiutato') DEFAULT 'inviata',
     data_richiesta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (utente_id) REFERENCES utenti(id) ON DELETE CASCADE,
-    FOREIGN KEY (amico_id) REFERENCES utenti(id) ON DELETE CASCADE
+    FOREIGN KEY (utente_uuid) REFERENCES utenti(uuid) ON DELETE CASCADE,
+    FOREIGN KEY (amico_uuid) REFERENCES utenti(uuid) ON DELETE CASCADE
 );
 
 CREATE TABLE materie (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    uuid CHAR(36) PRIMARY KEY,
     nome VARCHAR(100) NOT NULL UNIQUE,
     descrizione TEXT,
-    classe ENUM('1', '2', '3', '4', '5') NOT NULL,
+    classe ENUM('1', '2', '3', '4', '5') NOT NULL
 );
 
 CREATE TABLE tag (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    uuid CHAR(36) PRIMARY KEY,
     nome VARCHAR(50) UNIQUE NOT NULL,
     descrizione TEXT
 );
 
 CREATE TABLE appunti (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    uuid CHAR(36) PRIMARY KEY,
     titolo VARCHAR(255) NOT NULL,
     contenuto TEXT NOT NULL,
     markdown BOOLEAN DEFAULT TRUE,
     visibilita ENUM('pubblico', 'privato') DEFAULT 'pubblico',
-    autore_id INT NOT NULL,
-    materia_id INT,
+    autore_uuid CHAR(36),
+    materia_uuid CHAR(36),
     data_creazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_ultima_modifica TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     stato ENUM('bozza', 'pubblicato', 'in_revisione') DEFAULT 'bozza',
-    FOREIGN KEY (autore_id) REFERENCES utenti(id) ON DELETE SET NULL,
-    FOREIGN KEY (materia_id) REFERENCES materie(id) ON DELETE SET NULL
+    FOREIGN KEY (autore_uuid) REFERENCES utenti(uuid) ON DELETE SET NULL,
+    FOREIGN KEY (materia_uuid) REFERENCES materie(uuid) ON DELETE SET NULL
 );
 
 CREATE TABLE storico_modifiche (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    uuid CHAR(36) PRIMARY KEY,
     titolo VARCHAR(255) NOT NULL,
     contenuto TEXT NOT NULL,
     markdown BOOLEAN DEFAULT TRUE,
     visibilita ENUM('pubblico', 'privato'),
     stato ENUM('bozza', 'pubblicato', 'in_revisione'),
-    data_modifica TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-)
+    data_modifica TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE appunti_condivisi (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    appunto_id INT NOT NULL,
-    utente_id INT NOT NULL,
+    uuid CHAR(36) PRIMARY KEY,
+    appunto_uuid CHAR(36) NOT NULL,
+    utente_uuid CHAR(36) NOT NULL,
     data_condivisione TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (appunto_id) REFERENCES appunti(id) ON DELETE CASCADE,
-    FOREIGN KEY (utente_id) REFERENCES utenti(id) ON DELETE CASCADE
+    FOREIGN KEY (appunto_uuid) REFERENCES appunti(uuid) ON DELETE CASCADE,
+    FOREIGN KEY (utente_uuid) REFERENCES utenti(uuid) ON DELETE CASCADE
 );
 
 CREATE TABLE revisioni (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    appunto_id INT NOT NULL,
-    revisore_id INT NOT NULL,
+    uuid CHAR(36) PRIMARY KEY,
+    appunto_uuid CHAR(36) NOT NULL,
+    revisore_uuid CHAR(36),
     commento TEXT,
     data_revisionamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (appunto_id) REFERENCES appunti(id) ON DELETE CASCADE,
-    FOREIGN KEY (revisore_id) REFERENCES utenti(id) ON DELETE SET NULL
+    FOREIGN KEY (appunto_uuid) REFERENCES appunti(uuid) ON DELETE CASCADE,
+    FOREIGN KEY (revisore_uuid) REFERENCES utenti(uuid) ON DELETE SET NULL
 );
 
 CREATE TABLE commenti (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    appunto_id INT NOT NULL,
-    autore_id INT NOT NULL,
+    uuid CHAR(36) PRIMARY KEY,
+    appunto_uuid CHAR(36) NOT NULL,
+    autore_uuid CHAR(36) NOT NULL,
     testo TEXT NOT NULL,
     data_commento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (appunto_id) REFERENCES appunti(id) ON DELETE CASCADE,
-    FOREIGN KEY (autore_id) REFERENCES utenti(id) ON DELETE CASCADE
+    FOREIGN KEY (appunto_uuid) REFERENCES appunti(uuid) ON DELETE CASCADE,
+    FOREIGN KEY (autore_uuid) REFERENCES utenti(uuid) ON DELETE CASCADE
 );
 
 CREATE TABLE appunti_tag (
-    appunto_id INT NOT NULL,
-    tag_id INT NOT NULL,
-    PRIMARY KEY (appunto_id, tag_id),
-    FOREIGN KEY (appunto_id) REFERENCES appunti(id) ON DELETE CASCADE,
-    FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
+    appunto_uuid CHAR(36) NOT NULL,
+    tag_uuid CHAR(36) NOT NULL,
+    PRIMARY KEY (appunto_uuid, tag_uuid),
+    FOREIGN KEY (appunto_uuid) REFERENCES appunti(uuid) ON DELETE CASCADE,
+    FOREIGN KEY (tag_uuid) REFERENCES tag(uuid) ON DELETE CASCADE
 );
 
 CREATE TABLE notifiche (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    utente_id INT NOT NULL,
+    uuid CHAR(36) PRIMARY KEY,
+    utente_uuid CHAR(36) NOT NULL,
     messaggio TEXT NOT NULL,
     letta BOOLEAN DEFAULT FALSE,
     tipo ENUM('commento', 'revisione', 'richiesta_amicizia', 'condivisione_appunto', 'aggiornamento', 'miscellanea') NOT NULL,
     data_invio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (utente_id) REFERENCES utenti(id) ON DELETE CASCADE
+    FOREIGN KEY (utente_uuid) REFERENCES utenti(uuid) ON DELETE CASCADE
 );
 
 CREATE TABLE sessioni_login (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    utente_id INT NOT NULL,
+    uuid CHAR(36) PRIMARY KEY,
+    utente_uuid CHAR(36) NOT NULL,
     token VARCHAR(255) NOT NULL,
     data_accesso TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (utente_id) REFERENCES utenti(id) ON DELETE CASCADE
 );
+
+CREATE TABLE invii_email (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ip VARCHAR(45) NOT NULL,
+    data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX (data)
+);
+
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT IF NOT EXISTS delete_old_notifications
+ON SCHEDULE EVERY 1 DAY
+DO
+BEGIN
+    DELETE FROM notifiche WHERE data_invio < NOW() - INTERVAL 30 DAY;
+END;

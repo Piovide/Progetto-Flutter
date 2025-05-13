@@ -8,7 +8,7 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController emailUsernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _isObscure = true;
   String errorMessage = '';
@@ -34,16 +34,16 @@ class _SignInPageState extends State<SignInPage> {
             //Email TextField
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8),
               ),
               child: TextField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(),
-                  hintText: 'Email',
-                ),
+              controller: emailUsernameController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.email),
+                border: OutlineInputBorder(),
+                hintText: 'Email or Username',
+              ),
               ),
             ),
 
@@ -135,21 +135,35 @@ class _SignInPageState extends State<SignInPage> {
       );
 
   void checkInputsAndLogin() {
-    String email = emailController.text;
+    String emailOrUsername = emailUsernameController.text;
     String password = passwordController.text;
-    bool success = false;
-    if (email.isEmpty || password.isEmpty) {
+    bool isUsername = false;
+    Future<bool> result = Future.value(false);
+
+    if (emailOrUsername.isEmpty || password.isEmpty) {
       setErrorMessage('Please fill in all fields');
     } else {
       setErrorMessage('');
+      if(emailOrUsername.contains('@')) {
+        isUsername = false;
+      } else {
+        isUsername = true;
+      }
+      if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+          .hasMatch(emailOrUsername) && !isUsername) {
+        setErrorMessage('Please enter a valid email address');
+        return;
+      }
+
       final api = WebUtilz();
 
-      void loginUser() async {
+      Future<bool> loginUser() async {
+        bool success = false;
         final result = await api.request(
           endpoint: 'LOGIN',
           method: 'POST',
           body: {
-            'email': email,
+            (isUsername ? 'Username' : 'email') : emailOrUsername,
             'password': password,
           },
         );
@@ -162,17 +176,22 @@ class _SignInPageState extends State<SignInPage> {
           } else if (result['status'] == 500) {
             setErrorMessage("Server error. Please try again later.");
           } else {
-            setErrorMessage("Login failed. Please try again.");
+            setErrorMessage(result['message']);
+            // setErrorMessage("Login failed. Please try again.");
           }
-          setErrorMessage(result['message']);
         }
-        if (success) {
+
+        return success;
+      }
+
+      result = loginUser();
+
+      result.then((value) {
+        if (value) {
           // ignore: use_build_context_synchronously
           navigateToPage(context, 'home', true);
         }
-      }
-
-      loginUser();
+      });
     }
   }
 

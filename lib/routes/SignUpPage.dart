@@ -8,6 +8,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController surnameController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -15,6 +16,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController repeatPasswordController =
       TextEditingController();
   String errorMessage = '';
+  Color errorColor = Colors.red;
   bool _isObscure = true;
 
   @override
@@ -35,6 +37,27 @@ class _SignUpPageState extends State<SignUpPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            //Username TextField
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: TextField(
+                controller: usernameController,
+                keyboardType: TextInputType.name,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                  hintText: 'Username',
+                ),
+              ),
+            ),
+
+            //SizedBox for spacing
+            SizedBox(
+              height: 16,
+            ),
+
             //Surname TextField
             Container(
               decoration: BoxDecoration(
@@ -42,9 +65,9 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               child: TextField(
                 controller: surnameController,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.name,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email),
+                  prefixIcon: Icon(Icons.badge),
                   border: OutlineInputBorder(),
                   hintText: 'Surname',
                 ),
@@ -56,16 +79,16 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 16,
             ),
 
-            //Email TextField
+            //Name TextField
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
               ),
               child: TextField(
                 controller: nameController,
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.name,
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email),
+                  prefixIcon: Icon(Icons.badge),
                   border: OutlineInputBorder(),
                   hintText: 'Name',
                 ),
@@ -221,7 +244,10 @@ class _SignUpPageState extends State<SignUpPage> {
             //Error Message
             Text(
               getErrorMessage(),
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(
+                color: errorColor,
+                fontSize: 16,
+              ),
             ),
           ],
         ),
@@ -245,14 +271,18 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void checkInputsAndLogin() {
+    String username = usernameController.text;
     String surname = surnameController.text;
     String name = nameController.text;
     String email = emailController.text;
     String password = passwordController.text;
     String repeatPassword = repeatPasswordController.text;
     bool success = false;
+
+
     if (surname.isEmpty ||
         name.isEmpty ||
+        surname.isEmpty ||
         email.isEmpty ||
         password.isEmpty ||
         repeatPassword.isEmpty) {
@@ -265,14 +295,15 @@ class _SignUpPageState extends State<SignUpPage> {
     } else {
       setErrorMessage('');
       final api = WebUtilz();
-      //TODO: fare l'hash della password e testare la risposta dal server
-      void registerUser() async {
+
+      Future<bool> registerUser() async {
         final result = await api.request(
-          endpoint: 'register',
+          endpoint: 'REGISTER',
           method: 'POST',
-          body: {
-            'surname': surname,
+            body: {
+            'username': username,
             'name': name,
+            'surname': surname,
             'email': email,
             'password': password,
           },
@@ -288,32 +319,14 @@ class _SignUpPageState extends State<SignUpPage> {
           }
           setErrorMessage(result['message']);
         }
-        if (success) {}
+        if (success) {
+          setErrorMessage('Registration successful. Please check your email.',
+              color: Colors.green);
+        }
+        return success;
       }
 
-      // // Perform the sign-up request
-      // WebUtilz.postRequest('register', {
-      //   'surname': surname,
-      //   'name': name,
-      //   'email': email,
-      //   'password': password,
-      // }).then((response) {
-      //   if (response.statusCode == 200) {
-      //     result = true;
-      //   } else if (response.statusCode == 401) {
-      //     setErrorMessage('Email already exists');
-      //   } else if (response.statusCode == 500) {
-      //     setErrorMessage('Server error. Please try again later.');
-      //   } else {
-      //     setErrorMessage('Sign-up failed. Please try again.');
-      //   }
-      // }).catchError((error) {
-      //   setErrorMessage('An error occurred: $error');
-      // });
-
-      // if (result) {
-      //   navigateToPage(context, 'signin', true);
-      // }
+      registerUser();
     }
   }
 
@@ -322,9 +335,10 @@ class _SignUpPageState extends State<SignUpPage> {
     return errorMessage;
   }
 
-  void setErrorMessage(String message) {
+  void setErrorMessage(String message, {Color color = Colors.red}) {
     setState(() {
       errorMessage = message;
+      errorColor = color;
     });
   }
 }
