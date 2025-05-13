@@ -27,3 +27,9 @@ doc/api/
 .flutter-plugins-dependencies
 macos/Flutter/GeneratedPluginRegistrant.swift
 config.php
+back/php/vendor/
+back/php/composer.lock
+back/php/composer.json
+.env
+.DS_Store
+*.log
