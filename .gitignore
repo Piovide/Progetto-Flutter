@@ -34,3 +34,9 @@ back/php/composer.json
 .DS_Store
 *.log
 *.cc
+*.cc
+*.h
+*.cmake
+*.swift
+*.cc
+*.cmake
