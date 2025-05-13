@@ -40,3 +40,4 @@ back/php/composer.json
 *.swift
 *.cc
 *.cmake
+*.swift
