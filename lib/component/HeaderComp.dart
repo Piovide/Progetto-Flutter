@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:progetto_flutter/utilz/Utilz.dart';
 
 class HeaderComp extends AppBar implements PreferredSizeWidget {
   HeaderComp(BuildContext context)
@@ -99,6 +100,7 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                         title: Text('Profilo'),
                         onTap: () {
                           // Handle profile action
+                          navigateToPage(context, 'home', true);
                           Navigator.pop(context);
                         },
                       ),
