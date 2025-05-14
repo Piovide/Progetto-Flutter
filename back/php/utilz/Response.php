@@ -4,7 +4,6 @@ class Response {
     private $status;
     private $message;
     private $data;
-
     private $headers;
 
     public function __construct($status, $message, $data = null) {
@@ -47,8 +46,10 @@ class Response {
 
     public function send() {
         header('Content-Type: application/json');
-        foreach ($this->headers as $key => $value) {
-            header(header: "$key: $value");
+        if (isset($this->headers)) {   
+            foreach ($this->headers as $key => $value) {
+                header(header: "$key: $value");
+            }
         }
         $this->statusCode();
         echo $this->toJson();
