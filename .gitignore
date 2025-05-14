@@ -41,3 +41,4 @@ back/php/composer.json
 *.cc
 *.cmake
 *.swift
+/macos/Flutter
