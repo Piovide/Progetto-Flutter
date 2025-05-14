@@ -3,8 +3,7 @@ import '../component/HeaderComp.dart';
 import '../component/ProfilePageMenuWidget.dart';
 import '../component/ProfilePageIconWidget.dart';
 import '../component/ProfilePageFormWidget.dart';
-
-//TODO: fixare i banner gialli e neri per grandezza pagina
+import '../utilz/Utilz.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -16,7 +15,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: HeaderComp(context),
-      body: Container(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(30.0),
         child: Column(
           children: [
@@ -24,6 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
             
             const SizedBox(height: 40),
 
+            isMobile() ?
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -34,7 +34,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: ProfilePageFormWidget()
                 )
               ],
-            ),
+            )
+            :
+            ProfilePageMenuWidget(),
             
           ],
         ),

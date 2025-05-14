@@ -4,6 +4,8 @@ import '../routes/SignInPage.dart';
 import '../routes/SignUpPage.dart';
 import '../routes/HomePage.dart';
 import '../routes/ProfilePage.dart';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 void navigateToPage(BuildContext context, String pageName, bool replace) {
   Widget page;
@@ -55,4 +57,14 @@ void saveSessionToken(String token) async {
 Future<String?> getSessionToken() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getString('session_token');
+}
+
+bool isMobile() {
+  if (kIsWeb) return false;
+  return Platform.isAndroid || Platform.isIOS;
+}
+
+bool isDesktop() {
+  if (kIsWeb) return false;
+  return Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 }
