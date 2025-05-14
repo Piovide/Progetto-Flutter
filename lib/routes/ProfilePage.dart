@@ -23,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
             
             const SizedBox(height: 40),
 
-            isMobile() ?
+            // isMobile() ?
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -35,8 +35,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 )
               ],
             )
-            :
-            ProfilePageMenuWidget(),
+            // :
+            // ProfilePageMenuWidget(),
             
           ],
         ),
