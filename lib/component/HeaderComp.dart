@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:progetto_flutter/utilz/Utilz.dart';
+import 'package:progetto_flutter/utilz/WebUtilz.dart';
 
 class HeaderComp extends AppBar implements PreferredSizeWidget {
   HeaderComp(BuildContext context)
@@ -101,7 +102,7 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                         onTap: () {
                           // Handle profile action
                           Navigator.pop(context);
-                          navigateToPage(context, 'profile', true);
+                          navigateToPage(context, 'profile', false);
                         },
                       ),
                     ),
@@ -111,7 +112,38 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                         title: Text('Logout'),
                         onTap: () {
                           // Handle logout action
+                          final api = WebUtilz();
+
+                          Future<bool> logoutUser() async {
+                            bool success = false;
+                            Map<String, dynamic> dati = {};
+                            saveSessionToken('dffdsgfddsfsafdfasdfdsf');
+                            String? token = await getSessionToken();
+                            String? uuid = await getUUID();
+
+                            final result = await api.request(
+                              endpoint: 'LOGOUT',
+                              method: 'POST',
+                              body: {
+                                'uuid': uuid,
+                                if (token != null) 'token': token,
+                              },
+                            );
+                            if (result['status'] == 200) {
+                              success = true;
+                            }
+
+                            return success;
+                          }
+
                           Navigator.pop(context);
+
+                          logoutUser().then((value) {
+                            if (value) {
+                              clearSessionData();
+                              navigateToPage(context, 'login', false);
+                            }
+                          });
                         },
                       ),
                     ),

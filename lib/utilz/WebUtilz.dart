@@ -30,10 +30,10 @@ class WebUtilz {
         case 'POST':
           response =
               await http.post(url, headers: defaultHeaders, body: encodedBody);
-            // print('POST: $encodedBody');
-            // print('Headers: $defaultHeaders');
-            // print('Response status: ${response.statusCode}');
-            // print('Response: ${response.body}');
+            print('POST: $encodedBody');
+            print('Headers: $defaultHeaders');
+            print('Response status: ${response.statusCode}');
+            print('Response: ${response.body}');
           break;
         case 'PUT':
           response =

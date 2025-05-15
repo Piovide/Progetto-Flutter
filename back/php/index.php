@@ -27,6 +27,7 @@ $endpoint = strtoupper($endpoint);
 $validEndpoints = [
     'LOGIN',
     'REGISTER',
+    'LOGOUT',
     'FORGOT_PASSWORD',
     'CHANGE_PASSWORD', 
     'UPDATE_PROFILE', 
@@ -65,6 +66,13 @@ switch ($endpoint) {
         $password = password_hash($_POST['password'], PASSWORD_BCRYPT) ?? '';
         $auth = new Auth();
         $auth->register($username, $nome, $cognome, $email, $password);
+        break;
+    case 'LOGOUT':
+        include_once './utilz/Auth.php';
+        $token = $_POST['token'] ?? null;
+        $uuid = $_POST['uuid'] ?? null;
+        $auth = new Auth();
+        $auth->logout($uuid);
         break;
     default:
         echo json_encode(['success' => false, 'message' => 'Invalid endpoint']);
