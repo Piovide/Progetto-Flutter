@@ -141,7 +141,7 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                           logoutUser().then((value) {
                             if (value) {
                               clearSessionData();
-                              navigateToPage(context, 'login', false);
+                              navigateToPage(context, 'signin', true);
                             }
                           });
                         },
