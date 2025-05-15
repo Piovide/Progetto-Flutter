@@ -124,8 +124,8 @@ class Auth {
     //     FOREIGN KEY (utente_id) REFERENCES utenti(id) ON DELETE CASCADE
     // );
     
-    public function logout() {
-        // $query = "DELETE FROM sessioni_login WHERE token = ?";
+    public function logout($uuid) {
+        // $query = "DELETE FROM sessioni_login WHERE utente_id = ?";
         // $stmt = $this->conn->prepare($query);
         // if ($stmt === false) {
         //     $response = new Response(500, "Errore interno del server.");

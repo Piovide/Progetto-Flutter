@@ -68,3 +68,9 @@ bool isDesktop() {
   if (kIsWeb) return false;
   return Platform.isWindows || Platform.isLinux || Platform.isMacOS;
 }
+
+void clearSessionData() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('uuid');
+  await prefs.remove('session_token');
+}
