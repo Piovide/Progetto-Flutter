@@ -18,7 +18,7 @@ class ProfilePageIconWidget extends StatelessWidget {
                   width: 120,
                   height: 120,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(100), child:  Image(image: AssetImage('assets/images/profile.png'))
+                    borderRadius: BorderRadius.circular(100), child:  Image(image: AssetImage('assets/cat.jpg'))
                   ),
                 ),
                 Positioned(
