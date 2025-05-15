@@ -116,8 +116,9 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
 
                           Future<bool> logoutUser() async {
                             bool success = false;
-                            Map<String, dynamic> dati = {};
+                            //TODO: clear line below
                             saveSessionToken('dffdsgfddsfsafdfasdfdsf');
+                            
                             String? token = await getSessionToken();
                             String? uuid = await getUUID();
 

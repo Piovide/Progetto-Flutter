@@ -208,7 +208,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   navigateToPage(context, 'signin', true);
                 },
                 child: Text(
-                  'You don\'t have an account? Register',
+                  'Already have an account? Sign In',
                   style: TextStyle(color: Colors.blue),
                 ),
               ),
@@ -247,7 +247,9 @@ class _SignUpPageState extends State<SignUpPage> {
               style: TextStyle(
                 color: errorColor,
                 fontSize: 16,
+                
               ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
@@ -279,7 +281,6 @@ class _SignUpPageState extends State<SignUpPage> {
     String repeatPassword = repeatPasswordController.text;
     bool success = false;
 
-
     if (surname.isEmpty ||
         name.isEmpty ||
         surname.isEmpty ||
@@ -300,7 +301,7 @@ class _SignUpPageState extends State<SignUpPage> {
         final result = await api.request(
           endpoint: 'REGISTER',
           method: 'POST',
-            body: {
+          body: {
             'username': username,
             'name': name,
             'surname': surname,
@@ -321,6 +322,11 @@ class _SignUpPageState extends State<SignUpPage> {
         }
         if (success) {
           setErrorMessage('Registration successful. Please check your email.',
+              color: Colors.green);
+          //wait 2 seconds and print another message for spam email
+          await Future.delayed(Duration(seconds: 5));
+          setErrorMessage(
+              'Registration successful. Please check your email.\nIf you do not receive an email, please check your spam folder.',
               color: Colors.green);
         }
         return success;
