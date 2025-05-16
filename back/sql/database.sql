@@ -138,11 +138,11 @@ CREATE TABLE sessioni_login (
     utente_uuid CHAR(36) NOT NULL,
     token VARCHAR(255) NOT NULL,
     data_accesso TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (utente_id) REFERENCES utenti(id) ON DELETE CASCADE
+    FOREIGN KEY (utente_uuid) REFERENCES utenti(uuid) ON DELETE CASCADE
 );
 
 CREATE TABLE invii_email (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    uuid CHAR(36) PRIMARY KEY,
     ip VARCHAR(45) NOT NULL,
     data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX (data)
