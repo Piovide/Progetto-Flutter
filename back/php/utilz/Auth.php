@@ -2,7 +2,6 @@
 define('ROOT', __DIR__);
 require_once ROOT . '/Database.php';
 require_once ROOT . '/Response.php';
-require_once ROOT . '/AppuntiMailer.php';
 
 class Auth {
     private $conn;
@@ -12,6 +11,7 @@ class Auth {
     }
 
     public function register($username, $nome, $cognome, $email, $password) {
+        require_once ROOT . '/AppuntiMailer.php';
         // $utente = new Utente();
         // $utente->createTempUser($username, $nome, $cognome, $dataNascita, $sesso, $email, $password);
         $mailer = new AppuntiMailer();

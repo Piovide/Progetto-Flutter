@@ -36,6 +36,90 @@ class Notifica {
 
         $stmt->close();
         $conn->close();
+
+        return true;
+        // new Response(201, "Notifica inserita con successo")->send();
+    }
+
+    public static function getNotifiche($utente_uuid) {
+        $conn = Database::getConnection();
+        $query = "SELECT * FROM notifiche WHERE utente_uuid = ? ORDER BY data_invio DESC";
+        $stmt = $conn->prepare($query);
+
+        if ($stmt === false) {
+            die("Errore lato server: " . $conn->error);
+        }
+
+        $stmt->bind_param("s", $utente_uuid);
+        $stmt->execute();
+
+        if ($stmt->error) {
+            die("Errore lato server: " . $stmt->error);
+        }
+
+        $result = $stmt->get_result();
+        if ($result->num_rows == 0) {
+            return null;
+        }
+
+        $notifiche = [];
+        while ($row = $result->fetch_assoc()) {
+            $notifiche[] = [
+                'uuid' => $row['uuid'],
+                'utente_uuid' => $row['utente_uuid'],
+                'messaggio' => $row['messaggio'],
+                'letta' => $row['letta'] == 1,
+                'tipo' => $row['tipo'],
+                'data_invio' => $row['data_invio']
+            ];
+        }
+        $stmt->close();
+        $conn->close();
+        return $notifiche;
+    }
+
+    public static function markAsRead($uuid){
+        $conn = Database::getConnection();
+        $query = "UPDATE notifiche SET letta = 1 WHERE uuid = ?";
+        $stmt = $conn->prepare($query);
+
+        if ($stmt === false) {
+            die("Errore lato server: " . $conn->error);
+        }
+
+        $stmt->bind_param("s", $uuid);
+        $stmt->execute();
+
+        if ($stmt->error) {
+            die("Errore lato server: " . $stmt->error);
+        }
+
+        $stmt->close();
+        $conn->close();
+        // new Response(204, "Notifica letta con successo")->send();
+        return true;
+    }
+
+    public static function deleteNotifica($uuid) {
+        $conn = Database::getConnection();
+        $query = "DELETE FROM notifiche WHERE uuid = ?";
+        $stmt = $conn->prepare($query);
+
+        if ($stmt === false) {
+            die("Errore lato server: " . $conn->error);
+        }
+
+        $stmt->bind_param("s", $uuid);
+        $stmt->execute();
+
+        if ($stmt->error) {
+            die("Errore lato server: " . $stmt->error);
+        }
+
+        $stmt->close();
+        $conn->close();
+        // new Response(204, "Notifica eliminata con successo")->send();
+        return true;
     }
 }
 ?>
