@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:progetto_flutter/constants/colors.dart';
+import 'package:progetto_flutter/routes/HomePage.dart';
+import 'package:progetto_flutter/routes/ProfilePage.dart';
 import 'routes/SignInPage.dart';
 // import 'routes/SignUpPage.dart';
 // import 'routes/HomePage.dart';
@@ -15,7 +18,7 @@ class WikiApp extends StatelessWidget {
     return MaterialApp(
       title: 'Wiki Appunti',      
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: teal,
       ),
       debugShowCheckedModeBanner: false,
       color: Colors.blue,

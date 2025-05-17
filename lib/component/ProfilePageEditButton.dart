@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:progetto_flutter/constants/colors.dart';
 
 class ProfilePageEditButton extends StatelessWidget {
   const ProfilePageEditButton({
@@ -12,7 +13,7 @@ class ProfilePageEditButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: (){},
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
+          backgroundColor: teal,
           side: BorderSide.none,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),

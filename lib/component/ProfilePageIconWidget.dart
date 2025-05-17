@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:progetto_flutter/constants/colors.dart';
 
 class ProfilePageIconWidget extends StatelessWidget {
   const ProfilePageIconWidget({
@@ -27,10 +28,10 @@ class ProfilePageIconWidget extends StatelessWidget {
                   child: Container(
                     width: 35,
                     height: 35,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.blue),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: teal),
                     child: Icon(
                       Icons.camera_alt_outlined,
-                      color: Colors.white,
+                      color: white,
                       size: 20,
                     )
                   ),

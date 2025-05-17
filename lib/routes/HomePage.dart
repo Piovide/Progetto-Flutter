@@ -10,10 +10,10 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   
   final List<Map<String, String>> classes = [
-    {'title': 'Math 101', 'teacher': 'Mr. Smith'},
-    {'title': 'Biology 201', 'teacher': 'Ms. Johnson'},
-    {'title': 'History 301', 'teacher': 'Mr. Lee'},
-    {'title': 'Chemistry', 'teacher': 'Dr. Adams'},
+    {'title': 'Matematica', 'teacher': 'Prof.ssa Chieppa'},
+    {'title': 'Informatica', 'teacher': 'Prof.ssa Mongelli'},
+    {'title': 'Italiano', 'teacher': 'Prof.ssa Leone'},
+    {'title': 'T.P.S.I.T.', 'teacher': 'Prof. Frigo'},
   ];
 
   @override
