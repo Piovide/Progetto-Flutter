@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:progetto_flutter/constants/colors.dart';
 
 class HomePageCardWidget extends StatelessWidget {
   const HomePageCardWidget({
@@ -23,7 +24,7 @@ class HomePageCardWidget extends StatelessWidget {
             height: 50,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.blueAccent,
+              color: darkTeal,
               borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
             ),
             child: Padding(
@@ -31,7 +32,7 @@ class HomePageCardWidget extends StatelessWidget {
               child: Text(
                 subjectInfo['title']!,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: white,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 )
@@ -44,7 +45,7 @@ class HomePageCardWidget extends StatelessWidget {
               subjectInfo['teacher']!,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey[700],
+                color:grey,
               ),
             ),
           ),

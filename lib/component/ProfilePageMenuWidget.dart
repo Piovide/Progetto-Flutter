@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:progetto_flutter/constants/colors.dart';
 import 'ProfileMenuWidget.dart';
 
 class ProfilePageMenuWidget extends StatelessWidget {
@@ -18,7 +19,7 @@ class ProfilePageMenuWidget extends StatelessWidget {
         const SizedBox(height: 30),
         ProfileMenuWidget(title: "Informations", icon: Icons.info, onPress: (){}),
         const SizedBox(height: 30),
-        ProfileMenuWidget(title: "Logout", icon: Icons.logout_rounded, textColor: Colors.red, endIcon: false, onPress: (){}),
+        ProfileMenuWidget(title: "Logout", icon: Icons.logout_rounded, textColor: red, endIcon: false, onPress: (){}),
         const SizedBox(height: 30),
       ],
     );

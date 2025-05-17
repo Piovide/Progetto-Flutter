@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:progetto_flutter/constants/colors.dart';
 
 class ProfileMenuWidget extends StatelessWidget {
   const ProfileMenuWidget({
@@ -25,9 +26,9 @@ class ProfileMenuWidget extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
-          color: Colors.blue.withValues(alpha: 0.1),
+          color: teal.withValues(alpha: 0.1),
         ),
-        child: Icon(icon, color: Colors.blue, size: 20),
+        child: Icon(icon, color: teal, size: 20),
       ),
       title: Text(title, style: Theme.of(context).textTheme.bodyMedium?.apply(color:textColor)),
       trailing: endIcon? Container(
@@ -35,9 +36,9 @@ class ProfileMenuWidget extends StatelessWidget {
         height: 30,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
-          color: Colors.blue.withValues(alpha: 0.1),
+          color: teal.withValues(alpha: 0.1),
         ),
-        child: Icon(Icons.arrow_forward_ios, size: 18.0, color: Colors.blue),
+        child: Icon(Icons.arrow_forward_ios, size: 18.0, color: teal),
       ): null,
     );
   }

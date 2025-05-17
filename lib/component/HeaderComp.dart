@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:progetto_flutter/constants/colors.dart';
 import 'package:progetto_flutter/utilz/Utilz.dart';
 import 'package:progetto_flutter/utilz/WebUtilz.dart';
 
@@ -10,7 +11,7 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
               Icon(
                 Icons.note_alt,
                 size: 40,
-                color: Colors.black,
+                color: black,
               ),
               SizedBox(width: 10),
               Text(
@@ -22,7 +23,7 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
               ),
             ],
           ),
-          backgroundColor: Colors.blue,
+          backgroundColor: teal,
           centerTitle: false,
           actions: [
             IconButton(
