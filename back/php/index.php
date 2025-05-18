@@ -33,6 +33,7 @@ $action = strtoupper($action);
 $validEndpoints = [
     'AUTH',
     'NOTIFICATION',
+    'SUBJECT',
     'FORGOT_PASSWORD',
     'CHANGE_PASSWORD', 
     'UPDATE_PROFILE', 
@@ -117,6 +118,21 @@ try {
                 exit;
             }
             break;
+        case 'SUBJECT':
+            include_once './models/Materie.php';
+            $classe = $_POST['classe'] ?? null;
+            if (!$classe) {
+                $response = new Response(400, "Missing classe");
+                $response->send();
+                exit;
+            }
+            if ($action === 'GET') {
+                Materie::getMaterie($classe);
+            } else {
+                $response = new Response(400, "Missing action");
+                $response->send();
+                exit;
+            }
         default:
             $response = new Response(400, "Invalid endpoint");
             $response->send();
