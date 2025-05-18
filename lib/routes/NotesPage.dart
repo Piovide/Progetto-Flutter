@@ -1,0 +1,268 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+
+class Notespage extends StatefulWidget {
+  const Notespage({Key? key}) : super(key: key);
+
+  @override
+  State<Notespage> createState() => _NotesState();
+}
+
+class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
+  final TextEditingController _controller = TextEditingController();
+  late TabController _tabController;
+  final ScrollController _editorScrollController = ScrollController();
+  final ScrollController _previewScrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _controller.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _tabController.dispose();
+    _editorScrollController.dispose();
+    _previewScrollController.dispose();
+    super.dispose();
+  }
+
+  void insertText(String left, [String right = '']) {
+    final text = _controller.text;
+    final selection = _controller.selection;
+    final newText = text.replaceRange(selection.start, selection.end,
+        '$left${text.substring(selection.start, selection.end)}$right');
+    final cursorPosition = selection.start + left.length;
+
+    _controller.value = TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(
+          offset: cursorPosition + (selection.end - selection.start)),
+    );
+  }
+
+  Widget buildGroupedButton({
+    required Icon mainIcon,
+    required VoidCallback onMainPressed,
+    required List<Map<String, dynamic>> options,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: mainIcon,
+          onPressed: onMainPressed,
+          tooltip: options.first['label'],
+        ),
+        PopupMenuButton<Map<String, dynamic>>(
+          icon: const Icon(Icons.arrow_drop_down),
+          tooltip: 'More Options',
+          onSelected: (option) =>
+              insertText(option['left'], option['right'] ?? ''),
+          itemBuilder: (context) => options
+              .sublist(1) // Esclude la prima che è già il bottone principale
+              .map((option) => PopupMenuItem<Map<String, dynamic>>(
+                    value: option,
+                    child: Row(
+                      children: [
+                        if (option['icon'] != null)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Icon(
+                              option['icon'] is IconData
+                                  ? option['icon']
+                                  : Icons.code, // fallback
+                              size: 20,
+                            ),
+                          ),
+                        Text(option['label']),
+                      ],
+                    ),
+                  ))
+              .toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget buildMarkdownToolbar() {
+    return Wrap(
+      spacing: 8,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.format_bold),
+          onPressed: () => insertText('**', '**'),
+          tooltip: 'Bold',
+        ),
+        IconButton(
+          icon: const Icon(Icons.format_italic),
+          onPressed: () => insertText('_', '_'),
+          tooltip: 'Italic',
+        ),
+        IconButton(
+          icon: const Icon(Icons.link),
+          onPressed: () => insertText('[', '](url)'),
+          tooltip: 'Link',
+        ),
+        IconButton(
+          icon: const Icon(Icons.title),
+          onPressed: () => insertText('# '),
+          tooltip: 'Header',
+        ),
+        buildGroupedButton(
+          mainIcon: const Icon(Icons.format_list_bulleted),
+          onMainPressed: () => insertText('* '),
+          options: [
+            {
+              'label': 'Bullet List',
+              'icon': Icons.format_list_bulleted,
+              'left': '* '
+            },
+            {
+              'label': 'Numbered List',
+              'icon': Icons.format_list_numbered,
+              'left': '1. '
+            },
+            {
+              'label': 'Task List',
+              'icon': Icons.check_box_outline_blank,
+              'left': '- [ ] '
+            },
+          ],
+        ),
+        buildGroupedButton(
+          mainIcon: const Icon(Icons.code),
+          onMainPressed: () => insertText('```\n', '\n```'),
+          options: [
+            {
+              'label': 'Code Block',
+              'icon': Icons.code,
+              'left': '```\n',
+              'right': '\n```'
+            },
+            {
+              'label': 'Inline Code',
+              'icon': Icons.code_off,
+              'left': '`',
+              'right': '`'
+            },
+          ],
+        ),
+        buildGroupedButton(
+          mainIcon: const Icon(Icons.format_quote),
+          onMainPressed: () => insertText('> '),
+          options: [
+            {'label': 'Blockquote', 'icon': Icons.format_quote, 'left': '> '},
+            {
+              'label': 'Horizontal Line',
+              'icon': Icons.horizontal_rule,
+              'left': '\n---\n'
+            },
+            // {'label': 'Image', 'icon': Icons.image, 'left': '![Alt text](url)'},
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildEditor() {
+    return Card(
+      margin: EdgeInsets.zero,
+      surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildMarkdownToolbar(),
+            const SizedBox(height: 8),
+            Expanded(
+              child: TextField(
+                controller: _controller,
+                maxLines: null,
+                scrollController: _editorScrollController,
+                keyboardType: TextInputType.multiline,
+                expands: true,
+                textAlignVertical: TextAlignVertical.top,
+                style: Theme.of(context).textTheme.bodyMedium,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Theme.of(context).colorScheme.surface,
+                  border: const OutlineInputBorder(),
+                  hintText: 'Write your markdown here...',
+                  hintStyle: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: Theme.of(context).hintColor),
+                  contentPadding: const EdgeInsets.all(8),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildPreview() {
+    return Card(
+      margin: EdgeInsets.zero,
+      surfaceTintColor: Theme.of(context).colorScheme.surfaceTint,
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Markdown(
+          data: _controller.text,
+          controller: _previewScrollController,
+          styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+            p: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isPhone = MediaQuery.of(context).size.width < 600;
+
+    if (isPhone) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text("Markdown Editor"),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Editor'),
+              Tab(text: 'Preview'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            buildEditor(),
+            buildPreview(),
+          ],
+        ),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(title: const Text("Markdown Editor")),
+        body: Row(
+          children: [
+            Expanded(child: buildEditor()),
+            const VerticalDivider(width: 1),
+            Expanded(child: buildPreview()),
+          ],
+        ),
+      );
+    }
+  }
+}

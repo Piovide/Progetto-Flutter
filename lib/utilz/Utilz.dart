@@ -4,10 +4,11 @@ import '../routes/SignInPage.dart';
 import '../routes/SignUpPage.dart';
 import '../routes/HomePage.dart';
 import '../routes/ProfilePage.dart';
+import '../routes/SubjectPage.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-void navigateToPage(BuildContext context, String pageName, bool replace) {
+void navigateToPage(BuildContext context, String pageName, bool replace, {Map<String, dynamic>? arguments}) {
   Widget page;
   switch (pageName) {
     case 'signin':
@@ -22,6 +23,9 @@ void navigateToPage(BuildContext context, String pageName, bool replace) {
     case 'profile':
       page = ProfilePage();
       break;
+    case 'subject':
+      page = Subjectpage(materia: arguments?['materia']);
+      break;
     default:
       throw Exception('Invalid page name: $pageName');
   }
@@ -29,7 +33,7 @@ void navigateToPage(BuildContext context, String pageName, bool replace) {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => page),
-      (Route<dynamic> route) => false, // Remove all previous routes
+      (Route<dynamic> route) => false,
     );
   } else {
     Navigator.push(

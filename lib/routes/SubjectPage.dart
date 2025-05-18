@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:progetto_flutter/utilz/Utilz.dart';
 import '../component/HeaderComp.dart';
 import '../component/HomePageCardWidget.dart';
 import '../utilz/WebUtilz.dart';
 
-class Homepage extends StatefulWidget {
+class Subjectpage extends StatefulWidget {
+  final String materia;
+  const Subjectpage({super.key, required this.materia});
+
   @override
-  _HomepageState createState() => _HomepageState();
+  _SubjectState createState() => _SubjectState();
 }
 
-class _HomepageState extends State<Homepage> {
-  Future<List<Map<String, dynamic>>> getMaterie() async {
+class _SubjectState extends State<Subjectpage> {
+  Future<List<Map<String, dynamic>>> getAppunti() async {
     final api = WebUtilz();
     final result = await api.request(
-      endpoint: 'SUBJECT',
+      endpoint: 'NOTE',
       action: 'GET',
       method: 'POST',
       body: {
-        //TODO da togliere
-        'classe': '5BII',
+        'materia': widget.materia,
       },
     );
     print(result);
@@ -50,7 +51,7 @@ class _HomepageState extends State<Homepage> {
               const SizedBox(height: 16),
               Expanded(
                 child: FutureBuilder<List<Map<String, dynamic>>>(
-                  future: getMaterie(),
+                  future: getAppunti(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
@@ -76,12 +77,7 @@ class _HomepageState extends State<Homepage> {
                           final subjectInfo = classes[index];
                           return InkWell(
                               onTap: () {
-                                navigateToPage(context, 'subject', true,
-                                    arguments: {
-                                      'materia': subjectInfo['nome'],
-                                      'professore': subjectInfo['professore'],
-                                      'materia_uuid': subjectInfo['uuid']
-                                    });
+                                // Handle tap
                               },
                               borderRadius: BorderRadius.circular(12),
                               child:

@@ -34,6 +34,7 @@ $validEndpoints = [
     'AUTH',
     'NOTIFICATION',
     'SUBJECT',
+    'NOTE',
     'FORGOT_PASSWORD',
     'CHANGE_PASSWORD', 
     'UPDATE_PROFILE', 
