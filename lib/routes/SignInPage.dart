@@ -164,7 +164,8 @@ class _SignInPageState extends State<SignInPage> {
         String? token = await getSessionToken();
 
         final result = await api.request(
-          endpoint: 'LOGIN',
+          endpoint: 'AUTH',
+          action: 'LOGIN',
           method: 'POST',
           body: {
             (isUsername ? 'username' : 'email'): emailOrUsername,

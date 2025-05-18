@@ -6,6 +6,7 @@ class WebUtilz {
 
   Future<Map<String, dynamic>> request({
     required String endpoint,
+    required String action,
     String method = 'POST',
     Map<String, String>? headers,
     Map<String, dynamic>? body,
@@ -15,9 +16,12 @@ class WebUtilz {
       late http.Response response;
 
       // Set default headers
+      // to add a custom header, use the following format:
+      // headers: {'X-Custom-Header': 'value'}
       final defaultHeaders = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'X-Endpoint': endpoint,
+        'X-Action': action,
         ...?headers,
       };
 
@@ -30,10 +34,6 @@ class WebUtilz {
         case 'POST':
           response =
               await http.post(url, headers: defaultHeaders, body: encodedBody);
-            print('POST: $encodedBody');
-            print('Headers: $defaultHeaders');
-            print('Response status: ${response.statusCode}');
-            print('Response: ${response.body}');
           break;
         case 'PUT':
           response =
@@ -47,7 +47,7 @@ class WebUtilz {
           throw Exception('Metodo HTTP non supportato: $method');
       }
 
-      if (response.statusCode == 200) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
         return json.decode(response.body);
       } else {
         return {
@@ -57,9 +57,10 @@ class WebUtilz {
         };
       }
     } catch (e) {
+      print(e);
       return {
         'success': false,
-        'message': 'Errore di connessione: $e',
+        'message': 'Errore di connessione (Lanciato WebUtilz R. 62): $e',
       };
     }
   }

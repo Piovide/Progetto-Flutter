@@ -247,7 +247,6 @@ class _SignUpPageState extends State<SignUpPage> {
               style: TextStyle(
                 color: errorColor,
                 fontSize: 16,
-                
               ),
               textAlign: TextAlign.center,
             ),
@@ -299,7 +298,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
       Future<bool> registerUser() async {
         final result = await api.request(
-          endpoint: 'REGISTER',
+          endpoint: 'AUTH',
+          action: 'REGISTER',
           method: 'POST',
           body: {
             'username': username,

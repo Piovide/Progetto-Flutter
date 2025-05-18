@@ -1,8 +1,7 @@
 <?php
-// login.php
-
 // Abilita CORS per tutti i domini (solo per test, poi limita con l'IP o dominio)
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: http://localhost:61006");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Headers: *");
@@ -14,84 +13,110 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 header('Content-Type: application/json');
 
+include_once './models/Response.php';
+
 $endpoint = $_SERVER['HTTP_X_ENDPOINT'] ?? '';
+$action = $_SERVER['HTTP_X_ACTION'] ?? '';
 
 if (!$endpoint) {
-    echo json_encode(['success' => false, 'message' => 'Missing X-Endpoint header']);
+    new Response(400, "Missing X-Endpoint header")->send();
+    exit;
+}
+if (!$action) {
+    new Response(400, "Missing X-Action header")->send();
     exit;
 }
 
 $endpoint = strtoupper($endpoint);
-
+$action = strtoupper($action);
 // Verifica se l'endpoint è valido
 $validEndpoints = [
-    'LOGIN',
-    'REGISTER',
-    'LOGOUT',
+    'AUTH',
     'FORGOT_PASSWORD',
     'CHANGE_PASSWORD', 
     'UPDATE_PROFILE', 
-    'DELETE_ACCOUNT'
+    'DELETE_ACCOUNT',
+    'NOTIFICHE',
 ];
 
 if (!in_array($endpoint, $validEndpoints)) {
-    echo json_encode(['success' => false, 'message' => 'Invalid endpoint - ' . $endpoint]);
+    new Response(400, "Invalid endpoint")->send();
+    exit;
+}
+try {
+    switch ($endpoint) {
+        case 'AUTH':
+            include_once './utilz/Auth.php';
+            $auth = new Auth();
+            if($action === 'LOGIN') {
+                $password = $_POST['password'] ?? '';
+                $token = $_POST['token'] ?? null;
+                if(isset($_POST['email'])){
+                    $email = $_POST['email'] ?? '';
+                    $auth->login($email, $password, 'email', $token);
+                }else if(isset($_POST['username'])){
+                    $username = $_POST['username'] ?? '';
+                    $auth->login($username, $password, 'username', $token);
+                }else{
+                    new Response(400, "Missing email or username")->send();
+                    exit;
+                }
+            }else if($action === 'REGISTER'){
+                $username = $_POST['username'] ?? '';
+                $nome = $_POST['name'] ?? '';
+                $cognome = $_POST['surname'] ?? '';
+                $email = $_POST['email'] ?? '';
+                $password = password_hash($_POST['password'], PASSWORD_BCRYPT) ?? '';
+                $auth = new Auth();
+                $auth->register($username, $nome, $cognome, $email, $password);
+            }else if($action === 'LOGOUT'){
+                $token = $_POST['token'] ?? null;
+                $uuid = $_POST['uuid'] ?? null;
+                $auth = new Auth();
+                $auth->logout($uuid);
+            }else{
+                new Response(400, "Missing action")->send();
+                exit;
+            }
+            break;
+        case 'NOTIFICHE':
+            include_once './models/Notifiche.php';
+            $utente_uuid = $_POST['utente_uuid'] ?? null;
+            if (!$utente_uuid) {
+                new Response(400, "Missing utente_uuid")->send();
+                exit;
+            }
+            if ($action === 'GET') {
+                Notifica::getNotifiche($utente_uuid);
+            } else if ($action === 'INSERT') {
+                $messaggio = $_POST['messaggio'] ?? '';
+                $tipo = $_POST['tipo'] ?? '';
+                $letta = $_POST['letta'] ?? false;
+                if (!$messaggio || !$tipo) {
+                    new Response(400, "Missing messaggio or tipo")->send();
+                    exit;
+                }
+                $notifica = new Notifica(null, $utente_uuid, $messaggio, $tipo, $letta, null);
+                $notifica->inserisciNotifica();
+            } else if ($action === 'DELETE') {
+                $uuid = $_POST['uuid'] ?? null;
+                if (!$uuid) {
+                    new Response(400, "Missing uuid")->send();
+                    exit;
+                }
+                Notifica::deleteNotifica($uuid);
+            } else {
+                new Response(400, "Missing action")->send();
+                exit;
+            }
+            break;
+        default:
+            new Response(400, "Invalid endpoint")->send();
+            exit;
+    }
+} catch (Exception $e) {
+    new Response(500, "Internal server error: " . $e->getMessage())->send();
     exit;
 }
 
-switch ($endpoint) {
-    case 'LOGIN':
-        include_once './utilz/Auth.php';
-        $password = $_POST['password'] ?? '';
-        $auth = new Auth();
-        $token = $_POST['token'] ?? null;
-        if(isset($_POST['email'])){
-            $email = $_POST['email'] ?? '';
-            $auth->login($email, $password, 'email', $token);
-        }else if(isset($_POST['username'])){
-            $username = $_POST['username'] ?? '';
-            $auth->login($username, $password, 'username', $token);
-        }else{
-            echo json_encode(['success' => false, 'message' => 'Missing email or username']);
-            exit;
-        }
-        break;
-    case 'REGISTER':
-        include_once './utilz/Auth.php';
-        
-        $username = $_POST['username'] ?? '';
-        $nome = $_POST['name'] ?? '';
-        $cognome = $_POST['surname'] ?? '';
-        $email = $_POST['email'] ?? '';
-        $password = password_hash($_POST['password'], PASSWORD_BCRYPT) ?? '';
-        $auth = new Auth();
-        $auth->register($username, $nome, $cognome, $email, $password);
-        break;
-    case 'LOGOUT':
-        include_once './utilz/Auth.php';
-        $token = $_POST['token'] ?? null;
-        $uuid = $_POST['uuid'] ?? null;
-        $auth = new Auth();
-        $auth->logout($uuid);
-        break;
-    default:
-        echo json_encode(['success' => false, 'message' => 'Invalid endpoint']);
-        exit;
-}
-
-
-
-if ($email === 'test@example.com' && $password === '1234') {
-    echo json_encode(['success' => true, 'message' => 'Login ok']);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Credenziali errate']);
-}
-
-$requestMethod = $_SERVER['REQUEST_METHOD'];
-$endpoint = $_SERVER['HTTP_X_ENDPOINT'] ?? null;
-
-// if (!$endpoint) {
-//     (new Response(400, "Missing X-Endpoint header"))->send();
-//     exit;
-// }
 ?>

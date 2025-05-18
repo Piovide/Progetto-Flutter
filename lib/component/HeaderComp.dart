@@ -1,4 +1,7 @@
+// import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:progetto_flutter/constants/colors.dart';
 import 'package:progetto_flutter/utilz/Utilz.dart';
 import 'package:progetto_flutter/utilz/WebUtilz.dart';
@@ -32,13 +35,40 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                 color: Colors.black,
                 size: 30,
               ),
-              onPressed: () {
+              onPressed: () async {
                 final RenderBox renderBox =
                     (context.findRenderObject() as RenderBox);
                 final Offset offset = renderBox.localToGlobal(
                   Offset(renderBox.size.width, 0),
                 );
+                final api = WebUtilz();
+                Future<List<Map<String, dynamic>>> getNotifications() async {
+                  String? uuid = await getUUID();
 
+                  final result = await api.request(
+                  endpoint: 'NOTIFICATION',
+                  action: 'GET',
+                  method: 'POST',
+                  body: {
+                    'utente_uuid': 'uuid',
+                  },
+                  );
+                  print(result);
+                  if (result['status'] == 404) {
+                    return [];
+                  }
+                  if (result['data'] is List) {
+                  return List<Map<String, dynamic>>.from(result['data']);
+                  }
+                  return [];
+                }
+
+                List<Map<String, dynamic>> notifications = await getNotifications();
+                if (notifications.isEmpty) {
+                  print('Non hai notifiche');
+                } else {
+                  print('Hai ${notifications.length} notifiche');
+                }
                 showMenu(
                   context: context,
                   position: RelativeRect.fromLTRB(
@@ -60,13 +90,35 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                             ),
                           ),
                           Divider(),
-                          if (true)
-                            Center(
-                              child: Text(
-                                'Non hai notifiche',
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            ),
+
+
+                          // FutureBuilder<List<Map<String, dynamic>>>(
+                          //   future: getNotifications(),
+                          //   builder: (context, snapshot) {
+                          //     if (snapshot.connectionState == ConnectionState.waiting) {
+                          //       return Center(child: CircularProgressIndicator());
+                          //     } else if (snapshot.hasError) {
+                          //       return Center(child: Text('Errore nel caricamento delle notifiche'));
+                          //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          //       return Center(
+                          //         child: Text(
+                          //           'Non hai notifiche',
+                          //           style: TextStyle(color: Colors.grey),
+                          //         ),
+                          //       );
+                          //     } else {
+                          //       return Column(
+                          //         crossAxisAlignment: CrossAxisAlignment.start,
+                          //         children: snapshot.data!
+                          //             .map((notification) => ListTile(
+                          //                   title: Text(notification['title'] ?? 'Nessun titolo'),
+                          //                   subtitle: Text(notification['message'] ?? ''),
+                          //                 ))
+                          //             .toList(),
+                          //       );
+                          //     }
+                          //   },
+                          // ),
                         ],
                       ),
                     ),
@@ -124,7 +176,8 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                             String? uuid = await getUUID();
 
                             final result = await api.request(
-                              endpoint: 'LOGOUT',
+                              endpoint: 'AUTH',
+                              action: 'LOGOUT',
                               method: 'POST',
                               body: {
                                 'uuid': uuid,

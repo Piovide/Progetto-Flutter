@@ -16,7 +16,7 @@ class WikiApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Wiki Appunti',      
+      title: 'Wiki Appunti',
       theme: ThemeData(
         primarySwatch: teal,
       ),
@@ -26,5 +26,3 @@ class WikiApp extends StatelessWidget {
     );
   }
 }
-
-

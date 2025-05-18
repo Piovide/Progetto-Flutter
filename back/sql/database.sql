@@ -130,7 +130,7 @@ CREATE TABLE notifiche (
     tipo ENUM('commento', 'revisione', 'richiesta_amicizia', 'condivisione_appunto', 'aggiornamento', 'miscellanea') NOT NULL,
     data_invio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (utente_uuid) REFERENCES utenti(uuid) ON DELETE CASCADE
-); 
+);
 
 CREATE TABLE sessioni_login (
     uuid CHAR(36) PRIMARY KEY,

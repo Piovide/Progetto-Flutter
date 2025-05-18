@@ -7,7 +7,7 @@ class Notifica {
     private string $tipo;
     private ?string $data_invio;
 
-    public function __construct(string $uuid, string $utente_uuid, string $messaggio, string $tipo, bool $letta = false, ?string $data_invio = null) {
+    public function __construct(string $uuid = null, string $utente_uuid, string $messaggio, string $tipo, bool $letta = false, ?string $data_invio = null) {
         $this->uuid = $uuid;
         $this->utente_uuid = $utente_uuid;
         $this->messaggio = $messaggio;
@@ -37,45 +37,49 @@ class Notifica {
         $stmt->close();
         $conn->close();
 
-        return true;
-        // new Response(201, "Notifica inserita con successo")->send();
+        new Response(201, "Notifica inserita con successo")->send();
     }
 
     public static function getNotifiche($utente_uuid) {
-        $conn = Database::getConnection();
-        $query = "SELECT * FROM notifiche WHERE utente_uuid = ? ORDER BY data_invio DESC";
-        $stmt = $conn->prepare($query);
+        // $conn = Database::getConnection();
+        // $query = "SELECT * FROM notifiche WHERE utente_uuid = ? ORDER BY data_invio DESC";
+        // $stmt = $conn->prepare($query);
 
-        if ($stmt === false) {
-            die("Errore lato server: " . $conn->error);
-        }
+        // if ($stmt === false) {
+        //     die("Errore lato server: " . $conn->error);
+        // }
 
-        $stmt->bind_param("s", $utente_uuid);
-        $stmt->execute();
+        // $stmt->bind_param("s", $utente_uuid);
+        // $stmt->execute();
 
-        if ($stmt->error) {
-            die("Errore lato server: " . $stmt->error);
-        }
+        // if ($stmt->error) {
+        //     die("Errore lato server: " . $stmt->error);
+        // }
 
-        $result = $stmt->get_result();
-        if ($result->num_rows == 0) {
-            return null;
-        }
+        // $result = $stmt->get_result();
+        // if ($result->num_rows == 0) {
+            // $stmt->close();
+            // $conn->close();
+            new Response(404, "Nessuna notifica trovata")->send();
+            return;
+        // }
 
-        $notifiche = [];
-        while ($row = $result->fetch_assoc()) {
-            $notifiche[] = [
-                'uuid' => $row['uuid'],
-                'utente_uuid' => $row['utente_uuid'],
-                'messaggio' => $row['messaggio'],
-                'letta' => $row['letta'] == 1,
-                'tipo' => $row['tipo'],
-                'data_invio' => $row['data_invio']
-            ];
-        }
-        $stmt->close();
-        $conn->close();
-        return $notifiche;
+        // $notifiche = [];
+        // while ($row = $result->fetch_assoc()) {
+        //     $notifiche[] = [
+        //         'uuid' => $row['uuid'],
+        //         'utente_uuid' => $row['utente_uuid'],
+        //         'messaggio' => $row['messaggio'],
+        //         'letta' => $row['letta'] == 1,
+        //         'tipo' => $row['tipo'],
+        //         'data_invio' => $row['data_invio']
+        //     ];
+        // }
+        // $stmt->close();
+        // $conn->close();
+        // $response = new Response(200, "Notifiche recuperate con successo");
+        // $response->setData($notifiche);
+        // $response->send();
     }
 
     public static function markAsRead($uuid){
