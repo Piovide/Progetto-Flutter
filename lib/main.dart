@@ -22,7 +22,7 @@ class WikiApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       color: Colors.blue,
-      home: SignInPage(),
+      home: Homepage(),
     );
   }
 }

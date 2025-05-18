@@ -46,18 +46,11 @@ class WebUtilz {
         default:
           throw Exception('Metodo HTTP non supportato: $method');
       }
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        return json.decode(response.body);
-      } else {
-        return {
-          'success': false,
-          'message': 'Errore ${response.statusCode}',
-          'body': response.body,
-        };
-      }
+      
+      return json.decode(response.body);
+      
     } catch (e) {
-      print(e);
+      print(e.toString());
       return {
         'success': false,
         'message': 'Errore di connessione (Lanciato WebUtilz R. 62): $e',

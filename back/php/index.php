@@ -32,11 +32,11 @@ $action = strtoupper($action);
 // Verifica se l'endpoint è valido
 $validEndpoints = [
     'AUTH',
+    'NOTIFICATION',
     'FORGOT_PASSWORD',
     'CHANGE_PASSWORD', 
     'UPDATE_PROFILE', 
-    'DELETE_ACCOUNT',
-    'NOTIFICHE',
+    'DELETE_ACCOUNT'
 ];
 
 if (!in_array($endpoint, $validEndpoints)) {
@@ -82,7 +82,7 @@ try {
                 exit;
             }
             break;
-        case 'NOTIFICHE':
+        case 'NOTIFICATION':
             include_once './models/Notifiche.php';
             $utente_uuid = $_POST['utente_uuid'] ?? null;
             if (!$utente_uuid) {

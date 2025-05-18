@@ -64,11 +64,6 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                 }
 
                 List<Map<String, dynamic>> notifications = await getNotifications();
-                if (notifications.isEmpty) {
-                  print('Non hai notifiche');
-                } else {
-                  print('Hai ${notifications.length} notifiche');
-                }
                 showMenu(
                   context: context,
                   position: RelativeRect.fromLTRB(
@@ -91,34 +86,24 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                           ),
                           Divider(),
 
+                          if (notifications.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('Nessuna notifica'),
+                            )
+                          else
+                            ...notifications.map((notification) {
+                              return ListTile(
+                                title: Text(notification['tipo']),
+                                subtitle: Text(notification['messaggio']),
+                                onTap: () {
+                                  // Handle notification tap
+                                  Navigator.pop(context);
+                                  navigateToPage(context, 'profile', false);
+                                },
+                              );
+                            }),
 
-                          // FutureBuilder<List<Map<String, dynamic>>>(
-                          //   future: getNotifications(),
-                          //   builder: (context, snapshot) {
-                          //     if (snapshot.connectionState == ConnectionState.waiting) {
-                          //       return Center(child: CircularProgressIndicator());
-                          //     } else if (snapshot.hasError) {
-                          //       return Center(child: Text('Errore nel caricamento delle notifiche'));
-                          //     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                          //       return Center(
-                          //         child: Text(
-                          //           'Non hai notifiche',
-                          //           style: TextStyle(color: Colors.grey),
-                          //         ),
-                          //       );
-                          //     } else {
-                          //       return Column(
-                          //         crossAxisAlignment: CrossAxisAlignment.start,
-                          //         children: snapshot.data!
-                          //             .map((notification) => ListTile(
-                          //                   title: Text(notification['title'] ?? 'Nessun titolo'),
-                          //                   subtitle: Text(notification['message'] ?? ''),
-                          //                 ))
-                          //             .toList(),
-                          //       );
-                          //     }
-                          //   },
-                          // ),
                         ],
                       ),
                     ),

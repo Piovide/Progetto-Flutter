@@ -37,7 +37,8 @@ class Notifica {
         $stmt->close();
         $conn->close();
 
-        new Response(201, "Notifica inserita con successo")->send();
+        $response = new Response(201, "Notifica inserita con successo");
+        $response->send();
     }
 
     public static function getNotifiche($utente_uuid) {
@@ -60,8 +61,9 @@ class Notifica {
         // if ($result->num_rows == 0) {
             // $stmt->close();
             // $conn->close();
-            new Response(404, "Nessuna notifica trovata")->send();
-            return;
+            // $response = new Response(404, "Nessuna notifica trovata");
+            // $response->send();
+            // return;
         // }
 
         // $notifiche = [];
@@ -77,9 +79,35 @@ class Notifica {
         // }
         // $stmt->close();
         // $conn->close();
-        // $response = new Response(200, "Notifiche recuperate con successo");
+        $response = new Response(200, "Notifiche recuperate con successo");
+        $response->setData([
+            [
+            'uuid' => '1a2b3c4d-0000-0000-0000-000000000001',
+            'utente_uuid' => $utente_uuid,
+            'messaggio' => 'Benvenuto nella nostra app!',
+            'letta' => false,
+            'tipo' => 'info',
+            'data_invio' => '2024-06-01 10:00:00'
+            ],
+            [
+            'uuid' => '1a2b3c4d-0000-0000-0000-000000000002',
+            'utente_uuid' => $utente_uuid,
+            'messaggio' => 'Hai un nuovo messaggio.',
+            'letta' => false,
+            'tipo' => 'messaggio',
+            'data_invio' => '2024-06-02 12:30:00'
+            ],
+            [
+            'uuid' => '1a2b3c4d-0000-0000-0000-000000000003',
+            'utente_uuid' => $utente_uuid,
+            'messaggio' => 'La tua password è stata aggiornata.',
+            'letta' => true,
+            'tipo' => 'sicurezza',
+            'data_invio' => '2024-06-03 09:15:00'
+            ]
+        ]);
         // $response->setData($notifiche);
-        // $response->send();
+        $response->send();
     }
 
     public static function markAsRead($uuid){
@@ -100,7 +128,8 @@ class Notifica {
 
         $stmt->close();
         $conn->close();
-        // new Response(204, "Notifica letta con successo")->send();
+        $response = new Response(204, "Notifica letta con successo");
+        $response->send();
         return true;
     }
 
@@ -122,7 +151,8 @@ class Notifica {
 
         $stmt->close();
         $conn->close();
-        // new Response(204, "Notifica eliminata con successo")->send();
+        $response = new Response(204, "Notifica eliminata con successo");
+        $response->send();
         return true;
     }
 }
