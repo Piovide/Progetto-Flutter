@@ -49,3 +49,4 @@ GeneratedPluginRegistrant.swift
 generated_plugins.cmake
 generated_plugin_registrant.h
 generated_plugin_registrant.cc
+devtools_options.yaml

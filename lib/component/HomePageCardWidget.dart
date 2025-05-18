@@ -7,7 +7,7 @@ class HomePageCardWidget extends StatelessWidget {
     required this.subjectInfo,
   });
 
-  final Map<String, String> subjectInfo;
+  final Map<String, dynamic> subjectInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class HomePageCardWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                subjectInfo['title']!,
+                subjectInfo['nome']!,
                 style: TextStyle(
                   color: white,
                   fontWeight: FontWeight.bold,
@@ -42,7 +42,7 @@ class HomePageCardWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              subjectInfo['teacher']!,
+              subjectInfo['professore']!,
               style: TextStyle(
                 fontSize: 14,
                 color:grey,
