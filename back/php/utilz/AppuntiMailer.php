@@ -3,8 +3,8 @@ use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
 
-require '../vendor/autoload.php';
-
+define('BASE_DIR', dirname(__DIR__));
+require BASE_DIR . '/vendor/autoload.php';
 
 $config = require 'config.php';
 
@@ -14,8 +14,8 @@ class AppuntiMailer{
     private $transport;
 
     public function __construct() {
-        global $config;
-
+        // global $config;
+        $config = require 'config.php';
         $dsn = sprintf(
             'smtp://%s:%s@%s:%d',
             urlencode($config['smtp_user']),
@@ -28,7 +28,8 @@ class AppuntiMailer{
         $this->mailer = new Mailer($this->transport);
     }
     public function sendConfirmationEmail($toEmail, $toName, $token) {
-        global $config;
+        // global $config;
+        $config = require 'config.php';
         // Controllo spam
         // if ($this->spamCheck()) {
         //     new Response(429, "Hai raggiunto il limite di invii. Riprova più tardi.")->send();
