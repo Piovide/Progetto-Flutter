@@ -9,28 +9,47 @@ class ProfilePageFormWidget extends StatefulWidget {
 
 class _EnableFormState extends State<ProfilePageFormWidget> {
   bool setEnabled = false;
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _surnameController = TextEditingController();
+  final TextEditingController _dateOfBirthController = TextEditingController();
+  final TextEditingController _genreController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
 
+    saveUserData(
+      {
+        "name" : "Pierino",
+        "surname" : "Rossi",
+        "dateOfBirth" : "01/01/2000",
+        "genre" : "maschio",
+        "password" : "password123"
+      }
+    );
+
+
     return FutureBuilder(
       future: getUserData(),
       builder: (context, snapshot) {
-        // final userData = snapshot.data!;
-        // final nome = userData['nome'] as String;
-        // final cognome = userData['cognome'] as String;
-        // final dataNascita = userData['dataNascita'] as String;
-        // final sesso = userData['sesso'] as String;
-        // final password = userData['password'] as String;
+        final userData = snapshot.data!;
+        final name = userData['name'] as String;
+        final surname = userData['surname'] as String;
+        final dateOfBirth = userData['dateOfBirth'] as String;
+        final genre = userData['genre'] as String;
+        final password = userData['password'] as String;
 
-        // print(userData);
+        _nameController.text = name;
+        _surnameController.text = surname;
+        _dateOfBirthController.text = dateOfBirth;
+        _genreController.text = genre;
+        _passwordController.text = password;
 
         return Form(
           child: Column(
             children: [
               TextFormField(
-                controller: _controller,
+                controller: _nameController,
                 enabled: setEnabled,
                 // enableInteractiveSelection: false,
                 focusNode: FocusNode(),
@@ -40,13 +59,13 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                     borderRadius: BorderRadius.circular(100),
                     borderSide: BorderSide(color: black),
                   ),
-                  label: Text("nome", style: TextStyle(color: black)),
+                  label: Text("Name", style: TextStyle(color: black)),
                   prefixIcon: Icon(Icons.person, color: black),
                 ),
               ),
               const SizedBox(height: 20),
               TextFormField(
-                controller: _controller,
+                controller: _surnameController,
                 enabled: setEnabled,
                 focusNode: FocusNode(),
                 decoration: InputDecoration(
@@ -55,13 +74,13 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                     borderRadius: BorderRadius.circular(100),
                     borderSide: BorderSide(color: black),
                   ),
-                  label: Text("cognome", style: TextStyle(color: black)),
+                  label: Text("Surname", style: TextStyle(color: black)),
                   prefixIcon: Icon(Icons.email_outlined, color: black),
                 ),
               ),
               const SizedBox(height: 20),
               TextFormField(
-                controller: _controller,
+                controller: _dateOfBirthController,
                 enabled: setEnabled,
                 focusNode: FocusNode(),
                 decoration: InputDecoration(
@@ -70,13 +89,13 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                     borderRadius: BorderRadius.circular(100),
                     borderSide: BorderSide(color: black),
                   ),
-                  label: Text("dataNascita", style: TextStyle(color: black)),
+                  label: Text("Date of birth", style: TextStyle(color: black)),
                   prefixIcon: Icon(Icons.date_range_rounded, color: black),
                 ),
               ),
               const SizedBox(height: 20),
               TextFormField(
-                controller: _controller,
+                controller: _genreController,
                 enabled: setEnabled,
                 focusNode: FocusNode(),
                 decoration: InputDecoration(
@@ -85,13 +104,13 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                     borderRadius: BorderRadius.circular(100),
                     borderSide: BorderSide(color: black),
                   ),
-                  label: Text("sesso", style: TextStyle(color: black)),
+                  label: Text("Genre", style: TextStyle(color: black)),
                   prefixIcon: Icon(Icons.male_rounded, color: black),
                 ),
               ),
               const SizedBox(height: 20),
               TextFormField(
-                controller: _controller,
+                controller: _passwordController,
                 enabled: setEnabled,
                 focusNode: FocusNode(),
                 decoration: InputDecoration(
