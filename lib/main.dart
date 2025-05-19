@@ -23,7 +23,7 @@ class WikiApp extends StatelessWidget {
         primarySwatch: teal,
       ),
       debugShowCheckedModeBanner: false,
-      color: Colors.blue,
+      color: teal,
       home: SignUpPage(),
     );
   }

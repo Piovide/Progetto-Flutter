@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:progetto_flutter/constants/colors.dart';
 import 'package:progetto_flutter/utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
+
+// TODO: *PER CEO* style the text fields like the profile page
 
 class SignInPage extends StatefulWidget {
   @override
@@ -18,7 +21,7 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign In'),
-        backgroundColor: Colors.blue,
+        backgroundColor: teal,
         centerTitle: true,
       ),
       body: Center(
@@ -93,7 +96,7 @@ class _SignInPageState extends State<SignInPage> {
                 },
                 child: Text(
                   'You don\'t have an account? Register',
-                  style: TextStyle(color: Colors.blue),
+                  style: TextStyle(color: teal),
                 ),
               ),
             ),
@@ -113,7 +116,7 @@ class _SignInPageState extends State<SignInPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  backgroundColor: Colors.blue),
+                  backgroundColor: teal),
               child: Text(
                 'Sign In',
                 style: TextStyle(color: Colors.black),
