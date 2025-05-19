@@ -70,6 +70,16 @@ void saveUserData(Map<String, dynamic> userData) async {
   }
 }
 
+Future<Map<String, dynamic>> getUserData() async {
+  final prefs = await SharedPreferences.getInstance();
+  final keys = prefs.getKeys();
+  Map<String, dynamic> userData = {};
+  for (var key in keys) {
+    userData[key] = prefs.get(key);
+  }
+  return userData;
+}
+
 void saveUUID(String uuid) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString('uuid', uuid);
