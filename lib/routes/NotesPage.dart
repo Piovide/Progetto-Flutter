@@ -258,11 +258,11 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
           'contenuto': _controller.text,
         },
       );
-
-      showSnackBar(context, 'Nota salvata!', 2);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nota salvata!')),
-      );
+      if (result['status'] == 200) { 
+        showSnackBar(context, 'Nota salvata!', 2);
+      } else {
+        showSnackBar(context, 'Errore durante il salvataggio!', 2);
+      }
     }
 
     if (isPhone) {

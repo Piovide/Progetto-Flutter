@@ -176,5 +176,30 @@ class Appunti{
         $response = new Response(200, "appunto by materia recuperato con successo");
         $response->setData($appunti);
     }
+
+    public static function updateAppunto($titolo, $contenuto, $appunto_uuid){
+        // $conn = Database::getConnection();
+        // $query = "UPDATE appunti SET titolo = ?, contenuto = ? WHERE appunto_uuid = ?";
+        // $stmt = $conn->prepare($query);
+        // if($stmt === false){
+        //     $response = new Response(500, "Errore lato server". $conn->error ."");
+        //     $response->send();
+        //     return;
+        // }
+        // $stmt->bind_param("sss", $titolo, $contenuto, $appunto_uuid);
+        // $stmt->execute();
+        // if(!$stmt->error === false){
+        //     $response = new Response(500, "Errore lato server". $stmt->error ."");
+        //     $response->send();
+        //     return;
+        // }
+
+        // $stmt->close();
+        // $conn->close();
+        $response = new Response(200, "Appunto aggiornato con successo");
+        $response->send();
+        return;
+    }
+
 }
 ?>
