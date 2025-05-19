@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:progetto_flutter/utilz/Utilz.dart';
+import 'package:progetto_flutter/utilz/WebUtilz.dart';
 
 class Notespage extends StatefulWidget {
-  const Notespage({Key? key}) : super(key: key);
-
+  final Map<String, dynamic> data;
+  const Notespage({super.key, this.data = const {}});
   @override
   State<Notespage> createState() => _NotesState();
 }
 
 class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
-  final TextEditingController _controller = TextEditingController();
+  late final TextEditingController _controller;
   late TabController _tabController;
   final ScrollController _editorScrollController = ScrollController();
   final ScrollController _previewScrollController = ScrollController();
@@ -17,10 +19,15 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    final contenuto =
+        widget.data.containsKey('contenuto') && widget.data['contenuto'] != null
+            ? widget.data['contenuto']
+            : '';
+    _controller = TextEditingController(text: contenuto);
     _controller.addListener(() {
       setState(() {});
     });
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -163,7 +170,11 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
               'icon': Icons.horizontal_rule,
               'left': '\n---\n'
             },
-            // {'label': 'Image', 'icon': Icons.image, 'left': '![Alt text](url)'},
+            {
+              'label': 'Image (coming soon)',
+              'icon': Icons.image,
+              'left': '![Alt text](url)'
+            },
           ],
         ),
       ],
@@ -231,11 +242,40 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final isPhone = MediaQuery.of(context).size.width < 600;
+    final title =
+        widget.data.containsKey('titolo') && widget.data['titolo'] != null
+            ? widget.data['titolo']
+            : 'Markdown Editor';
+    void onSave() async {
+      final api = WebUtilz();
+      final result = await api.request(
+        endpoint: 'NOTE',
+        action: 'UPDATE',
+        method: 'POST',
+        body: {
+          'id': widget.data['id'],
+          'titolo': title,
+          'contenuto': _controller.text,
+        },
+      );
+
+      showSnackBar(context, 'Nota salvata!', 2);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Nota salvata!')),
+      );
+    }
 
     if (isPhone) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text("Markdown Editor"),
+          title: Text(title),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.save),
+              tooltip: 'Salva',
+              onPressed: onSave,
+            ),
+          ],
           bottom: TabBar(
             controller: _tabController,
             tabs: const [
@@ -254,7 +294,16 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
       );
     } else {
       return Scaffold(
-        appBar: AppBar(title: const Text("Markdown Editor")),
+        appBar: AppBar(
+          title: Text(title),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.save),
+              tooltip: 'Salva',
+              onPressed: onSave,
+            ),
+          ],
+        ),
         body: Row(
           children: [
             Expanded(child: buildEditor()),

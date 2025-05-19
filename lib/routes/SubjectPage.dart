@@ -79,9 +79,9 @@ class _SubjectState extends State<Subjectpage> {
                           return InkWell(
                               onTap: () {
                                 navigateToPage(context, 'notes', false,
-                                arguments: {
-                                  'info': subjectInfo,
-                                  });
+                                    arguments: {
+                                      'data': subjectInfo,
+                                    });
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: NotesCardWidget(subjectInfo: subjectInfo));
