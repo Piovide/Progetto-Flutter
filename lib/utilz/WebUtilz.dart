@@ -34,6 +34,9 @@ class WebUtilz {
         case 'POST':
           response =
               await http.post(url, headers: defaultHeaders, body: encodedBody);
+          print("----------------------------------------------------------");
+          print(response.body);
+          print("----------------------------------------------------------");
           break;
         case 'PUT':
           response =
@@ -46,11 +49,11 @@ class WebUtilz {
         default:
           throw Exception('Metodo HTTP non supportato: $method');
       }
-      
+
       return json.decode(response.body);
-      
     } catch (e) {
       print(e.toString());
+
       return {
         'success': false,
         'message': 'Errore di connessione (Lanciato WebUtilz R. 62): $e',

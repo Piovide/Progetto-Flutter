@@ -28,14 +28,9 @@ class AppuntiMailer{
         $this->mailer = new Mailer($this->transport);
     }
     public function sendConfirmationEmail($toEmail, $toName, $token) {
-        // global $config;
+
         $config = require 'config.php';
-        // Controllo spam
-        // if ($this->spamCheck()) {
-        //     new Response(429, "Hai raggiunto il limite di invii. Riprova più tardi.")->send();
-        //     return false;
-        // }
-        $confirmationLink = 'https://tuosito.it/verify.php?token=' . urlencode($token);
+        $confirmationLink = 'http://localhost/Progetto-Flutter/back/php/utilz/verify.php?token=' . $token;
 
         $email = (new Email())
             ->from(sprintf('%s <%s>', $config['from_name'], $config['smtp_user']))
@@ -43,8 +38,8 @@ class AppuntiMailer{
             ->subject('Conferma il tuo account')
             ->html("
                 <h2>Ciao $toName!</h2>
-                <p>Grazie per esserti registrato.</p>
-                <p>Clicca <a href='$confirmationLink'>qui</a> per confermare il tuo account:</p>
+                <p>Grazie per esserti registrato</p>
+                <p>Clicca <a href='$confirmationLink'>clicca qui!!</a> per confermare il tuo account:</p>
                 <p>Se non sei stato tu, ignora questa email.</p>
             ")
             ->text("Clicca sul seguente link per confermare il tuo account: $confirmationLink");

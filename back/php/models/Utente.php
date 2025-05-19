@@ -16,46 +16,55 @@ class Utente {
     private String $bio;
     private String $URI_immagineProfilo;
 
-    public function Utente(String $utente_uuid, String $username , String $nome, String $cognome, String $dataNascita, String $email, String $password, String $ruolo, String $bio): void{
-        $this->utente_uuid = $utente_uuid;
-        $this->username = $username;
-        $this->nome = $nome;
-        $this->cognome = $cognome;
-        $this->dataNascita = $cognome;
-        $this->email = $email;
-        $this->password = $password;
-        $this->ruolo = $ruolo;
-        $this->bio = $bio;
+
+    public function Utente(){
+        super();
     }
-    public function createTempUser($username, $nome, $cognome, $email, $password) {
+    public static function createTempUser($username, $nome, $cognome, $email, $password) {
         $conn = Database::getConnection();
-        $query = "INSERT INTO utenti_temporanei (username, nome, cognome, data_nascita, sesso, email, password, token_verifica) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $token = bin2hex(random_bytes(16));
+
+        $query = "INSERT INTO utenti_temporanei (uuid, username, nome, cognome, email, password_hash, token_verifica, data_creazione) 
+                  VALUES (uuid(), ?, ?, ?, ?, ?, ?, NOW())";
         $stmt = $conn->prepare($query);
         if ($stmt === false) {
-            die("Errore preparazione query: " . $conn->error);
+            http_response_code(500);
+            echo json_encode(['status' => 500, 'error' => $conn->error]);
+            $conn->close();
+            exit;
         }
-        $token = bin2hex(random_bytes(16));
-        $stmt->bind_param("ssssssss", $username, $nome, $cognome, $email, $password, $token);
+        $stmt->bind_param("ssssss", $username, $nome, $cognome, $email, $password, $token);
         $stmt->execute();
         if ($stmt->error) {
-            die("Errore esecuzione query: " . $stmt->error);
+            http_response_code(500);
+            echo json_encode(['status' => 500, 'error' => $stmt->error]);
+            $stmt->close();
+            $conn->close();
+            exit;
         }
         $stmt->close();
         $conn->close();
         return $token;
     }
 
-    public function createUser($username, $nome, $cognome, $dataNascita, $sesso, $email, $password) {
+    public function createUser($username, $nome, $cognome, $email, $password) {
         $conn = Database::getConnection();
-        $query = "INSERT INTO utenti (username, nome, cognome, data_nascita, sesso, email, password_hash) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO utenti (uuid, username, nome, cognome, email, password_hash) VALUES (uuid(), ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         if ($stmt === false) {
-            die("Errore preparazione query: " . $conn->error);
+            http_response_code(500);
+            echo json_encode(['status' => 500, 'error' => $conn->error]);
+            $conn->close();
+            exit;
         }
-        $stmt->bind_param("sssssss", $username, $nome, $cognome, $dataNascita, $sesso, $email, $password);
+        $stmt->bind_param("sssss", $username, $nome, $cognome, $email, $password);
         $stmt->execute();
         if ($stmt->error) {
-            die("Errore esecuzione query: " . $stmt->error);
+            http_response_code(500);
+            echo json_encode(['status' => 500, 'error' => $stmt->error]);
+            $stmt->close();
+            $conn->close();
+            exit;
         }
         $stmt->close();
         $conn->close();
@@ -66,12 +75,16 @@ class Utente {
         $query = "SELECT * FROM utenti WHERE utente_uuid = ?";
         $stmt = $conn->prepare($query);
         if ($stmt === false) {
-            die("Errore preparazione query: " . $conn->error);
+            http_response_code(500);
+            echo json_encode(['status' => 500, 'error' => $conn->error]);
+            exit;
         }
-        $stmt->bind_param("i", $utente_uuid);
+        $stmt->bind_param("s", $utente_uuid); // UUID è stringa!
         $stmt->execute();
         if ($stmt->error) {
-            die("Errore esecuzione query: " . $stmt->error);
+            http_response_code(500);
+            echo json_encode(['status' => 500, 'error' => $stmt->error]);
+            exit;
         }
         $result = $stmt->get_result();
         if ($result->num_rows > 0) {

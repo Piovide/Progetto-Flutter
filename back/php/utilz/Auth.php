@@ -3,6 +3,8 @@ define('ROOT', __DIR__);
 require_once ROOT . '/Database.php';
 require_once ROOT . '/Response.php';
 
+define('MODEL_DIR', dirname(__DIR__));
+require MODEL_DIR . '/models/Utente.php';
 class Auth {
     private $conn;
 
@@ -12,10 +14,11 @@ class Auth {
 
     public function register($username, $nome, $cognome, $email, $password) {
         require_once ROOT . '/AppuntiMailer.php';
+        $token=Utente::createTempUser($username, $nome, $cognome, $email, $password);
+
         // $utente = new Utente();
         // $utente->createTempUser($username, $nome, $cognome, $dataNascita, $sesso, $email, $password);
         $mailer = new AppuntiMailer();
-        $token = bin2hex(random_bytes(16));
         $mailResult = $mailer->sendConfirmationEmail($email, $nome, $token);
         if (!$mailResult) {
             $response = new Response(500, "Errore durante l'invio dell'email di conferma.");
