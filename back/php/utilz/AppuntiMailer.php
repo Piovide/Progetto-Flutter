@@ -3,10 +3,11 @@ use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
 
-require './vendor/autoload.php';
+require '../vendor/autoload.php';
 
 
 $config = require 'config.php';
+
 class AppuntiMailer{
 
     private $mailer;
