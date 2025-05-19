@@ -11,10 +11,7 @@ class Database {
     }
 
     public static function getConnection() {
-        if (!self::$instance) {
-            self::$instance = new Database();
-        }
-        return self::$instance->connection;
+        return $connection = new mysqli('localhost', 'root', '', 'wiki_db');
     }
 
     public function close() {
@@ -22,24 +19,6 @@ class Database {
             $this->connection->close();
             self::$instance = null;
         }
-    }
-
-    public function performQuery($query, $params) {
-        $stmt = $this->connection->prepare($query);
-        if ($stmt === false) {
-            die("Errore preparazione query: " . $this->connection->error);
-        }
-
-        if ($params) {
-            $stmt->bind_param(...$params);
-        }
-
-        $stmt->execute();
-        if ($stmt->error) {
-            die("Errore esecuzione query: " . $stmt->error);
-        }
-
-        return $stmt->get_result();
     }
 
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:progetto_flutter/constants/colors.dart';
 import 'package:progetto_flutter/routes/HomePage.dart';
 import 'package:progetto_flutter/routes/NotesPage.dart';
+import 'package:progetto_flutter/routes/SignUpPage.dart';
 // import 'package:progetto_flutter/routes/ProfilePage.dart';
 // import 'routes/SignInPage.dart';
 // import 'routes/SignUpPage.dart';
@@ -23,7 +24,7 @@ class WikiApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       color: Colors.blue,
-      home: Notespage(),
+      home: SignUpPage(),
     );
   }
 }
