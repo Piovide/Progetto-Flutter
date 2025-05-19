@@ -87,11 +87,11 @@ try {
         case 'NOTIFICATION':
             include_once './models/Notifiche.php';
             $utente_uuid = $_POST['utente_uuid'] ?? null;
-            if (!$utente_uuid) {
-                $response = new Response(400, "Missing utente_uuid");
-                $response->send();
-                exit;
-            }
+            // if (!$utente_uuid) {
+            //     $response = new Response(400, "Missing utente_uuid");
+            //     $response->send();
+            //     exit;
+            // }
             if ($action === 'GET') {
                 Notifica::getNotifiche($utente_uuid);
             } else if ($action === 'INSERT') {
