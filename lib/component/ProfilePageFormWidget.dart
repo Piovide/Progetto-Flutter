@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../utilz/Utilz.dart';
 
+// TODO: modify the form to make a double check on the password (check with if-else statements)
+
 class ProfilePageFormWidget extends StatefulWidget {
   @override
   _EnableFormState createState() => _EnableFormState();
@@ -9,6 +11,7 @@ class ProfilePageFormWidget extends StatefulWidget {
 
 class _EnableFormState extends State<ProfilePageFormWidget> {
   bool setEnabled = false;
+  bool showSaveButton = false;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
@@ -20,6 +23,8 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
 
     saveUserData(
       {
+        "username" : "pierino.rossi",
+        "email" : "pierino.rossi@gmail.com",
         "name" : "Pierino",
         "surname" : "Rossi",
         "dateOfBirth" : "01/01/2000",
@@ -124,12 +129,33 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                 ),
               ),
               const SizedBox(height: 20),
+              showSaveButton ?
+              SizedBox(
+                width: 200,
+                child: ElevatedButton(
+                  onPressed: (){
+                    setState(() {
+                      showSaveButton = !showSaveButton;
+                      setEnabled = !setEnabled;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: teal,
+                    side: BorderSide.none,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ),
+                  child: Text("Salva", style: TextStyle(color: Colors.white)),
+                ),
+              ):
               SizedBox(
                 width: 200,
                 child: ElevatedButton(
                   onPressed: (){
                     setState(() {
                       setEnabled = !setEnabled;
+                      showSaveButton = !showSaveButton;
                     });
                   },
                   style: ElevatedButton.styleFrom(
