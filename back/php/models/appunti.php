@@ -1,5 +1,5 @@
 <?php
-class appunti{
+class Appunti{
     private String $appunto_uuid;
     private String $titolo;
     private String $contenuto;
@@ -41,9 +41,9 @@ class appunti{
     }
 
     static function getAppunti(){
-        $conn = database::getConnection();
-        $query = "SELECT * FROM appunti";
-        $ris = $conn->query($query);
+        // $conn = database::getConnection();
+        // $query = "SELECT * FROM appunti";
+        // $ris = $conn->query($query);
         // if ($stmt === false) {
         //     die("Errore lato server: " . $conn->error);
         // }

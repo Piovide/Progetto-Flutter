@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:progetto_flutter/utilz/Utilz.dart';
 import '../component/HeaderComp.dart';
-import '../component/HomePageCardWidget.dart';
+import '../component/NotesCardWidget.dart';
 import '../utilz/WebUtilz.dart';
 
 class Subjectpage extends StatefulWidget {
@@ -77,11 +78,13 @@ class _SubjectState extends State<Subjectpage> {
                           final subjectInfo = classes[index];
                           return InkWell(
                               onTap: () {
-                                // Handle tap
+                                navigateToPage(context, 'notes', false,
+                                arguments: {
+                                  'info': subjectInfo,
+                                  });
                               },
                               borderRadius: BorderRadius.circular(12),
-                              child:
-                                  HomePageCardWidget(subjectInfo: subjectInfo));
+                              child: NotesCardWidget(subjectInfo: subjectInfo));
                         },
                       );
                     });

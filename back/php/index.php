@@ -134,8 +134,46 @@ try {
                 $response->send();
                 exit;
             }
+            break;
+        case 'NOTE':
+//     CREATE TABLE appunti (
+//     uuid CHAR(36) PRIMARY KEY,
+//     titolo VARCHAR(255) NOT NULL,
+//     contenuto TEXT NOT NULL,
+//     markdown BOOLEAN DEFAULT TRUE,
+//     visibilita ENUM('pubblico', 'privato') DEFAULT 'pubblico',
+//     autore_uuid CHAR(36),
+//     materia_uuid CHAR(36),
+//     data_creazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+//     data_ultima_modifica TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+//     stato ENUM('bozza', 'pubblicato', 'in_revisione') DEFAULT 'bozza',
+//     FOREIGN KEY (autore_uuid) REFERENCES utenti(uuid) ON DELETE SET NULL,
+//     FOREIGN KEY (materia_uuid) REFERENCES materie(uuid) ON DELETE SET NULL
+// );
+
+            include_once './models/Appunti.php';
+            if ($action === 'GET') {
+                Appunti::getAppunti();
+            } else if ($action === 'INSERT') {
+                $titolo = $_POST['titolo'] ?? '';
+                $contenuto = $_POST['contenuto'] ?? '';
+                $markdown = $_POST['markdown'] ?? 1;
+                $visibilta = $_POST['visibilta'] ?? 'pubblico';
+                $autore_uuid = $_POST['autore_uuid'] ?? '';
+                $materia_uuid = $_POST['materia_uuid'] ?? '';
+                $data_creazione = $_POST['data_creazione'] ?? date('Y-m-d H:i:s');
+                $stato = $_POST['stato'] ?? 'bozza';
+                if (!$titolo || !$contenuto || !$autore_uuid || !$materia_uuid) {
+                    $response = new Response(400, "Missing titolo, contenuto, autore_uuid or materia_uuid");
+                    $response->send();
+                    exit;
+                }
+                $appunto = new Appunti(null, $titolo, $contenuto, $markdown, $visibilta, $autore_uuid, $materia_uuid, $data_creazione, $stato);
+                $appunto->inserisciAppunti();
+            }
+
         default:
-            $response = new Response(400, "Invalid endpoint");
+            $response = new Response(400, "endpoint not implemented");
             $response->send();
             exit;
     }

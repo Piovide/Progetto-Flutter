@@ -76,7 +76,7 @@ class _HomepageState extends State<Homepage> {
                           final subjectInfo = classes[index];
                           return InkWell(
                               onTap: () {
-                                navigateToPage(context, 'subject', true,
+                                navigateToPage(context, 'subject', false,
                                     arguments: {
                                       'materia': subjectInfo['nome'],
                                       'professore': subjectInfo['professore'],

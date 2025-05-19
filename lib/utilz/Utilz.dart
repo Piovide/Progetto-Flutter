@@ -5,6 +5,7 @@ import '../routes/SignUpPage.dart';
 import '../routes/HomePage.dart';
 import '../routes/ProfilePage.dart';
 import '../routes/SubjectPage.dart';
+import '../routes/NotesPage.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -25,6 +26,9 @@ void navigateToPage(BuildContext context, String pageName, bool replace, {Map<St
       break;
     case 'subject':
       page = Subjectpage(materia: arguments?['materia']);
+      break;
+    case 'notes':
+      page = Notespage();
       break;
     default:
       throw Exception('Invalid page name: $pageName');
