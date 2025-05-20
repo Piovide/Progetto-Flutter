@@ -3,8 +3,6 @@ import 'package:progetto_flutter/constants/colors.dart';
 import 'package:progetto_flutter/utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
-// TODO: *PER CEO* style the text fields like the profile page
-
 class SignInPage extends StatefulWidget {
   @override
   _SignInPageState createState() => _SignInPageState();
@@ -34,19 +32,14 @@ class _SignInPageState extends State<SignInPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            //Email TextField
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextField(
-                controller: emailUsernameController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(),
-                  hintText: 'Email or Username',
-                ),
+            //Email TextFormField
+            TextFormField(
+              controller: emailUsernameController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                label: Text('Email or Username', style: TextStyle(color: black)),
+                prefixIcon: Icon(Icons.email),
               ),
             ),
 
@@ -55,28 +48,24 @@ class _SignInPageState extends State<SignInPage> {
               height: 16,
             ),
 
-            //Password TextField
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextField(
-                controller: passwordController,
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: _isObscure,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                        _isObscure ? Icons.visibility_off : Icons.visibility),
-                    onPressed: () {
-                      _isObscure = !_isObscure;
-                      (context as Element).markNeedsBuild();
-                    },
+            //Password TextFormField            
+            TextFormField(
+              controller: passwordController,
+              keyboardType: TextInputType.visiblePassword,
+              obscureText: _isObscure,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                label: Text('Password', style: TextStyle(color: black)),
+                prefixIcon: Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isObscure ? Icons.visibility_off : Icons.visibility
                   ),
-                  border: OutlineInputBorder(),
-                  hintText: 'Password',
-                ),
+                  onPressed: () {
+                    _isObscure = !_isObscure;
+                    (context as Element).markNeedsBuild();
+                  },
+                )
               ),
             ),
 
