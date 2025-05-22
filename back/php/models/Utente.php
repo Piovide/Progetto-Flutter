@@ -16,7 +16,7 @@ class Utente {
     // private String $bio;
     // private String $URI_immagineProfilo;
 
-    public function Utente($username, $nome, $cognome, $email, $password) {
+    public function __construct($username, $nome, $cognome, $email, $password) {
         $this->username = $username;
         $this->nome = $nome;
         $this->cognome = $cognome;
@@ -61,6 +61,7 @@ class Utente {
             $response->send();
             exit;
         }
+        
         $stmt->bind_param("sssss", $this->username, $this->nome, $this->cognome, $this->email, $this->password);
         $stmt->execute();
         if ($stmt->error) {
