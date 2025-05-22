@@ -125,7 +125,21 @@ class _SignInPageState extends State<SignInPage> {
           ],
         ),
       );
-
+  void validateToken() async {
+    String? token = await getSessionToken();
+    if (token != null) {
+      final api = WebUtilz();
+      final result = await api.request(
+        endpoint: 'AUTH',
+        action: 'VALIDATE_TOKEN',
+        method: 'POST',
+        body: {'token': token},
+      );
+      if (result['status'] == 200) {
+        navigateToPage(context, 'home', true);
+      }
+    }
+  }
   void checkInputsAndLogin() {
     String emailOrUsername = emailUsernameController.text;
     String password = passwordController.text;
@@ -152,36 +166,26 @@ class _SignInPageState extends State<SignInPage> {
       Future<bool> loginUser() async {
         bool success = false;
         Map<String, dynamic> dati = {};
-        saveSessionToken('dffdsgfddsfsafdfasdfdsf');
-        String? token = await getSessionToken();
-
         final result = await api.request(
           endpoint: 'AUTH',
           action: 'LOGIN',
           method: 'POST',
           body: {
             (isUsername ? 'username' : 'email'): emailOrUsername,
-            'password': password,
-            if (token != null) 'token': token,
+            'password': password
           },
         );
         if (result['status'] == 200) {
           success = true;
-          // if (result['UUID'] != null) {
-          //   saveUUID(result['UUID']);
-          // }
           dati = result['data'];
-          // TODO: Delete this when sql is implemented
-          if (dati['username'] != null) {
-            saveUUID(dati['username']);
-            String? username = await getUUID();
-            print("questo é lo username: " + username.toString());
+          if (dati['uuid'] != null) {
+            saveUUID(dati['uuid']);
+            String? uuid = await getUUID();
+            print("questo é lo username: " + uuid.toString());
           }
 
           if (dati['token'] != null) {
             saveSessionToken(dati['token']);
-            token = await getSessionToken();
-            print("questo é il token: " + token.toString());
           }
         } else {
           success = false;
