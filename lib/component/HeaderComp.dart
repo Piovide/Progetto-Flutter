@@ -1,9 +1,9 @@
 // import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
 
 import 'package:flutter/material.dart';
-import 'package:progetto_flutter/constants/colors.dart';
-import 'package:progetto_flutter/utilz/Utilz.dart';
-import 'package:progetto_flutter/utilz/WebUtilz.dart';
+import 'package:wiki_appunti/constants/colors.dart';
+import 'package:wiki_appunti/utilz/Utilz.dart';
+import 'package:wiki_appunti/utilz/WebUtilz.dart';
 
 class HeaderComp extends AppBar implements PreferredSizeWidget {
   HeaderComp(BuildContext context, bool showIcons)
