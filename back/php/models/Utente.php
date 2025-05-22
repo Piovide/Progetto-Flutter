@@ -51,7 +51,7 @@ class Utente {
         return $token;
     }
 
-    public function createUser($username, $nome, $cognome, $email, $password) {
+    public  function createUser() {
         $conn = Database::getConnection();
         $query = "INSERT INTO utenti (uuid, username, nome, cognome, email, password_hash) VALUES (uuid(), ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
@@ -61,7 +61,7 @@ class Utente {
             $response->send();
             exit;
         }
-        $stmt->bind_param("sssss", $username, $nome, $cognome, $email, $password);
+        $stmt->bind_param("sssss", $this->username, $this->nome, $this->cognome, $this->email, $this->password);
         $stmt->execute();
         if ($stmt->error) {
             $stmt->close();

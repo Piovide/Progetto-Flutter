@@ -13,7 +13,11 @@ if (!$token) {
 }
 
 $conn = Database::getConnection();
-
+$Utente = new Utente($tempUser['username'],
+    $tempUser['nome'],
+    $tempUser['cognome'],
+    $tempUser['email'],
+    $tempUser['password_hash']);
 // Cerca l'utente temporaneo con quel token
 $query = "SELECT * FROM utenti_temporanei WHERE token_verifica = ?";
 $stmt = $conn->prepare($query);
@@ -33,13 +37,7 @@ $tempUser = $result->fetch_assoc();
 $stmt->close();
 
 // Crea l'utente definitivo
-Utente::createUser(
-    $tempUser['username'],
-    $tempUser['nome'],
-    $tempUser['cognome'],
-    $tempUser['email'],
-    $tempUser['password_hash']
-);
+$Utente->createUser();
 
 // Elimina l'utente temporaneo
 $delStmt = $conn->prepare("DELETE FROM utenti_temporanei WHERE token_verifica = ?");
