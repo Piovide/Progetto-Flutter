@@ -33,8 +33,7 @@ $tempUser = $result->fetch_assoc();
 $stmt->close();
 
 // Crea l'utente definitivo
-$utente = new Utente();
-$utente->createUser(
+Utente::createUser(
     $tempUser['username'],
     $tempUser['nome'],
     $tempUser['cognome'],
