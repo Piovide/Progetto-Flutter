@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:progetto_flutter/utilz/Utilz.dart';
+import 'package:wiki_appunti/constants/colors.dart';
+import 'package:wiki_appunti/utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -24,7 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign Up'),
-        backgroundColor: Colors.blue,
+        backgroundColor: teal,
         centerTitle: true,
       ),
       body: Center(
@@ -38,18 +39,13 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           children: [
             //Username TextField
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextField(
-                controller: usernameController,
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.person),
-                  border: OutlineInputBorder(),
-                  hintText: 'Username',
-                ),
+            TextFormField(
+              controller: usernameController,
+              keyboardType: TextInputType.name,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                label: Text('Username', style: TextStyle(color: black)),
+                prefixIcon: Icon(Icons.person),
               ),
             ),
 
@@ -59,18 +55,13 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
 
             //Surname TextField
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextField(
-                controller: surnameController,
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.badge),
-                  border: OutlineInputBorder(),
-                  hintText: 'Surname',
-                ),
+            TextFormField(
+              controller: surnameController,
+              keyboardType: TextInputType.name,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                label: Text('Surname', style: TextStyle(color: black)),
+                prefixIcon: Icon(Icons.badge),
               ),
             ),
 
@@ -80,20 +71,15 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
 
             //Name TextField
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+            TextFormField(
+              controller: nameController,
+              keyboardType: TextInputType.name,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                label: Text('Name', style: TextStyle(color: black)),
+                prefixIcon: Icon(Icons.badge),
               ),
-              child: TextField(
-                controller: nameController,
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.badge),
-                  border: OutlineInputBorder(),
-                  hintText: 'Name',
-                ),
-              ),
-            ),
+            ),            
 
             //SizedBox for spacing
             SizedBox(
@@ -101,18 +87,13 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
 
             //Email TextField
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextField(
-                controller: emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email),
-                  border: OutlineInputBorder(),
-                  hintText: 'Email',
-                ),
+            TextFormField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                label: Text('Email', style: TextStyle(color: black)),
+                prefixIcon: Icon(Icons.email),
               ),
             ),
 
@@ -122,26 +103,21 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
 
             //Password TextField
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextField(
-                controller: passwordController,
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: _isObscure,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                        _isObscure ? Icons.visibility_off : Icons.visibility),
-                    onPressed: () {
-                      _isObscure = !_isObscure;
-                      (context as Element).markNeedsBuild();
-                    },
-                  ),
-                  border: OutlineInputBorder(),
-                  hintText: 'Password',
+            TextFormField(
+              controller: passwordController,
+              keyboardType: TextInputType.visiblePassword,
+              obscureText: _isObscure,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                label: Text('Password', style: TextStyle(color: black)),
+                prefixIcon: Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                      _isObscure ? Icons.visibility_off : Icons.visibility),
+                  onPressed: () {
+                    _isObscure = !_isObscure;
+                    (context as Element).markNeedsBuild();
+                  },
                 ),
               ),
             ),
@@ -152,43 +128,41 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
 
             //Repeat Password TextField
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: TextField(
-                controller: repeatPasswordController,
-                keyboardType: TextInputType.visiblePassword,
-                onChanged: (value) {
-                  checkPasswordInput(value);
-                },
-                obscureText: _isObscure,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.lock),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                        _isObscure ? Icons.visibility_off : Icons.visibility),
-                    onPressed: () {
-                      _isObscure = !_isObscure;
-                      (context as Element).markNeedsBuild();
-                    },
-                  ),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color:
-                            checkPasswordInput(repeatPasswordController.text)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color:
-                            checkPasswordInput(repeatPasswordController.text)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color:
-                            checkPasswordInput(repeatPasswordController.text)),
-                  ),
-                  hintText: 'Repeat Password',
+            TextFormField(
+              controller: repeatPasswordController,
+              keyboardType: TextInputType.visiblePassword,
+              onChanged: (value) {
+                checkPasswordInput(value);
+              },
+              obscureText: _isObscure,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(100),
+                  borderSide: BorderSide(
+                      color:
+                          checkPasswordInput(repeatPasswordController.text)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(100),
+                  borderSide: BorderSide(
+                      color:
+                          checkPasswordInput(repeatPasswordController.text)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(100),
+                  borderSide: BorderSide(
+                      color:
+                          checkPasswordInput(repeatPasswordController.text)),
+                ),
+                label: Text('Repeat Password', style: TextStyle(color: black)),
+                prefixIcon: Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                      _isObscure ? Icons.visibility_off : Icons.visibility),
+                  onPressed: () {
+                    _isObscure = !_isObscure;
+                    (context as Element).markNeedsBuild();
+                  },
                 ),
               ),
             ),
@@ -209,7 +183,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 },
                 child: Text(
                   'Already have an account? Sign In',
-                  style: TextStyle(color: Colors.blue),
+                  style: TextStyle(color: teal),
                 ),
               ),
             ),
@@ -229,7 +203,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  backgroundColor: Colors.blue),
+                  backgroundColor: teal),
               child: Text(
                 'Sign Up',
                 style: TextStyle(color: Colors.black),

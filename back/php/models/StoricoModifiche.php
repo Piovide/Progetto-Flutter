@@ -27,13 +27,12 @@ class StoricoModifiche {
         if ($stmt === false) {
             die("Errore lato server: " . $conn->error);
         }
-
+        $markdownVal = $this->markdown ? '1' : '0';
         $stmt->bind_param(
             "ssssss",
             $this->titolo,
             $this->contenuto,
-            //assolutamente zero idee su come funziona sta roba
-            $markdown = $this->markdown ? '1' : '0',
+            $markdownVal,
             $this->visibilita,
             $this->stato,
             $this->data_modifica

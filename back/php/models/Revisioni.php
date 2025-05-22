@@ -16,14 +16,14 @@ class Revisione {
 
     public function inserisciRevisione() {
         $conn = Database::getConnection();
-        $query = "INSERT INTO revisioni (uuid, appunto_uuid, revisore_uuid, commento, data_revisionamento) VALUES (?, ?, ?, ?, ?)";
+        $query = "INSERT INTO revisioni (uuid, appunto_uuid, revisore_uuid, commento, data_revisionamento) VALUES (UUID(), ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
 
         if ($stmt === false) {
             die("Errore lato server: " . $conn->error);
         }
 
-        $stmt->bind_param("sssss", $this->uuid, $this->appunto_uuid, $this->revisore_uuid, $this->commento, $this->data_revisionamento);
+        $stmt->bind_param("ssss", $this->appunto_uuid, $this->revisore_uuid, $this->commento, $this->data_revisionamento);
 
         $stmt->execute();
 

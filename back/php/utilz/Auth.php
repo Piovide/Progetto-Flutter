@@ -14,7 +14,8 @@ class Auth {
 
     public function register($username, $nome, $cognome, $email, $password) {
         require_once ROOT . '/AppuntiMailer.php';
-        $token=Utente::createTempUser($username, $nome, $cognome, $email, $password);
+        $utente = new Utente($username, $nome, $cognome, $email, $password);
+        $token = $utente->createTempUser($username, $nome, $cognome, $email, $password);
 
         // $utente = new Utente();
         // $utente->createTempUser($username, $nome, $cognome, $dataNascita, $sesso, $email, $password);

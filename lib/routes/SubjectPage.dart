@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:progetto_flutter/utilz/Utilz.dart';
+import 'package:wiki_appunti/utilz/Utilz.dart';
 import '../component/HeaderComp.dart';
 import '../component/NotesCardWidget.dart';
 import '../utilz/WebUtilz.dart';
@@ -79,9 +79,9 @@ class _SubjectState extends State<Subjectpage> {
                           return InkWell(
                               onTap: () {
                                 navigateToPage(context, 'notes', false,
-                                arguments: {
-                                  'info': subjectInfo,
-                                  });
+                                    arguments: {
+                                      'data': subjectInfo,
+                                    });
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: NotesCardWidget(subjectInfo: subjectInfo));

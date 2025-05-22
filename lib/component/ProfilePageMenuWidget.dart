@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:progetto_flutter/constants/colors.dart';
+import 'package:wiki_appunti/constants/colors.dart';
 import 'ProfileMenuWidget.dart';
 
 class ProfilePageMenuWidget extends StatelessWidget {
@@ -12,10 +12,6 @@ class ProfilePageMenuWidget extends StatelessWidget {
     return Column(
       children: [
         ProfileMenuWidget(title: "Settings", icon: Icons.settings, onPress: (){}),
-        const SizedBox(height: 30),
-        ProfileMenuWidget(title: "Wallet", icon: Icons.wallet, onPress: (){}),
-        const SizedBox(height: 30),
-        ProfileMenuWidget(title: "User Management", icon: Icons.verified_user_rounded, onPress: (){}),
         const SizedBox(height: 30),
         ProfileMenuWidget(title: "Informations", icon: Icons.info, onPress: (){}),
         const SizedBox(height: 30),

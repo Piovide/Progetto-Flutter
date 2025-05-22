@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:progetto_flutter/utilz/Utilz.dart';
+import 'package:wiki_appunti/utilz/Utilz.dart';
 import '../component/HeaderComp.dart';
 import '../component/HomePageCardWidget.dart';
 import '../utilz/WebUtilz.dart';
