@@ -43,12 +43,13 @@ $utente->createUser(
 );
 
 // Elimina l'utente temporaneo
-$delStmt = $conn->prepare("DELETE FROM utenti_temporanei WHERE uuid = ?");
-$delStmt->bind_param("s", $tempUser['uuid']);
+$delStmt = $conn->prepare("DELETE FROM utenti_temporanei WHERE token_verifica = ?");
+$delStmt->bind_param("s", $token);
 $delStmt->execute();
 $delStmt->close();
 
 $conn->close();
+
 
 // Risposta di successo
 echo json_encode(['status' => 200, 'message' => 'Account confermato con successo! Ora puoi effettuare il login.']);
