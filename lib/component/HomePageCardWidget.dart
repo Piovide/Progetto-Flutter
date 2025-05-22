@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:progetto_flutter/constants/colors.dart';
+import 'package:wiki_appunti/constants/colors.dart';
 
 class HomePageCardWidget extends StatelessWidget {
   const HomePageCardWidget({

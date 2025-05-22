@@ -9,7 +9,8 @@ import '../routes/NotesPage.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-void navigateToPage(BuildContext context, String pageName, bool replace, {Map<String, dynamic>? arguments}) {
+void navigateToPage(BuildContext context, String pageName, bool replace,
+    {Map<String, dynamic>? arguments}) {
   Widget page;
   switch (pageName) {
     case 'signin':
@@ -28,7 +29,7 @@ void navigateToPage(BuildContext context, String pageName, bool replace, {Map<St
       page = Subjectpage(materia: arguments?['materia']);
       break;
     case 'notes':
-      page = Notespage();
+      page = Notespage(data: arguments?['data']);
       break;
     default:
       throw Exception('Invalid page name: $pageName');
@@ -47,10 +48,17 @@ void navigateToPage(BuildContext context, String pageName, bool replace, {Map<St
   }
 }
 
-void showSnackBar(BuildContext context, String message, int duration) {
+void showSnackBar(BuildContext context, String message, int duration,
+    {Color? backgroundColor}) {
   final snackBar = SnackBar(
     content: Text(message),
     duration: Duration(seconds: duration),
+    backgroundColor: backgroundColor ?? Colors.blueGrey,
+    behavior: SnackBarBehavior.floating,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16),
+    ),
+    margin: const EdgeInsets.only(bottom: 24, left: 16, right: 16),
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
