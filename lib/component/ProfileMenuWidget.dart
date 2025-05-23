@@ -20,6 +20,9 @@ class ProfileMenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(100)
+      ),
       onTap: onPress,
       leading: Container(
         width: 40,

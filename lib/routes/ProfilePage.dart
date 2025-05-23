@@ -25,6 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
             // isMobile() ?
             Row(
+              spacing: 10,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Expanded(
