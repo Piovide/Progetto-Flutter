@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:progetto_flutter/constants/colors.dart';
-import 'package:progetto_flutter/routes/HomePage.dart';
-import 'package:progetto_flutter/routes/NotesPage.dart';
-import 'package:progetto_flutter/routes/SignUpPage.dart';
-// import 'package:progetto_flutter/routes/ProfilePage.dart';
+import 'package:wiki_appunti/constants/colors.dart';
+import 'package:wiki_appunti/routes/HomePage.dart';
+import 'package:wiki_appunti/routes/NotesPage.dart';
+import 'package:wiki_appunti/routes/ProfilePage.dart';
+import 'package:wiki_appunti/routes/SignInPage.dart';
+import 'package:wiki_appunti/routes/SignUpPage.dart';
+// import 'package:wiki_appunti/routes/ProfilePage.dart';
 // import 'routes/SignInPage.dart';
 // import 'routes/SignUpPage.dart';
 // import 'routes/HomePage.dart';
@@ -24,7 +26,7 @@ class WikiApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       color: teal,
-      home: SignUpPage(),
+      home: SignInPage(),
     );
   }
 }

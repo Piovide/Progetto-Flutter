@@ -7,11 +7,8 @@ class Appunti{
     private String $visibilta;
     private String $autore_uuid;
     private String $materia_uuid;
-    private String $data_creazione;
-    private String $data_ultima_modifica;
-    private String $stato;
 
-    public function Appunti(String $appunto_uuid, String $titolo, String $contenuto, int $markdown, String $visibilita, String $autore_uuid, String $materia_uuid, String $data_creazione, String $stato ){
+    public function Appunti(String $appunto_uuid, String $titolo, String $contenuto, int $markdown, String $visibilita, String $autore_uuid, String $materia_uuid){
         $this->appunto_uuid = $appunto_uuid;
         $this->titolo = $titolo;
         $this->contenuto = $contenuto;
@@ -19,28 +16,32 @@ class Appunti{
         $this->visibilta = $visibilita;
         $this->autore_uuid = $autore_uuid;
         $this->materia_uuid = $materia_uuid;
-        $this->data_creazione = $data_creazione;
-        $this->stato = $stato;
     }
 
     public function inserisciAppunti(){
         $conn = Database::getConnection();
-        $query = "INSERT INTO appunti values(?,?,?,?,?,?,?,'null',?,?,?)"; 
+        $query = "INSERT INTO appunti (uuid, titolo, contenuto, markdown, visibilita, autore_uuid, materia_uuid) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         if($stmt === false){
+            // $response = new Response(500, "Errore lato server". $conn->error ."");
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
             die("Errore lato server". $conn->error ."");
         }
-        $stmt->bind_param("sssisssss", $this->appunto_uuid, $this->titolo, $this->contenuto, $this->markdown, $this->visibilta, $this->autore_uuid, $this->materia_uuid, $this->data_creazione, $this->stato);
+        $stmt->bind_param("ssisss", $this->titolo, $this->contenuto, $this->markdown, $this->visibilta, $this->autore_uuid, $this->materia_uuid);
         $stmt->execute();
         if(!$stmt->error === false){
-            die("Errore lato server". $stmt->error ."");
+            // $response = new Response(500, "Errore lato server". $stmt->error ."");
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
+            die("Errore lato server ". $stmt->error ."");
         }
 
         $stmt->close();
         $conn->close();
     }
 
-    static function getAppunti(){
+    public static function getAppunti(){
         // $conn = database::getConnection();
         // $query = "SELECT * FROM appunti";
         // $ris = $conn->query($query);
@@ -99,7 +100,7 @@ class Appunti{
                     ]);
                     $response->send();
     }
-    static function getAppuntiById(string $appunto_uuid){
+    public static function getAppuntiById(string $appunto_uuid){
         $conn = database::getConnection();
         $query = "SELECT * FROM appunti WHERE appunto_uuid = ?";
         $stmt = $conn->prepare($query);
@@ -121,7 +122,7 @@ class Appunti{
             return;
         }
 
-        while($row = $stmt->fetch_assoc){
+        while($row = $result->fetch_assoc()){
             $appunti[]=[
                 'appunto_uuid' =>$row['appunto_uuid'],
                 'titolo' => $row['titolo'],
@@ -138,16 +139,22 @@ class Appunti{
         $response->setData($appunti);
     }
 
-    static function getAppuntiByMateria(string $materia_uuid){
+    public static function getAppuntiByMateria(string $materia_uuid){
         $conn = database::getConnection();
         $query = "SELECT * FROM appunti WHERE materia_uuid = ?";
         $stmt = $conn->prepare($query);
         if($stmt === false){
+            // $response = new Response(500, "Errore lato server". $conn->error ."");
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
             die("Errore lato server". $conn->error ."");
         }
         $stmt->bind_param("s", $materia_uuid);
         $stmt->execute();
         if(!$stmt->error === false){
+            // $response = new Response(500, "Errore lato server". $stmt->error ."");
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
             die("Errore lato server". $stmt->error ."");
         }
 
@@ -160,7 +167,7 @@ class Appunti{
             return;
         }
 
-        while($row = $stmt->fetch_assoc){
+        while($row = $result->fetch_assoc()){
             $appunti[]=[
                 'appunto_uuid' =>$row['appunto_uuid'],
                 'titolo' => $row['titolo'],
@@ -182,14 +189,16 @@ class Appunti{
         // $query = "UPDATE appunti SET titolo = ?, contenuto = ? WHERE appunto_uuid = ?";
         // $stmt = $conn->prepare($query);
         // if($stmt === false){
-        //     $response = new Response(500, "Errore lato server". $conn->error ."");
+        //     // $response = new Response(500, "Errore lato server". $conn->error ."");
+        //     $response = new Response(500, "Errore lato server riprovare più tardi");
         //     $response->send();
         //     return;
         // }
         // $stmt->bind_param("sss", $titolo, $contenuto, $appunto_uuid);
         // $stmt->execute();
         // if(!$stmt->error === false){
-        //     $response = new Response(500, "Errore lato server". $stmt->error ."");
+        //     // $response = new Response(500, "Errore lato server". $stmt->error ."");
+        //     $response = new Response(500, "Errore lato server riprovare più tardi");
         //     $response->send();
         //     return;
         // }

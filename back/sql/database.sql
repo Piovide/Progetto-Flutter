@@ -12,6 +12,9 @@
 -- sessioni_login: memorizza i token attivi per login persistente e tracciamento.
 -- amici: sistema base per le relazioni sociali tra utenti (richieste, accettazioni, ecc).
 
+CREATE DATABASE IF NOT EXISTS wiki_db;
+USE wiki_db;
+
 CREATE TABLE utenti (
     uuid CHAR(36) PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -154,4 +157,5 @@ ON SCHEDULE EVERY 1 DAY
 DO
 BEGIN
     DELETE FROM notifiche WHERE data_invio < NOW() - INTERVAL 30 DAY;
+    DELETE FROM utenti_temporanei WHERE data_creazione < (NOW() - INTERVAL 1 HOUR);
 END;

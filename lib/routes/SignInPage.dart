@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:progetto_flutter/constants/colors.dart';
-import 'package:progetto_flutter/utilz/Utilz.dart';
+import 'package:wiki_appunti/constants/colors.dart';
+import 'package:wiki_appunti/utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
 class SignInPage extends StatefulWidget {
@@ -13,6 +13,19 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController passwordController = TextEditingController();
   bool _isObscure = true;
   String errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getSessionToken().then((token) {
+      if (token != null) {
+        print("questo é il token dafan: " + token.toString());
+        validateToken(token);
+      } else {
+        print("token nullo");
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +50,10 @@ class _SignInPageState extends State<SignInPage> {
               controller: emailUsernameController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
-                label: Text('Email or Username', style: TextStyle(color: black)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100)),
+                label:
+                    Text('Email or Username', style: TextStyle(color: black)),
                 prefixIcon: Icon(Icons.email),
               ),
             ),
@@ -48,25 +63,24 @@ class _SignInPageState extends State<SignInPage> {
               height: 16,
             ),
 
-            //Password TextFormField            
+            //Password TextFormField
             TextFormField(
               controller: passwordController,
               keyboardType: TextInputType.visiblePassword,
               obscureText: _isObscure,
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
-                label: Text('Password', style: TextStyle(color: black)),
-                prefixIcon: Icon(Icons.lock),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isObscure ? Icons.visibility_off : Icons.visibility
-                  ),
-                  onPressed: () {
-                    _isObscure = !_isObscure;
-                    (context as Element).markNeedsBuild();
-                  },
-                )
-              ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(100)),
+                  label: Text('Password', style: TextStyle(color: black)),
+                  prefixIcon: Icon(Icons.lock),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                        _isObscure ? Icons.visibility_off : Icons.visibility),
+                    onPressed: () {
+                      _isObscure = !_isObscure;
+                      (context as Element).markNeedsBuild();
+                    },
+                  )),
             ),
 
             //SizedBox for spacing
@@ -125,6 +139,31 @@ class _SignInPageState extends State<SignInPage> {
           ],
         ),
       );
+  void validateToken(token) async {
+    if (token != null) {
+      Map<String, dynamic> dati = {};
+      final api = WebUtilz();
+      final result = await api.request(
+        endpoint: 'AUTH',
+        action: 'VALIDATE_TOKEN',
+        method: 'POST',
+        body: {'token': token},
+      );
+      if (result['status'] == 200) {
+        dati = result['data'];
+
+        saveUserData({
+          "username": dati['username'],
+          "email": dati['email'],
+          "nome": dati['nome'],
+          "cognome": dati['cognome'],
+          "data_nascita": dati['data_nascita'] ?? '',
+          "sesso": dati['sesso'] ?? ''
+        });
+        navigateToPage(context, 'home', true);
+      }
+    }
+  }
 
   void checkInputsAndLogin() {
     String emailOrUsername = emailUsernameController.text;
@@ -152,37 +191,37 @@ class _SignInPageState extends State<SignInPage> {
       Future<bool> loginUser() async {
         bool success = false;
         Map<String, dynamic> dati = {};
-        saveSessionToken('dffdsgfddsfsafdfasdfdsf');
-        String? token = await getSessionToken();
-
         final result = await api.request(
           endpoint: 'AUTH',
           action: 'LOGIN',
           method: 'POST',
           body: {
             (isUsername ? 'username' : 'email'): emailOrUsername,
-            'password': password,
-            if (token != null) 'token': token,
+            'password': password
           },
         );
         if (result['status'] == 200) {
           success = true;
-          // if (result['UUID'] != null) {
-          //   saveUUID(result['UUID']);
-          // }
           dati = result['data'];
-          // TODO: Delete this when sql is implemented
-          if (dati['username'] != null) {
-            saveUUID(dati['username']);
-            String? username = await getUUID();
-            print("questo é lo username: " + username.toString());
+          if (dati['uuid'] != null) {
+            saveUUID(dati['uuid']);
+            String? uuid = await getUUID();
+            print("questo é lo uuid: " + uuid.toString());
           }
 
           if (dati['token'] != null) {
             saveSessionToken(dati['token']);
-            token = await getSessionToken();
+            String? token = await getSessionToken();
             print("questo é il token: " + token.toString());
           }
+          saveUserData({
+            "username": dati['username'],
+            "email": dati['email'],
+            "nome": dati['nome'],
+            "cognome": dati['cognome'],
+            "data_nascita": dati['data_nascita'] ?? '',
+            "sesso": dati['sesso'] ?? ''
+          });
         } else {
           success = false;
           if (result['status'] == 401) {

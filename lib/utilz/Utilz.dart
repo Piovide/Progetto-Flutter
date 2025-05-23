@@ -120,6 +120,5 @@ bool isDesktop() {
 
 void clearSessionData() async {
   final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('uuid');
-  await prefs.remove('session_token');
+  await prefs.clear();
 }

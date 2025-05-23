@@ -66,11 +66,16 @@ try {
                     exit;
                 }
             }else if($action === 'REGISTER'){
-                $username = $_POST['username'] ?? '';
-                $nome = $_POST['name'] ?? '';
-                $cognome = $_POST['surname'] ?? '';
-                $email = $_POST['email'] ?? '';
-                $password = password_hash($_POST['password'], PASSWORD_BCRYPT) ?? '';
+                $username = $_POST['username'] ?? null;
+                $nome = $_POST['name'] ?? null;
+                $cognome = $_POST['surname'] ?? null;
+                $email = $_POST['email'] ?? null;
+                $password = password_hash($_POST['password'], PASSWORD_BCRYPT) ?? null;
+                if(!$username || !$nome || !$cognome || !$email || !$password){
+                    $response = new Response(400, "Missing parameters");
+                    $response->send();
+                    exit;
+                }
                 $auth = new Auth();
                 $auth->register($username, $nome, $cognome, $email, $password);
             }else if($action === 'LOGOUT'){
@@ -78,6 +83,15 @@ try {
                 $uuid = $_POST['uuid'] ?? null;
                 $auth = new Auth();
                 $auth->logout($uuid);
+            }else if($action ===  'VALIDATE_TOKEN'){
+                $token = $_POST['token'] ?? null;
+                if(!$token){
+                    $response = new Response(400, "Missing token");
+                    $response->send();
+                    exit;
+                }else{
+                    $auth->validateToken($token);
+                }
             }else{
                 $response = new Response(400, "Missing action");
                 $response->send();
@@ -168,7 +182,7 @@ try {
                     $response->send();
                     exit;
                 }
-                $appunto = new Appunti(null, $titolo, $contenuto, $markdown, $visibilta, $autore_uuid, $materia_uuid, $data_creazione, $stato);
+                $appunto = new Appunti(null, $titolo, $contenuto, $markdown, $visibilta, $autore_uuid, $materia_uuid);
                 $appunto->inserisciAppunti();
             }
 

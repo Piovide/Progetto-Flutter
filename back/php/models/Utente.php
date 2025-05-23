@@ -3,24 +3,28 @@
 use Dom\Text;
 
 class Utente {
-    private String $utente_uuid;
+    // private String $utente_uuid;
     private String $username;
     private String $nome;
     private String $cognome;
-    private String $dataNascita;
-    private String $sesso;
-    private String $dataUltimoAccesso;
+    // private String $dataNascita;
+    // private String $sesso;
+    // private String $dataUltimoAccesso;
     private String $email;
     private String $password;
-    private String $ruolo;
-    private String $bio;
-    private String $URI_immagineProfilo;
+    // private String $ruolo;
+    // private String $bio;
+    // private String $URI_immagineProfilo;
 
-
-    public function Utente(){
-        super();
+    public function __construct($username, $nome, $cognome, $email, $password) {
+        $this->username = $username;
+        $this->nome = $nome;
+        $this->cognome = $cognome;
+        $this->email = $email;
+        $this->password = $password;
     }
-    public static function createTempUser($username, $nome, $cognome, $email, $password) {
+
+    public function createTempUser($username, $nome, $cognome, $email, $password) {
         $conn = Database::getConnection();
         $token = bin2hex(random_bytes(16));
 
@@ -47,30 +51,31 @@ class Utente {
         return $token;
     }
 
-    public function createUser($username, $nome, $cognome, $email, $password) {
+    public  function createUser() {
         $conn = Database::getConnection();
         $query = "INSERT INTO utenti (uuid, username, nome, cognome, email, password_hash) VALUES (uuid(), ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         if ($stmt === false) {
-            http_response_code(500);
-            echo json_encode(['status' => 500, 'error' => $conn->error]);
             $conn->close();
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
             exit;
         }
-        $stmt->bind_param("sssss", $username, $nome, $cognome, $email, $password);
+        
+        $stmt->bind_param("sssss", $this->username, $this->nome, $this->cognome, $this->email, $this->password);
         $stmt->execute();
         if ($stmt->error) {
-            http_response_code(500);
-            echo json_encode(['status' => 500, 'error' => $stmt->error]);
             $stmt->close();
             $conn->close();
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
             exit;
         }
         $stmt->close();
         $conn->close();
     }
 
-    public function getUserById($utente_uuid) {
+    public static function getUserById($utente_uuid) {
         $conn = Database::getConnection();
         $query = "SELECT * FROM utenti WHERE utente_uuid = ?";
         $stmt = $conn->prepare($query);
@@ -93,7 +98,7 @@ class Utente {
             return null;
         }
     }
-    public function getUserByEmail($email) {
+    public static function getUserByEmail($email) {
         $conn = Database::getConnection();
         $query = "SELECT * FROM utenti WHERE email = ?";
         $stmt = $conn->prepare($query);
@@ -113,7 +118,7 @@ class Utente {
         }
     }
 
-    public function getUserByUsername($username) {
+    public static function getUserByUsername($username) {
         $conn = Database::getConnection();
         $query = "SELECT * FROM utenti WHERE username = ?";
         $stmt = $conn->prepare($query);
@@ -133,7 +138,7 @@ class Utente {
         }
     }
 
-    public function deleteUser($utente_uuid) {
+    public static function deleteUser($utente_uuid) {
         $conn = Database::getConnection();
         $query = "DELETE FROM utenti WHERE utente_uuid = ?";
         $stmt = $conn->prepare($query);
@@ -149,7 +154,7 @@ class Utente {
         $conn->close();
     }
 
-    public function changeSingleField($utente_uuid, $field, $value) {
+    public static function changeSingleField($utente_uuid, $field, $value) {
         $conn = Database::getConnection();
         $query = "UPDATE utenti SET " . $field . " = ? WHERE utente_uuid = ?";
         $stmt = $conn->prepare($query);

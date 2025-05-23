@@ -30,25 +30,28 @@ if ($result->num_rows === 0) {
 }
 
 $tempUser = $result->fetch_assoc();
-$stmt->close();
-
-// Crea l'utente definitivo
-$utente = new Utente();
-$utente->createUser(
+//print_r($tempUser);
+$Utente = new Utente    (
     $tempUser['username'],
     $tempUser['nome'],
     $tempUser['cognome'],
     $tempUser['email'],
-    $tempUser['password_hash']
-);
+    $tempUser['password_hash']);
+
+
+$stmt->close();
+
+// Crea l'utente definitivo
+$Utente->createUser();
 
 // Elimina l'utente temporaneo
-$delStmt = $conn->prepare("DELETE FROM utenti_temporanei WHERE uuid = ?");
-$delStmt->bind_param("s", $tempUser['uuid']);
+$delStmt = $conn->prepare("DELETE FROM utenti_temporanei WHERE token_verifica = ?");
+$delStmt->bind_param("s", $token);
 $delStmt->execute();
 $delStmt->close();
 
 $conn->close();
+
 
 // Risposta di successo
 echo json_encode(['status' => 200, 'message' => 'Account confermato con successo! Ora puoi effettuare il login.']);

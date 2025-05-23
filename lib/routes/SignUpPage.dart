@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:progetto_flutter/constants/colors.dart';
-import 'package:progetto_flutter/utilz/Utilz.dart';
+import 'package:wiki_appunti/constants/colors.dart';
+import 'package:wiki_appunti/utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -43,7 +43,8 @@ class _SignUpPageState extends State<SignUpPage> {
               controller: usernameController,
               keyboardType: TextInputType.name,
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100)),
                 label: Text('Username', style: TextStyle(color: black)),
                 prefixIcon: Icon(Icons.person),
               ),
@@ -59,7 +60,8 @@ class _SignUpPageState extends State<SignUpPage> {
               controller: surnameController,
               keyboardType: TextInputType.name,
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100)),
                 label: Text('Surname', style: TextStyle(color: black)),
                 prefixIcon: Icon(Icons.badge),
               ),
@@ -75,11 +77,12 @@ class _SignUpPageState extends State<SignUpPage> {
               controller: nameController,
               keyboardType: TextInputType.name,
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100)),
                 label: Text('Name', style: TextStyle(color: black)),
                 prefixIcon: Icon(Icons.badge),
               ),
-            ),            
+            ),
 
             //SizedBox for spacing
             SizedBox(
@@ -91,7 +94,8 @@ class _SignUpPageState extends State<SignUpPage> {
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100)),
                 label: Text('Email', style: TextStyle(color: black)),
                 prefixIcon: Icon(Icons.email),
               ),
@@ -108,7 +112,8 @@ class _SignUpPageState extends State<SignUpPage> {
               keyboardType: TextInputType.visiblePassword,
               obscureText: _isObscure,
               decoration: InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(100)),
                 label: Text('Password', style: TextStyle(color: black)),
                 prefixIcon: Icon(Icons.lock),
                 suffixIcon: IconButton(
@@ -139,20 +144,17 @@ class _SignUpPageState extends State<SignUpPage> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(100),
                   borderSide: BorderSide(
-                      color:
-                          checkPasswordInput(repeatPasswordController.text)),
+                      color: checkPasswordInput(repeatPasswordController.text)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(100),
                   borderSide: BorderSide(
-                      color:
-                          checkPasswordInput(repeatPasswordController.text)),
+                      color: checkPasswordInput(repeatPasswordController.text)),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(100),
                   borderSide: BorderSide(
-                      color:
-                          checkPasswordInput(repeatPasswordController.text)),
+                      color: checkPasswordInput(repeatPasswordController.text)),
                 ),
                 label: Text('Repeat Password', style: TextStyle(color: black)),
                 prefixIcon: Icon(Icons.lock),
@@ -263,7 +265,8 @@ class _SignUpPageState extends State<SignUpPage> {
       setErrorMessage('Please fill in all fields');
     } else if (password != repeatPassword) {
       setErrorMessage('Passwords do not match');
-    } else if (password.length < 6) {
+      }
+       else if (password.length < 6) {
       setErrorMessage('Password must be at least 6 characters long');
       return;
     } else {
