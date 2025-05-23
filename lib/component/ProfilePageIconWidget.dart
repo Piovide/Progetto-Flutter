@@ -12,15 +12,6 @@ class _ProfilePageIconWidgetState extends State<ProfilePageIconWidget> {
 
   @override
   Widget build(BuildContext context) {
-    saveUserData({
-      "username": "pierino.rossi",
-      "email": "pierino.rossi@gmail.com",
-      "name": "Pierino",
-      "surname": "Rossi",
-      "dateOfBirth": "01/01/2000",
-      "genre": "maschio",
-      "password": "password123"
-    });
 
     return FutureBuilder(
         future: getUserData(),

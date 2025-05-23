@@ -20,33 +20,29 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    saveUserData({
-      "username": "pierino.rossi",
-      "email": "pierino.rossi@gmail.com",
-      "name": "Pierino",
-      "surname": "Rossi",
-      "dateOfBirth": "01/01/2000",
-      "genre": "maschio",
-      "password": "password123"
-    });
-
     return FutureBuilder(
         future: getUserData(),
         builder: (context, snapshot) {
-          final userData = snapshot.data!;
-          final name = userData['name'] as String? ?? '';
-          final surname = userData['surname'] as String? ?? '';
-          final dateOfBirth = userData['dateOfBirth'] as String? ??
-              'Inserisci la tua data di nascita';
-          final genre = userData['genre'] as String? ?? '';
-          final password = userData['password'] as String? ?? '';
+          final userData = snapshot.data;
+          if (userData == null) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          final name = userData['nome'] as String? ?? '';
+          final surname = userData['cognome'] as String? ?? '';
+          final dateOfBirth = userData['data_nascita'] != null
+              ? userData['data_nascita'] as String
+              : '';
+          final genre = userData['sesso'] != null
+              ? userData['sesso'] as String
+              : 'Seleziona il tuo genere';
 
           final List<String> genderItems = ['maschio', 'femmina', 'altro'];
           _nameController.text = name;
           _surnameController.text = surname;
           _dateOfBirthController.text = dateOfBirth;
           _genreController.text = genre;
-          _passwordController.text = password;
 
           return Form(
             child: Column(

@@ -81,7 +81,9 @@ class Auth {
         if ($result->num_rows > 0) {
             $utente = $result->fetch_assoc();
              if(!password_verify($password, $utente['password_hash'])){
-                die("coglione");
+                $response = new Response(401, "Password non valida.");
+                $response->send();
+                return;
              }
             $token = bin2hex(random_bytes(16));
             $query = "INSERT INTO sessioni_login (uuid,utente_uuid, token) VALUES (uuid(),?, ?)";
@@ -104,11 +106,10 @@ class Auth {
             $response->setData([
                 'uuid' => $utente['uuid'],
                 'token' => $token,
-                ($type === 'username') ? 'username' : 'email' => $username
-            ]);
-            $response->setHeaders([
-                'Authorization' => 'Bearer ' . $token,
-                'Content-Type' => 'application/json'
+                'username' => $utente['username'],
+                'nome' => $utente['nome'],
+                'cognome' => $utente['cognome'],
+                'email' => $utente['email']
             ]);
             $response->send();
         } else {
@@ -121,38 +122,89 @@ class Auth {
     }
     
 
-    // CREATE TABLE sessioni_login (
-    //     id INT AUTO_INCREMENT PRIMARY KEY,
-    //     utente_id INT NOT NULL,
-    //     token VARCHAR(255) NOT NULL,
-    //     data_accesso TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    //     FOREIGN KEY (utente_id) REFERENCES utenti(id) ON DELETE CASCADE
-    // );
-    
     public function logout($uuid) {
-        // $query = "DELETE FROM sessioni_login WHERE utente_id = ?";
-        // $stmt = $this->conn->prepare($query);
-        // if ($stmt === false) {
-        //     $response = new Response(500, "Errore interno del server.");
-        //     $response->send();
-        //     die("Errore preparazione query: " . $this->conn->error);
-        // }
-        // $stmt->bind_param("s", $token);
-        // $stmt->execute();
-        // if ($stmt->error) {
-        //     $response = new Response(500, "Errore interno del server.");
-        //     $response->send();
-        //     die("Errore esecuzione query: " . $stmt->error);
-        // }
-        // $stmt->close();
-        // $this->conn->close();
-        // $response = new Response(200, "Logout avvenuto con successo.");
-        // $response->send();
-
+        $query = "DELETE FROM sessioni_login WHERE utente_uuid = ?";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            $response = new Response(500, "Errore interno del server.");
+            $response->send();
+            die("Errore preparazione query: " . $this->conn->error);
+        }
+        $stmt->bind_param("s", $uuid);
+        $stmt->execute();
+        if ($stmt->error) {
+            $response = new Response(500, "Errore interno del server.");
+            $response->send();
+            die("Errore esecuzione query: " . $stmt->error);
+        }
+        $stmt->close();
+        $this->conn->close();
         $response = new Response(200, "Logout avvenuto con successo.");
         $response->send();
-        // $response = new Response(500, "Errore interno del server.");
-        // $response->send();
+    }
+
+    public function validateToken($token){
+        $query = "SELECT * FROM sessioni_login WHERE token = ?";
+        $smtp = $this->conn->prepare($query);
+        if($smtp === false){
+            $response = new Response(500, "Errore interno del server.");
+            $response->send();
+            die("Errore preparazione query: " . $this->conn->error); 
+        }
+        $smtp->bind_param("s", $token);
+        $smtp->execute();
+        if($smtp->error){
+            $response = new Response(500, "Errore interno del server");
+            $response->send();
+        }
+        $result = $smtp->get_result();
+        if($result->num_rows > 0){
+            $utente = $result->fetch_assoc();
+            $query = "UPDATE sessioni_login SET data_accesso = NOW() WHERE token = ?";
+            $smtp = $this->conn->prepare($query);
+            if($smtp === false){
+                $response = new Response(500, "Errore interno del server.");
+                $response->send();
+                die("Errore preparazione query: " . $this->conn->error);
+            }
+            $smtp->bind_param("s", $token);
+            $smtp->execute();
+            if($smtp->error){
+                $response = new Response(500, "Errore interno del server.");
+                $response->send();
+                die("Errore esecuzione query: " . $smtp->error);
+            }
+            $query = "SELECT * FROM utenti WHERE uuid = ?";
+            $smtp = $this->conn->prepare($query);
+            if($smtp === false){
+                $response = new Response(500, "Errore interno del server.");
+                $response->send();
+                die("Errore preparazione query: " . $this->conn->error);
+            }
+            $smtp->bind_param("s", $utente['utente_uuid']);
+            $smtp->execute();
+            if($smtp->error){
+                $response = new Response(500, "Errore interno del server.");
+                $response->send();
+                die("Errore esecuzione query: " . $smtp->error);
+            }
+            $result = $smtp->get_result();
+            if($result->num_rows > 0){
+                $utente = $result->fetch_assoc();
+                $response = new Response(200, "Token valido");
+                $response->setData([
+                    'uuid' => $utente['uuid'],
+                    'username' => $utente['username'],
+                    'nome' => $utente['nome'],
+                    'cognome' => $utente['cognome'],
+                    'email' => $utente['email']
+                ]);
+                $response->send();
+            }else{
+                $response = new Response(401, "Token non valido");
+                $response->send();
+            }
+        }
     }
 }
 

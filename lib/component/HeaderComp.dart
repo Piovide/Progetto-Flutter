@@ -155,8 +155,6 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
 
                                 Future<bool> logoutUser() async {
                                   bool success = false;
-                                  //TODO: clear line below
-                                  saveSessionToken('dffdsgfddsfsafdfasdfdsf');
 
                                   String? token = await getSessionToken();
                                   String? uuid = await getUUID();
@@ -172,6 +170,7 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                                   );
                                   if (result['status'] == 200) {
                                     success = true;
+                                    clearSessionData();
                                   }
 
                                   return success;
