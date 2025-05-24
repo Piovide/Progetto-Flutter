@@ -11,20 +11,41 @@ class Notespage extends StatefulWidget {
 }
 
 class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
-  late final TextEditingController _controller;
+  late final TextEditingController _contentController;
+  late final TextEditingController _titleController;
   late TabController _tabController;
   final ScrollController _editorScrollController = ScrollController();
   final ScrollController _previewScrollController = ScrollController();
+  bool _isEditingTitle = false;
+
+  bool showEditor = false;
+
+  Future<void> checkEditorPermission() async {
+    final autoreUuid = widget.data['autore_uuid'];
+    final loginUuid = await getUUID();
+    setState(() {
+      showEditor = autoreUuid != null && autoreUuid == loginUuid;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    checkEditorPermission();
+    final titolo =
+        widget.data.containsKey('titolo') && widget.data['titolo'] != null
+            ? widget.data['titolo']
+            : 'Nuovo Appunto';
+    _titleController = TextEditingController(text: titolo);
+    _titleController.addListener(() {
+      setState(() {});
+    });
     final contenuto =
         widget.data.containsKey('contenuto') && widget.data['contenuto'] != null
             ? widget.data['contenuto']
             : '';
-    _controller = TextEditingController(text: contenuto);
-    _controller.addListener(() {
+    _contentController = TextEditingController(text: contenuto);
+    _contentController.addListener(() {
       setState(() {});
     });
     _tabController = TabController(length: 2, vsync: this);
@@ -32,7 +53,8 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _contentController.dispose();
+    _titleController.dispose();
     _tabController.dispose();
     _editorScrollController.dispose();
     _previewScrollController.dispose();
@@ -40,13 +62,14 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
   }
 
   void insertText(String left, [String right = '']) {
-    final text = _controller.text;
-    final selection = _controller.selection;
+    final title = _titleController.text;
+    final text = _contentController.text;
+    final selection = _contentController.selection;
     final newText = text.replaceRange(selection.start, selection.end,
         '$left${text.substring(selection.start, selection.end)}$right');
     final cursorPosition = selection.start + left.length;
 
-    _controller.value = TextEditingValue(
+    _contentController.value = TextEditingValue(
       text: newText,
       selection: TextSelection.collapsed(
           offset: cursorPosition + (selection.end - selection.start)),
@@ -195,7 +218,7 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
             const SizedBox(height: 8),
             Expanded(
               child: TextField(
-                controller: _controller,
+                controller: _contentController,
                 maxLines: null,
                 scrollController: _editorScrollController,
                 keyboardType: TextInputType.multiline,
@@ -229,7 +252,7 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Markdown(
-          data: _controller.text,
+          data: _contentController.text,
           controller: _previewScrollController,
           styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
             p: Theme.of(context).textTheme.bodyMedium,
@@ -242,10 +265,6 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final isPhone = MediaQuery.of(context).size.width < 600;
-    final title =
-        widget.data.containsKey('titolo') && widget.data['titolo'] != null
-            ? widget.data['titolo']
-            : 'Markdown Editor';
     void onSave() async {
       final api = WebUtilz();
       final result = await api.request(
@@ -253,12 +272,12 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
         action: 'UPDATE',
         method: 'POST',
         body: {
-          'id': widget.data['id'],
-          'titolo': title,
-          'contenuto': _controller.text,
+          'id': widget.data['uuid'],
+          'titolo': _titleController.text,
+          'contenuto': _contentController.text,
         },
       );
-      if (result['status'] == 200) { 
+      if (result['status'] == 200) {
         showSnackBar(context, 'Nota salvata!', 2);
       } else {
         showSnackBar(context, 'Errore durante il salvataggio!', 2);
@@ -268,49 +287,153 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
     if (isPhone) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(title),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.save),
-              tooltip: 'Salva',
-              onPressed: onSave,
-            ),
-          ],
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Editor'),
-              Tab(text: 'Preview'),
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _isEditingTitle
+                  ? SizedBox(
+                      width: 200,
+                      child: TextField(
+                        controller: _titleController,
+                        autofocus: true,
+                        onSubmitted: (_) {
+                          setState(() {
+                            _isEditingTitle = false;
+                          });
+                        },
+                        onEditingComplete: () {
+                          setState(() {
+                            _isEditingTitle = false;
+                          });
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                        ),
+                        style: Theme.of(context).appBarTheme.titleTextStyle,
+                      ),
+                    )
+                  : Text(
+                      _titleController.text.isNotEmpty
+                          ? _titleController.text
+                          : 'Nuovo Appunto',
+                      style: Theme.of(context).appBarTheme.titleTextStyle,
+                    ),
+              if (showEditor) ...[
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    setState(() {
+                      _isEditingTitle = !_isEditingTitle;
+                    });
+                  },
+                  tooltip: 'Modifica Titolo',
+                ),
+              ],
             ],
           ),
+          actions: showEditor
+              ? [
+                  IconButton(
+                    icon: const Icon(Icons.save),
+                    tooltip: 'Salva',
+                    onPressed: onSave,
+                  ),
+                ]
+              : [],
+          bottom: showEditor
+              ? TabBar(
+                  controller: _tabController,
+                  tabs: const [
+                    Tab(text: 'Editor'),
+                    Tab(text: 'Preview'),
+                  ],
+                )
+              : null,
         ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            buildEditor(),
-            buildPreview(),
-          ],
-        ),
+        body: showEditor
+            ? TabBarView(
+                controller: _tabController,
+                children: [
+                  buildEditor(),
+                  buildPreview(),
+                ],
+              )
+            : buildPreview(),
       );
     } else {
       return Scaffold(
         appBar: AppBar(
-          title: Text(title),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.save),
-              tooltip: 'Salva',
-              onPressed: onSave,
-            ),
-          ],
+          title: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _isEditingTitle
+                  ? SizedBox(
+                      width: 200,
+                      child: TextField(
+                        controller: _titleController,
+                        autofocus: true,
+                        onSubmitted: (_) {
+                          setState(() {
+                            _isEditingTitle = false;
+                          });
+                        },
+                        onEditingComplete: () {
+                          setState(() {
+                            _isEditingTitle = false;
+                          });
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                          contentPadding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                        ),
+                        style: Theme.of(context).appBarTheme.titleTextStyle,
+                      ),
+                    )
+                  : Text(
+                      _titleController.text.isNotEmpty
+                          ? _titleController.text
+                          : 'Nuovo Appunto',
+                      style: Theme.of(context).appBarTheme.titleTextStyle,
+                    ),
+              if (showEditor) ...[
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    setState(() {
+                      _isEditingTitle = !_isEditingTitle;
+                    });
+                  },
+                  tooltip: 'Modifica Titolo',
+                ),
+              ],
+            ],
+          ),
+          actions: showEditor
+              ? [
+                  IconButton(
+                    icon: const Icon(Icons.save),
+                    tooltip: 'Salva',
+                    onPressed: onSave,
+                  ),
+                ]
+              : [],
         ),
-        body: Row(
-          children: [
-            Expanded(child: buildEditor()),
-            const VerticalDivider(width: 1),
-            Expanded(child: buildPreview()),
-          ],
-        ),
+        body: showEditor
+            ? Row(
+                children: [
+                  Expanded(child: buildEditor()),
+                  const VerticalDivider(width: 1),
+                  Expanded(child: buildPreview()),
+                ],
+              )
+            : buildPreview(),
       );
     }
   }

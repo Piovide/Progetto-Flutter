@@ -23,11 +23,10 @@ class _SubjectState extends State<Subjectpage> {
         'materia': widget.materia,
       },
     );
-    print(result);
     if (result['status'] == 404) {
       return [];
     }
-    if (result['data'] is List) {
+    if (result['data'] != null && result['data'] is List) {
       return List<Map<String, dynamic>>.from(result['data']).toList();
     }
     return [];
@@ -59,7 +58,9 @@ class _SubjectState extends State<Subjectpage> {
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Errore: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('Nessuna materia trovata.'));
+                      return Center(
+                          child: Text(
+                              'Non ci sono appunti disponibili per questa materia.'));
                     }
                     final classes = snapshot.data!;
                     return LayoutBuilder(builder: (context, constraints) {
