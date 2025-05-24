@@ -37,32 +37,7 @@ class Auth {
     }
 
     public function login($username, $password, $type, string $token = null) {
-        // controllo se l'utente è già loggato in sessione
-         if ($token !== null) {
-             $query = "SELECT * FROM sessioni_login WHERE token = ? AND data_accesso > NOW() - INTERVAL 8 HOUR";
-             $stmt = $this->conn->prepare($query);
-             if ($stmt === false) {
-                 $response = new Response(500, "Errore interno del server.");
-                $response->send();
-                die("Errore preparazione query: " . $this->conn->error);
-            }
-            $stmt->bind_param("s", $token);
-            $stmt->execute();
-            if ($stmt->error) {
-                $response = new Response(500, "Errore interno del server.");
-                $response->send();
-                die("Errore esecuzione query: " . $stmt->error);
-            }
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                // Utente già loggato
-                $response = new Response(200, "Utente già loggato.");
-                $response->send();
-            }
-        }
-        
-            $query = "SELECT * FROM utenti WHERE email = ? OR username = ?";
-
+        $query = "SELECT * FROM utenti WHERE email = ? OR username = ?";
         //$query.= " AND password_hash = ?";
         //$password = password_hash($password, PASSWORD_BCRYPT);
         $stmt = $this->conn->prepare($query);
@@ -204,6 +179,55 @@ class Auth {
                 $response = new Response(401, "Token non valido");
                 $response->send();
             }
+        }
+    }
+
+    public function changePassword($uuid, $old_password, $new_password) {
+        $query = "SELECT * FROM utenti WHERE email = ? OR username = ?";
+        $stmt = $this->conn->prepare($query);
+
+        if ($stmt === false) {
+            $response = new Response(500, "Errore interno del server.");
+            $response->send();
+        }
+        $stmt->bind_param("ss", $username, $username);
+        $stmt->execute();
+        if ($stmt->error) {
+            $response = new Response(500, "Errore interno del server.");
+            $response->send();
+        }
+
+        $result = $stmt->get_result();
+       
+        if ($result->num_rows > 0) {
+            $utente = $result->fetch_assoc();
+            if(password_verify($old_password, $utente['password_hash'])){
+                $query = "UPDATE utenti SET password_hash = ? WHERE uuid = ?";
+                $stmt = $this->conn->prepare($query);
+                if ($stmt === false) {
+                    $response = new Response(500, "Errore interno del server.");
+                    $response->send();
+                }
+                $new_password_hash = password_hash($new_password, PASSWORD_BCRYPT);
+                $stmt->bind_param("ss", $new_password_hash, $uuid);
+                $stmt->execute();
+                if ($stmt->error) {
+                    $response = new Response(500, "Errore interno del server.");
+                    $response->send();
+                }
+                $stmt->close();
+                $this->conn->close();
+                $response = new Response(200, "Password cambiata con successo.");
+            }else{
+                $response = new Response(401, "Password non valida.");
+                $response->send();
+                return;
+            }
+            
+        } else {
+            // Credenziali non valide
+            $response = new Response(401, "Credenziali non valide.");
+            $response->send();
         }
     }
 }

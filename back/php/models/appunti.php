@@ -42,24 +42,29 @@ class Appunti{
     }
 
     public static function getAppunti(){
-        // $conn = database::getConnection();
-        // $query = "SELECT * FROM appunti";
-        // $ris = $conn->query($query);
-        // if ($stmt === false) {
-        //     die("Errore lato server: " . $conn->error);
-        // }
+        $conn = database::getConnection();
+        $query = "SELECT * FROM appunti";
+        $stmt = $conn->prepare($query);
+        if ($stmt === false) {
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
+        }
+        $stmt->execute();
+        if ($stmt->error) {
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
+        }
+        $result = $stmt->get_result();
+        if ($result->num_rows == 0) {
+            $stmt->close();
+            $conn->close();
+            $response = new Response(404, "Nessuna notifica trovata");
+            $response->send();
+            return;
+        }
 
-        // $result = $stmt->get_result();
-        // if ($result->num_rows == 0) {
-            // $stmt->close();
-            // $conn->close();
-            // $response = new Response(404, "Nessuna notifica trovata");
-            // $response->send();
-            // return;
-        // }
-
-        /*$appunti = [];
-        while($row = $ris->fetch_assoc){
+        $appunti = [];
+        while($row = $result->fetch_assoc()){
             $appunti[]=[
                 'appunto_uuid' =>$row['appunto_uuid'],
                 'titolo' => $row['titolo'],
@@ -71,34 +76,11 @@ class Appunti{
                 'data_creazione' => $row['data_creazione'],
                 'stato'=> $row['stato']
             ];
-        }*/
+        }
 
-         $response = new Response(200, "appunti recuperati con successo");
-         $response->setData([
-                    [
-                        'appunto_uuid' =>'9233df1c-3410-11f0-ad98-088fc32680d9',
-                        'titolo' => 'gli appunti di piero',
-                        'contenuto' => 'contenuto bello',
-                        'markdown' => '<title>daje</title>',
-                        'visibilita' => 'visibile',
-                        'autore_uuid' => 'f9588744-3410-11f0-ad98-088fc32680d9',
-                        'materia_uuid' => '0b196c51-3411-11f0-ad98-088fc32680d9',
-                        'data_creazione' => '2025-05-18 21:56:24',
-                        'stato'=>'revisionato'
-                    ],
-                    [
-                        'appunto_uuid' =>'9233df1c-3410-11f0-ad98-088fc32680d9',
-                        'titolo' => 'gli appunti di piero',
-                        'contenuto' => 'contenuto bello',
-                        'markdown' => '<title>ceOLin</title>',
-                        'visibilita' => 'visibile',
-                        'autore_uuid' => 'f9588754-3410-11f0-ad98-088fc32680d9',
-                        'materia_uuid' => '0b194c51-3411-11f0-ad98-088fc32680d9',
-                        'data_creazione' => '2025-05-18 21:56:24',
-                        'stato'=>'non so'
-                    ]
-                    ]);
-                    $response->send();
+        $response = new Response(200, "appunti recuperati con successo");
+        $response->setData($appunti);
+        $response->send();
     }
     public static function getAppuntiById(string $appunto_uuid){
         $conn = database::getConnection();

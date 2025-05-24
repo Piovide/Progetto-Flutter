@@ -35,10 +35,6 @@ $validEndpoints = [
     'NOTIFICATION',
     'SUBJECT',
     'NOTE',
-    'FORGOT_PASSWORD',
-    'CHANGE_PASSWORD', 
-    'UPDATE_PROFILE', 
-    'DELETE_ACCOUNT'
 ];
 
 if (!in_array($endpoint, $validEndpoints)) {
@@ -92,6 +88,17 @@ try {
                 }else{
                     $auth->validateToken($token);
                 }
+            }else if($action === 'CHANGE_PASSWORD'){
+                $token = $_POST['token'] ?? null;
+                $uuid = $_POST['uuid'] ?? null;
+                $old_password = $_POST['old_password'] ?? null;
+                $new_password = $_POST['new_password'] ?? null;
+                if(!$token || !$uuid || !$old_password || !$new_password){
+                    $response = new Response(400, "Missing parameters");
+                    $response->send();
+                    exit;
+                }
+                $auth->changePassword($uuid, $old_password, $new_password);
             }else{
                 $response = new Response(400, "Missing action");
                 $response->send();
