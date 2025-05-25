@@ -1,4 +1,6 @@
 <?php
+include_once __DIR__ . '/../utilz/Database.php';
+
 class Appunti{
     private String $appunto_uuid;
     private String $titolo;
@@ -106,7 +108,7 @@ class Appunti{
         $response->send();
     }
     public static function getAppuntiById(string $appunto_uuid){
-        $conn = database::getConnection();
+        $conn = Database::getConnection();
         $query = "SELECT * FROM appunti WHERE appunto_uuid = ?";
         $stmt = $conn->prepare($query);
         if($stmt === false){
@@ -144,9 +146,9 @@ class Appunti{
         $response->setData($appunti);
     }
 
-    public static function getAppuntiByMateria(string $materia_uuid){
-        $conn = database::getConnection();
-        $query = "SELECT * FROM appunti WHERE materia_uuid = ?";
+    public static function getAppuntiByAutore(string $autore_uuid){
+        $conn = Database::getConnection();
+        $query = "SELECT * FROM appunti WHERE autore_uuid = ?";
         $stmt = $conn->prepare($query);
         if($stmt === false){
             // $response = new Response(500, "Errore lato server". $conn->error ."");
@@ -154,7 +156,7 @@ class Appunti{
             $response->send();
             die("Errore lato server". $conn->error ."");
         }
-        $stmt->bind_param("s", $materia_uuid);
+        $stmt->bind_param("s", $autore_uuid);
         $stmt->execute();
         if(!$stmt->error === false){
             // $response = new Response(500, "Errore lato server". $stmt->error ."");
@@ -185,7 +187,54 @@ class Appunti{
                 'stato'=> $row['stato']
             ];
         }
-        $response = new Response(200, "appunto by materia recuperato con successo");
+        $response = new Response(200, "appunto by autore recuperato con successo");
+        $response->setData($appunti);
+        $response->send();
+        return;
+    }
+
+    public static function getAppuntiByMateria(string $materia_uuid, string $classe){
+        $conn = Database::getConnection();
+        $query = "SELECT * FROM appunti A INNER JOIN materie M WHERE materia_uuid = ? AND M.classe = ?";
+        $stmt = $conn->prepare($query);
+        if($stmt === false){
+            // $response = new Response(500, "Errore lato server". $conn->error ."");
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
+            die("Errore lato server". $conn->error ."");
+        }
+        $stmt->bind_param("ss", $materia_uuid, $classe);
+        $stmt->execute();
+        if(!$stmt->error === false){
+            // $response = new Response(500, "Errore lato server". $stmt->error ."");
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
+            die("Errore lato server". $stmt->error ."");
+        }
+
+        $result = $stmt->get_result();
+        if ($result->num_rows == 0) {
+            $stmt->close();
+            $conn->close();
+            $response = new Response(404, "Nessun appunto trovato");
+            $response->send();
+            return;
+        }
+
+        while($row = $result->fetch_assoc()){
+            $appunti[]=[
+                'appunto_uuid' =>$row['appunto_uuid'],
+                'titolo' => $row['titolo'],
+                'contenuto' => $row['contenuto'],
+                'markdown' => $row['markdown'],
+                'visibilita' => $row['visibilita'],
+                'autore_uuid' => $row['autore_uuid'],
+                'materia_uuid' => $row['materia_uuid'],
+                'data_creazione' => $row['data_creazione'],
+                'stato'=> $row['stato']
+            ];
+        }
+        $response = new Response(200, "appunti recuperato con successo");
         $response->setData($appunti);
     }
 

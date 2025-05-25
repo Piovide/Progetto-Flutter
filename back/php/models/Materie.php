@@ -1,4 +1,5 @@
 <?php
+include_once __DIR__ . '/../utilz/Database.php';
 class Materie {
     private string $uuid;
     private string $nome;
@@ -33,39 +34,44 @@ class Materie {
     }
 
     public static function getMaterie($classe) {
-        // $conn = Database::getConnection();
-        // $query = "SELECT * FROM materie WHERE classe = ?";
-        // $stmt = $conn->prepare($query);
+        $conn = Database::getConnection();
+        $query = "SELECT * FROM materie WHERE classe = ?";
+        $stmt = $conn->prepare($query);
 
-        // if ($stmt === false) {
-        //     die("Errore lato server: " . $conn->error);
-        // }
+        if ($stmt === false) {
+            die("Errore lato server: " . $conn->error);
+        }
 
-        // $stmt->bind_param("s", $classe);
-        // $stmt->execute();
+        $stmt->bind_param("s", $classe);
+        $stmt->execute();
 
-        // if ($stmt->error) {
-        //     die("Errore lato server: " . $stmt->error);
-        // }
+        if ($stmt->error) {
+            die("Errore lato server: " . $stmt->error);
+        }
 
-        // $result = $stmt->get_result();
-        // $materie = [];
+        $result = $stmt->get_result();
+        $materie = [];
 
-        // while ($row = $result->fetch_assoc()) {
-        //     $materie[] = new Materie($row['uuid'], $row['nome'], $row['descrizione'], $row['classe']);
-        // }
+        while ($row = $result->fetch_assoc()) {
+            $materie[] = [
+                'uuid' => $row['uuid'],
+                'nome' => $row['nome'],
+                'descrizione' => $row['descrizione'],
+                'classe' => $row['classe'],
+                'professore' => $row['professore']
+            ];
+        }
 
-        // $stmt->close();
-        // $conn->close();
-        $materie = [
-            ['uuid' => '1', 'nome' => 'Matematica', 'professore' => 'Chieppa', 'descrizione' => 'Studio dei numeri e delle forme', 'classe' => '5BII'],
-            ['uuid' => '2', 'nome' => 'TPS', 'professore' => 'Frigo', 'descrizione' => 'Tecnologie progettazione sistemi informatici', 'classe' => '5BII'],
-            ['uuid' => '3', 'nome' => 'Storia','professore' => 'Leone', 'descrizione' => 'Studio della storia mondiale', 'classe' => '5BII'],
-            ['uuid' => '4', 'nome' => 'Informatica', 'professore' => 'Mongelli', 'descrizione' => 'Studio dei computer e della programmazione', 'classe' => '5BII']
-        ];
+        $stmt->close();
+        $conn->close();
+        // $materie = [
+        //     ['uuid' => '1', 'nome' => 'Matematica', 'professore' => 'Chieppa', 'descrizione' => 'Studio dei numeri e delle forme', 'classe' => '5BII'],
+        //     ['uuid' => '2', 'nome' => 'TPS', 'professore' => 'Frigo', 'descrizione' => 'Tecnologie progettazione sistemi informatici', 'classe' => '5BII'],
+        //     ['uuid' => '3', 'nome' => 'Storia','professore' => 'Leone', 'descrizione' => 'Studio della storia mondiale', 'classe' => '5BII'],
+        //     ['uuid' => '4', 'nome' => 'Informatica', 'professore' => 'Mongelli', 'descrizione' => 'Studio dei computer e della programmazione', 'classe' => '5BII']
+        // ];
         $response = new Response(200, "Materie recuperate con successo", $materie);
         $response->send();
-
     }
 }
 ?>

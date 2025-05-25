@@ -56,6 +56,8 @@ class NotesCardWidget extends StatelessWidget {
                   icon: Icon(
                     Icons.info_outline_rounded,
                   ),
+                  tooltip: subjectInfo['descrizione'] ??
+                      'Nessuna descrizione disponibile',
                 )),
           )
         ],

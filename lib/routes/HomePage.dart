@@ -21,7 +21,26 @@ class _HomepageState extends State<Homepage> {
         'classe': '5BII',
       },
     );
-    print(result);
+    if (result['status'] == 404) {
+      return [];
+    }
+    if (result['data'] is List) {
+      return List<Map<String, dynamic>>.from(result['data']).toList();
+    }
+    return [];
+  }
+
+  Future<List<Map<String, dynamic>>> getAppuntiUtente() async {
+    final api = WebUtilz();
+    final uuid = getUUID();
+    final result = await api.request(
+      endpoint: 'NOTE',
+      action: 'GET_BY_UUID',
+      method: 'POST',
+      body: {
+        'uuid': uuid,
+      },
+    );
     if (result['status'] == 404) {
       return [];
     }
@@ -54,18 +73,35 @@ class _HomepageState extends State<Homepage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Text(
-                  'Benvenuto/a  ${userData?['username'] ?? 'Utente'}!',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Benvenuto/a  ${userData?['username'] ?? 'Utente'}!',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    tooltip: 'Aggiungi appunti',
+                    onPressed: () {
+                      navigateToPage(context, 'notes', false, arguments: {
+                        'data': {
+                          'titolo': 'Nuovo appunto',
+                          'contenuto': '',
+                          'autore_uuid': userData?['uuid'] ?? '',
+                        },
+                      });
+                    },
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               Text(
-                'Appunti recenti:',
+                'I tuoi appunti:',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -78,14 +114,14 @@ class _HomepageState extends State<Homepage> {
               const SizedBox(height: 16),
               Expanded(
                 child: FutureBuilder<List<Map<String, dynamic>>>(
-                  future: getMaterie(),
+                  future: getAppuntiUtente(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Errore: ${snapshot.error}'));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('Nessuna materia trovata.'));
+                      return Center(child: Text('Nessun appunto trovato.'));
                     }
                     final classes = snapshot.data!;
                     return LayoutBuilder(builder: (context, constraints) {
@@ -104,11 +140,9 @@ class _HomepageState extends State<Homepage> {
                           final subjectInfo = classes[index];
                           return InkWell(
                               onTap: () {
-                                navigateToPage(context, 'subject', false,
+                                navigateToPage(context, 'notes', false,
                                     arguments: {
-                                      'materia': subjectInfo['nome'],
-                                      'professore': subjectInfo['professore'],
-                                      'materia_uuid': subjectInfo['uuid']
+                                      'data': subjectInfo,
                                     });
                               },
                               borderRadius: BorderRadius.circular(12),

@@ -191,6 +191,23 @@ try {
                 }
                 $appunto = new Appunti(null, $titolo, $contenuto, $markdown, $visibilta, $autore_uuid, $materia_uuid);
                 $appunto->inserisciAppunti();
+            } else if ($action === 'GET_BY_UUID') {
+                $uuid = $_POST['uuid'] ?? null;
+                if (!$uuid) {
+                    $response = new Response(400, "Missing uuid");
+                    $response->send();
+                    exit;
+                }
+                Appunti::getAppuntiByAutore($uuid);
+            } else if ($action === 'GET_BY_SUBJECT'){
+                $materia = $_POST['materia'];
+                $classe = $_POST['classe'];
+                if(!$materia || !$classe){
+                    $response = new Response(400, "Missing materia or classe");
+                    $response->send();
+                    exit;
+                }
+                Appunti::getAppuntiByMateria($materia, $classe);
             }
 
         default:

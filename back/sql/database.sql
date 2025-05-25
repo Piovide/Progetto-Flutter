@@ -55,8 +55,15 @@ CREATE TABLE materie (
     uuid CHAR(36) PRIMARY KEY,
     nome VARCHAR(100) NOT NULL UNIQUE,
     descrizione TEXT,
-    classe ENUM('1', '2', '3', '4', '5') NOT NULL
+    classe VARCHAR(25) NOT NULL,
+    professore VARCHAR(100) NOT NULL
 );
+INSERT INTO materie (uuid, nome, descrizione, classe) VALUES
+(uuid(), 'Matematica', 'Studio dei numeri e delle forme', '5BII'),
+(uuid(), 'TPS', 'Tecnologie progettazione sistemi informatici', '5BII'),
+(uuid(), 'Storia', 'Studio della storia mondiale', '5BII'),
+(uuid(), 'Informatica', 'Studio dei computer e della programmazione', '5BII');
+
 
 CREATE TABLE tag (
     uuid CHAR(36) PRIMARY KEY,

@@ -153,6 +153,7 @@ class _SignInPageState extends State<SignInPage> {
         dati = result['data'];
 
         saveUserData({
+          "uuid": dati['uuid'],
           "username": dati['username'],
           "email": dati['email'],
           "nome": dati['nome'],
@@ -215,6 +216,7 @@ class _SignInPageState extends State<SignInPage> {
             print("questo é il token: " + token.toString());
           }
           saveUserData({
+            "uuid": dati['uuid'],
             "username": dati['username'],
             "email": dati['email'],
             "nome": dati['nome'],
