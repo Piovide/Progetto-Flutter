@@ -157,21 +157,6 @@ try {
             }
             break;
         case 'NOTE':
-//     CREATE TABLE appunti (
-//     uuid CHAR(36) PRIMARY KEY,
-//     titolo VARCHAR(255) NOT NULL,
-//     contenuto TEXT NOT NULL,
-//     markdown BOOLEAN DEFAULT TRUE,
-//     visibilita ENUM('pubblico', 'privato') DEFAULT 'pubblico',
-//     autore_uuid CHAR(36),
-//     materia_uuid CHAR(36),
-//     data_creazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//     data_ultima_modifica TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-//     stato ENUM('bozza', 'pubblicato', 'in_revisione') DEFAULT 'bozza',
-//     FOREIGN KEY (autore_uuid) REFERENCES utenti(uuid) ON DELETE SET NULL,
-//     FOREIGN KEY (materia_uuid) REFERENCES materie(uuid) ON DELETE SET NULL
-// );
-
             include_once './models/Appunti.php';
             if ($action === 'GET') {
                 Appunti::getAppunti();
@@ -184,13 +169,18 @@ try {
                 $materia_uuid = $_POST['materia_uuid'] ?? '';
                 $data_creazione = $_POST['data_creazione'] ?? date('Y-m-d H:i:s');
                 $stato = $_POST['stato'] ?? 'bozza';
-                if (!$titolo || !$contenuto || !$autore_uuid || !$materia_uuid) {
-                    $response = new Response(400, "Missing titolo, contenuto, autore_uuid or materia_uuid");
+                if (!$titolo || !$contenuto || !$autore_uuid /*|| !$materia_uuid'*/) {
+                    $response = new Response(400, "
+                      questo e l'user uuid: " . $autore_uuid .
+                     "questo e il titolo titolo,".$titolo.
+                     "questo e il contenuto".$contenuto."materia_uuid");
+                    
                     $response->send();
                     exit;
                 }
-                $appunto = new Appunti(null, $titolo, $contenuto, $markdown, $visibilta, $autore_uuid, $materia_uuid);
+                $appunto = new Appunti( $titolo, $contenuto, $markdown, $visibilta, $autore_uuid, $materia_uuid);
                 $appunto->inserisciAppunti();
+                $response = new Response(200,"success");
             } else if ($action === 'GET_BY_UUID') {
                 $uuid = $_POST['uuid'] ?? null;
                 if (!$uuid) {
@@ -211,7 +201,7 @@ try {
             }
 
         default:
-            $response = new Response(400, "endpoint not implemented");
+            $response = new Response(400, "endpoint not implemented".$endpoint);
             $response->send();
             exit;
     }

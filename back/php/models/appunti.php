@@ -2,7 +2,7 @@
 include_once __DIR__ . '/../utilz/Database.php';
 
 class Appunti{
-    private String $appunto_uuid;
+    private String $appunto_uuid ;
     private String $titolo;
     private String $contenuto;
     private int $markdown;
@@ -10,8 +10,8 @@ class Appunti{
     private String $autore_uuid;
     private String $materia_uuid;
 
-    public function Appunti(String $appunto_uuid, String $titolo, String $contenuto, int $markdown, String $visibilita, String $autore_uuid, String $materia_uuid){
-        $this->appunto_uuid = $appunto_uuid;
+    public function __construct( String $titolo, String $contenuto, int $markdown, String $visibilita, String $autore_uuid, String $materia_uuid){
+       // $this->appunto_uuid = $appunto_uuid;
         $this->titolo = $titolo;
         $this->contenuto = $contenuto;
         $this->markdown = $markdown;
@@ -22,7 +22,7 @@ class Appunti{
 
     public function inserisciAppunti(){
         $conn = Database::getConnection();
-        $query = "INSERT INTO appunti (uuid, titolo, contenuto, markdown, visibilita, autore_uuid, materia_uuid) VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO appunti (uuid, titolo, contenuto, markdown, visibilita, autore_uuid, materia_uuid) VALUES (UUID(), ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         if($stmt === false){
             // $response = new Response(500, "Errore lato server". $conn->error ."");

@@ -269,12 +269,13 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
       final api = WebUtilz();
       final result = await api.request(
         endpoint: 'NOTE',
-        action: 'UPDATE',
+        action: 'INSERT',
         method: 'POST',
         body: {
-          'id': widget.data['uuid'],
+          'autore_uuid': await getUUID(),
           'titolo': _titleController.text,
           'contenuto': _contentController.text,
+          'materia_uuid': "b5e6e7a0-39b6-11f0-aa3d-088fc32680d9 "
         },
       );
       if (result['status'] == 200) {
