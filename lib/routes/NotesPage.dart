@@ -306,7 +306,7 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
       final result = await api.request(
         endpoint: 'NOTE',
         action: 'UPDATE',
-        method: 'POST',
+        method: 'UPDATE',
         body: {
           'uuid': widget.data['uuid'],
           'autore_uuid': autoreUUID,

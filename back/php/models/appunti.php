@@ -263,5 +263,34 @@ class Appunti {
         $response->send();
         return;
     }
+
+    public static function deleteAppunto($appunto_uuid) {
+        $conn = Database::getConnection();
+        $query = "DELETE FROM appunti WHERE uuid = ?";
+        $stmt = $conn->prepare($query);
+        if($stmt === false){
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
+            return;
+        }
+        $stmt->bind_param("s", $appunto_uuid);
+        $stmt->execute();
+        if(!$stmt->error === false){
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
+            return;
+        }
+        if($stmt->affected_rows === 0){
+            $stmt->close();
+            $conn->close();
+            $response = new Response(404, "Nessun appunto trovato con l'uuid specificato".$appunto_uuid);
+            $response->send();
+            return;
+        }
+        $stmt->close();
+        $conn->close();
+        $response = new Response(200, "Appunto eliminato con successo");
+        $response->send();
+    }
 }
 ?>

@@ -41,6 +41,15 @@ class WebUtilz {
             print("----------------------------------------------------------");
           }
           break;
+        case 'UPDATE':
+          response =
+              await http.post(url, headers: defaultHeaders, body: encodedBody);
+          if (kDebugMode) {
+            print("----------------------------------------------------------");
+            print(response.body);
+            print("----------------------------------------------------------");
+          }
+          break;
         case 'PUT':
           response =
               await http.put(url, headers: defaultHeaders, body: encodedBody);
