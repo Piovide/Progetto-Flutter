@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../utilz/Utilz.dart';
 
-// TODO: modify the form to make a double check on the password (check with if-else statements)
-
 class ProfilePageFormWidget extends StatefulWidget {
   @override
   _EnableFormState createState() => _EnableFormState();
@@ -13,14 +11,14 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
   bool setEnabled = false;
   bool showSaveButton = false;
   bool showPasswordConfirmation = false;
+  bool _isInitialized = false;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _genreController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,14 +41,19 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
               : 'Seleziona il tuo genere';
 
           final List<String> genderItems = ['maschio', 'femmina', 'altro'];
-          _nameController.text = name;
-          _surnameController.text = surname;
-          _dateOfBirthController.text = dateOfBirth;
-          _genreController.text = genre;
 
-          if (setEnabled) {
-          } else {}
+          // _nameController.text = name;
+          // _surnameController.text = surname;
+          // _genreController.text = genre;
+          // _dateOfBirthController.text = dateOfBirth;
 
+          if(!_isInitialized){
+            _nameController.text = name;
+            _surnameController.text = surname;
+            _genreController.text = genre;
+            _dateOfBirthController.text = dateOfBirth;
+            _isInitialized = true;
+          }
           return Form(
             child: Column(
               children: [
@@ -102,7 +105,7 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                       if (pickedDate != null) {
                         setState(() {
                           _dateOfBirthController.text =
-                              "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                              "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
                         });
                       }
                     }
@@ -222,8 +225,7 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                             setState(() {
                               showSaveButton = !showSaveButton;
                               setEnabled = !setEnabled;
-                              showPasswordConfirmation =
-                                  !showPasswordConfirmation;
+                              showPasswordConfirmation = !showPasswordConfirmation;
                             });
                           },
                           style: ElevatedButton.styleFrom(

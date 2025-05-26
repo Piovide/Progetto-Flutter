@@ -20,6 +20,11 @@ class InformationPage extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
             ),
+            const SizedBox(height: 80),
+            Text(
+              'Questa è una pagina informativa.',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
           ],
         )
       ),
