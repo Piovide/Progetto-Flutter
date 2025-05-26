@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:wiki_appunti/routes/InformationPage.dart';
 import '../routes/SignInPage.dart';
 import '../routes/SignUpPage.dart';
 import '../routes/HomePage.dart';
@@ -34,6 +35,9 @@ void navigateToPage(BuildContext context, String pageName, bool replace,
       break;
     case 'settings':
       page = SettingsPage();
+      break;
+    case 'information':
+      page = InformationPage();
       break;
     default:
       throw Exception('Invalid page name: $pageName');

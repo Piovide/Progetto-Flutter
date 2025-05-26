@@ -14,9 +14,9 @@ class ProfilePageMenuWidget extends StatelessWidget {
       children: [
         ProfileMenuWidget(title: "Settings", icon: Icons.settings, onPress: (){navigateToPage(context, 'settings', false);}),
         const SizedBox(height: 30),
-        ProfileMenuWidget(title: "Informations", icon: Icons.info, onPress: (){}),
+        ProfileMenuWidget(title: "Informations", icon: Icons.info, onPress: (){navigateToPage(context, 'information', false);}),
         const SizedBox(height: 30),
-        ProfileMenuWidget(title: "Delete", icon: Icons.logout_rounded, textColor: red, endIcon: false, onPress: (){}),
+        ProfileMenuWidget(title: "Delete Account", icon: Icons.logout_rounded, textColor: red, endIcon: false, onPress: (){}),
         const SizedBox(height: 30),
       ],
     );
