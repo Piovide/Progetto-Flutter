@@ -62,7 +62,6 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
   }
 
   void insertText(String left, [String right = '']) {
-    final title = _titleController.text;
     final text = _contentController.text;
     final selection = _contentController.selection;
     final newText = text.replaceRange(selection.start, selection.end,
@@ -267,18 +266,23 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
     final isPhone = MediaQuery.of(context).size.width < 600;
     void onSave() async {
       final api = WebUtilz();
+      final title = _titleController.text.trim();
+      final content = _contentController.text.trim();
+      final materiaUUID =
+          widget.data['materia_uuid'] ?? '415bf3c4-398b-11f0-8291-505a65fbd4fe';
+      final autoreUUID = await getUUID();
       final result = await api.request(
         endpoint: 'NOTE',
         action: 'INSERT',
         method: 'POST',
         body: {
-          'autore_uuid': await getUUID(),
-          'titolo': _titleController.text,
-          'contenuto': _contentController.text,
-          'materia_uuid': "b5e6e7a0-39b6-11f0-aa3d-088fc32680d9 "
-        },
+          'autore_uuid': autoreUUID,
+          'titolo': title,
+          'contenuto': content,
+          'materia_uuid': materiaUUID,
+        },  
       );
-      if (result['status'] == 200) {
+      if (result['status'] >= 200 && result['status'] < 300) {
         showSnackBar(context, 'Nota salvata!', 2);
       } else {
         showSnackBar(context, 'Errore durante il salvataggio!', 2);

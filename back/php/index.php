@@ -170,17 +170,13 @@ try {
                 $data_creazione = $_POST['data_creazione'] ?? date('Y-m-d H:i:s');
                 $stato = $_POST['stato'] ?? 'bozza';
                 if (!$titolo || !$contenuto || !$autore_uuid /*|| !$materia_uuid'*/) {
-                    $response = new Response(400, "
-                      questo e l'user uuid: " . $autore_uuid .
-                     "questo e il titolo titolo,".$titolo.
-                     "questo e il contenuto".$contenuto."materia_uuid");
-                    
+                    $response = new Response(400, 
+                      "titolo: $titolo, contenuto: $contenuto, autore_uuid: $autore_uuid, materia_uuid: $materia_uuid");
                     $response->send();
                     exit;
                 }
                 $appunto = new Appunti( $titolo, $contenuto, $markdown, $visibilta, $autore_uuid, $materia_uuid);
                 $appunto->inserisciAppunti();
-                $response = new Response(200,"success");
             } else if ($action === 'GET_BY_UUID') {
                 $uuid = $_POST['uuid'] ?? null;
                 if (!$uuid) {
@@ -199,9 +195,9 @@ try {
                 }
                 Appunti::getAppuntiByMateria($materia, $classe);
             }
-
+            break;
         default:
-            $response = new Response(400, "endpoint not implemented".$endpoint);
+            $response = new Response(400, "endpoint not implemented ".$endpoint);
             $response->send();
             exit;
     }

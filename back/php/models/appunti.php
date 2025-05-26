@@ -41,69 +41,50 @@ class Appunti{
 
         $stmt->close();
         $conn->close();
+        $response = new Response(201, "Appunto inserito con successo");
+        $response->send();
     }
 
     public static function getAppunti(){
-        // $conn = database::getConnection();
-        // $query = "SELECT * FROM appunti";
-        // $stmt = $conn->prepare($query);
-        // if ($stmt === false) {
-        //     $response = new Response(500, "Errore lato server riprovare più tardi");
-        //     $response->send();
-        // }
-        // $stmt->execute();
-        // if ($stmt->error) {
-        //     $response = new Response(500, "Errore lato server riprovare più tardi");
-        //     $response->send();
-        // }
-        // $result = $stmt->get_result();
-        // if ($result->num_rows == 0) {
-        //     $stmt->close();
-        //     $conn->close();
-        //     $response = new Response(404, "Nessuna notifica trovata");
-        //     $response->send();
-        //     return;
-        // }
+        $conn = database::getConnection();
+        $query = "SELECT * FROM appunti";
+        $stmt = $conn->prepare($query);
+        if ($stmt === false) {
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
+        }
+        $stmt->execute();
+        if ($stmt->error) {
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
+        }
+        $result = $stmt->get_result();
+        if ($result->num_rows == 0) {
+            $stmt->close();
+            $conn->close();
+            $response = new Response(404, "Nessuna notifica trovata");
+            $response->send();
+            return;
+        }
 
         $appunti = [];
-        // while($row = $result->fetch_assoc()){
-        //     $appunti[]=[
-        //         'appunto_uuid' =>$row['appunto_uuid'],
-        //         'titolo' => $row['titolo'],
-        //         'contenuto' => $row['contenuto'],
-        //         'markdown' => $row['markdown'],
-        //         'visibilita' => $row['visibilita'],
-        //         'autore_uuid' => $row['autore_uuid'],
-        //         'materia_uuid' => $row['materia_uuid'],
-        //         'data_creazione' => $row['data_creazione'],
-        //         'stato'=> $row['stato']
-        //     ];
-        // }
+        while($row = $result->fetch_assoc()){
+            $appunti[]=[
+                'appunto_uuid' =>$row['appunto_uuid'],
+                'titolo' => $row['titolo'],
+                'contenuto' => $row['contenuto'],
+                'markdown' => $row['markdown'],
+                'visibilita' => $row['visibilita'],
+                'autore_uuid' => $row['autore_uuid'],
+                'materia_uuid' => $row['materia_uuid'],
+                'data_creazione' => $row['data_creazione'],
+                'stato'=> $row['stato']
+            ];
+        }
 
         $response = new Response(200, "appunti recuperati con successo");
         // $response->setData($appunti);
-        $response->setData([[
-                            'appunto_uuid' =>'9233df1c-3410-11f0-ad98-088fc32680d9',
-                            'titolo' => 'gli appunti di piero',
-                            'contenuto' => 'contenuto bello',
-                            'markdown' => '<title>daje</title>',
-                            'visibilita' => 'visibile',
-                            'autore_uuid' => 'f9588744-3410-11f0-ad98-088fc32680d9',
-                            'materia_uuid' => '0b196c51-3411-11f0-ad98-088fc32680d9',
-                            'data_creazione' => '2025-05-18 21:56:24',
-                            'stato'=>'revisionato'
-        ],
-        [
-                            'appunto_uuid' =>'9233df1c-3410-11f0-ad98-088fc32680d9',
-                            'titolo' => 'gli appunti di franco',
-                            'contenuto' => 'contenuto bello',
-                            'markdown' => '<title>daje</title>',
-                            'visibilita' => 'visibile',
-                            'autore_uuid' => '114759b3-37b0-11f0-a062-505a65fbd4fe',
-                            'materia_uuid' => '0b196c51-3411-11f0-ad98-088fc32680d9',
-                            'data_creazione' => '2025-05-18 21:56:24',
-                            'stato'=>'revisionato'
-        ]]);
+        $response->setData();
 
         $response->send();
     }
