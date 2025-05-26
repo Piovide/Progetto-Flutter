@@ -19,7 +19,8 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
   final TextEditingController _genreController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +48,8 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
           _dateOfBirthController.text = dateOfBirth;
           _genreController.text = genre;
 
-          if(setEnabled){
-            
-          }else{
-
-          }
+          if (setEnabled) {
+          } else {}
 
           return Form(
             child: Column(
@@ -89,10 +87,27 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
+                TextField(
                   controller: _dateOfBirthController,
                   enabled: setEnabled,
                   focusNode: FocusNode(),
+                  readOnly: true,
+                  onTap: () async {
+                    if (setEnabled) {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime.now(),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _dateOfBirthController.text =
+                              "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                        });
+                      }
+                    }
+                  },
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(100)),
@@ -157,7 +172,7 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                if(showPasswordConfirmation)
+                if (showPasswordConfirmation)
                   Column(
                     children: [
                       TextFormField(
@@ -167,14 +182,15 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                         obscureText: true,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(100)
-                          ),
+                              borderRadius: BorderRadius.circular(100)),
                           disabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100),
                             borderSide: BorderSide(color: black),
                           ),
-                          label: Text("New Password", style: TextStyle(color: black)),
-                          prefixIcon: Icon(Icons.lock_outline_rounded, color: black),
+                          label: Text("New Password",
+                              style: TextStyle(color: black)),
+                          prefixIcon:
+                              Icon(Icons.lock_outline_rounded, color: black),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -185,14 +201,15 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                         obscureText: true,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(100)
-                          ),
+                              borderRadius: BorderRadius.circular(100)),
                           disabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100),
                             borderSide: BorderSide(color: black),
                           ),
-                          label: Text("Confirm Password", style: TextStyle(color: black)),
-                          prefixIcon: Icon(Icons.lock_outline_rounded, color: black),
+                          label: Text("Confirm Password",
+                              style: TextStyle(color: black)),
+                          prefixIcon:
+                              Icon(Icons.lock_outline_rounded, color: black),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -206,7 +223,8 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                             setState(() {
                               showSaveButton = !showSaveButton;
                               setEnabled = !setEnabled;
-                              showPasswordConfirmation = !showPasswordConfirmation;
+                              showPasswordConfirmation =
+                                  !showPasswordConfirmation;
                             });
                           },
                           style: ElevatedButton.styleFrom(
@@ -216,7 +234,8 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                               borderRadius: BorderRadius.circular(30.0),
                             ),
                           ),
-                          child: Text("Salva", style: TextStyle(color: Colors.white)),
+                          child: Text("Salva",
+                              style: TextStyle(color: Colors.white)),
                         ),
                       )
                     : SizedBox(
@@ -226,7 +245,8 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                             setState(() {
                               setEnabled = !setEnabled;
                               showSaveButton = !showSaveButton;
-                              showPasswordConfirmation = !showPasswordConfirmation;
+                              showPasswordConfirmation =
+                                  !showPasswordConfirmation;
                             });
                           },
                           style: ElevatedButton.styleFrom(
