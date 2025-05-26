@@ -10,8 +10,18 @@ class InformationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: HeaderComp(context, false),
-      body: const Center(
-        child: Text('This is the Information Page'),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(30.0),
+        child: Column(
+          children: [
+            Center(
+              child: Text(
+                'Informazioni',
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+            ),
+          ],
+        )
       ),
     );
   }
