@@ -12,11 +12,14 @@ class ProfilePageFormWidget extends StatefulWidget {
 class _EnableFormState extends State<ProfilePageFormWidget> {
   bool setEnabled = false;
   bool showSaveButton = false;
+  bool showPasswordConfirmation = false;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _genreController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +46,12 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
           _surnameController.text = surname;
           _dateOfBirthController.text = dateOfBirth;
           _genreController.text = genre;
+
+          if(setEnabled){
+            
+          }else{
+
+          }
 
           return Form(
             child: Column(
@@ -143,11 +152,52 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                       borderRadius: BorderRadius.circular(100),
                       borderSide: BorderSide(color: black),
                     ),
-                    label: Text("Password", style: TextStyle(color: black)),
+                    label: Text("Old password", style: TextStyle(color: black)),
                     prefixIcon: Icon(Icons.lock_outline_rounded, color: black),
                   ),
                 ),
                 const SizedBox(height: 20),
+                if(showPasswordConfirmation)
+                  Column(
+                    children: [
+                      TextFormField(
+                        controller: _newPasswordController,
+                        enabled: setEnabled,
+                        focusNode: FocusNode(),
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(100)
+                          ),
+                          disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(100),
+                            borderSide: BorderSide(color: black),
+                          ),
+                          label: Text("New Password", style: TextStyle(color: black)),
+                          prefixIcon: Icon(Icons.lock_outline_rounded, color: black),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        controller: _confirmPasswordController,
+                        enabled: setEnabled,
+                        focusNode: FocusNode(),
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(100)
+                          ),
+                          disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(100),
+                            borderSide: BorderSide(color: black),
+                          ),
+                          label: Text("Confirm Password", style: TextStyle(color: black)),
+                          prefixIcon: Icon(Icons.lock_outline_rounded, color: black),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 showSaveButton
                     ? SizedBox(
                         width: 200,
@@ -156,6 +206,7 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                             setState(() {
                               showSaveButton = !showSaveButton;
                               setEnabled = !setEnabled;
+                              showPasswordConfirmation = !showPasswordConfirmation;
                             });
                           },
                           style: ElevatedButton.styleFrom(
@@ -165,8 +216,7 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                               borderRadius: BorderRadius.circular(30.0),
                             ),
                           ),
-                          child: Text("Salva",
-                              style: TextStyle(color: Colors.white)),
+                          child: Text("Salva", style: TextStyle(color: Colors.white)),
                         ),
                       )
                     : SizedBox(
@@ -176,6 +226,7 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                             setState(() {
                               setEnabled = !setEnabled;
                               showSaveButton = !showSaveButton;
+                              showPasswordConfirmation = !showPasswordConfirmation;
                             });
                           },
                           style: ElevatedButton.styleFrom(
