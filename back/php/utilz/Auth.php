@@ -184,46 +184,8 @@ class Auth {
         }
     }
 
-    public function updateUserData($uuid, $nome, $cognome, $dataNascita, $sesso, $old_password, $new_password){
-        if ($new_password !== null && $old_password !== null) {
-            $query = "SELECT password_hash FROM utenti WHERE uuid = ?";
-            $stmt = $this->conn->prepare($query);
-            if ($stmt === false) {
-                $response = new Response(500, "Errore interno del server.");
-                $response->send();
-                return;
-            }
-            $stmt->bind_param("s", $uuid);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            if ($result->num_rows > 0) {
-                $utente = $result->fetch_assoc();
-                if (password_verify($old_password, $utente['password_hash'])) {
-                    $new_password_hash = password_hash($new_password, PASSWORD_BCRYPT);
-                    $query = "UPDATE utenti SET password_hash = ? WHERE uuid = ?";
-                    $stmt2 = $this->conn->prepare($query);
-                    if ($stmt2 === false) {
-                        $response = new Response(500, "Errore interno del server.");
-                        $response->send();
-                        return;
-                    }
-                    $stmt2->bind_param("ss", $new_password_hash, $uuid);
-                    $stmt2->execute();
-                    if ($stmt2->error) {
-                        $response = new Response(500, "Errore durante l'aggiornamento della password.");
-                        $response->send();
-                        return;
-                    }
-                    $stmt2->close();
-                } else {
-                    $response = new Response(401, "Password attuale non valida.");
-                    $response->send();
-                    return;
-                }
-            }
-            $stmt->close();
-        }
-
+    public function updateUserData($uuid, $nome, $cognome, $data_nascita, $sesso, $old_password, $new_password): void{
+        $result = $this->changePassword($uuid, $old_password, $new_password);
         $fields = [];
         $params = [];
         $types = '';
@@ -238,9 +200,9 @@ class Auth {
             $params[] = $cognome;
             $types .= 's';
         }
-        if ($dataNascita !== null) {
+        if ($data_nascita !== null) {
             $fields[] = "data_nascita = ?";
-            $params[] = $dataNascita;
+            $params[] = $data_nascita;
             $types .= 's';
         }
         if ($sesso !== null) {
@@ -275,51 +237,41 @@ class Auth {
     }
 
     public function changePassword($uuid, $old_password, $new_password) {
-        $query = "SELECT * FROM utenti WHERE email = ? OR username = ?";
+        $query = "SELECT * FROM utenti WHERE uuid = ?";
         $stmt = $this->conn->prepare($query);
 
         if ($stmt === false) {
-            $response = new Response(500, "Errore interno del server.");
-            $response->send();
+            return false;
         }
-        $stmt->bind_param("ss", $username, $username);
+        $stmt->bind_param("s", $uuid);
         $stmt->execute();
         if ($stmt->error) {
-            $response = new Response(500, "Errore interno del server.");
-            $response->send();
+            return false;
         }
 
         $result = $stmt->get_result();
-       
+
         if ($result->num_rows > 0) {
             $utente = $result->fetch_assoc();
-            if(password_verify($old_password, $utente['password_hash'])){
+            if (password_verify($old_password, $utente['password_hash'])) {
                 $query = "UPDATE utenti SET password_hash = ? WHERE uuid = ?";
                 $stmt = $this->conn->prepare($query);
                 if ($stmt === false) {
-                    $response = new Response(500, "Errore interno del server.");
-                    $response->send();
+                    return false;
                 }
                 $new_password_hash = password_hash($new_password, PASSWORD_BCRYPT);
                 $stmt->bind_param("ss", $new_password_hash, $uuid);
                 $stmt->execute();
                 if ($stmt->error) {
-                    $response = new Response(500, "Errore interno del server.");
-                    $response->send();
+                    return false;
                 }
                 $stmt->close();
-                $this->conn->close();
-                $response = new Response(200, "Password cambiata con successo.");
-            }else{
-                $response = new Response(401, "Password non valida.");
-                $response->send();
-                return;
+                return true;
+            } else {
+                return false;
             }
-            
         } else {
-            // Credenziali non valide
-            $response = new Response(401, "Credenziali non valide.");
-            $response->send();
+            return false;
         }
     }
 }
