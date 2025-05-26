@@ -62,7 +62,7 @@ class Appunti{
         if ($result->num_rows == 0) {
             $stmt->close();
             $conn->close();
-            $response = new Response(404, "Nessuna notifica trovata");
+            $response = new Response(404, "Nessuna appunto trovato");
             $response->send();
             return;
         }
@@ -70,7 +70,7 @@ class Appunti{
         $appunti = [];
         while($row = $result->fetch_assoc()){
             $appunti[]=[
-                'appunto_uuid' =>$row['appunto_uuid'],
+                'uuid' =>$row['uuid'],
                 'titolo' => $row['titolo'],
                 'contenuto' => $row['contenuto'],
                 'markdown' => $row['markdown'],
@@ -83,8 +83,29 @@ class Appunti{
         }
 
         $response = new Response(200, "appunti recuperati con successo");
-        // $response->setData($appunti);
-        $response->setData();
+        $response->setData($appunti);
+        // $response->setData([[
+        //                     'appunto_uuid' =>'9233df1c-3410-11f0-ad98-088fc32680d9',
+        //                     'titolo' => 'gli appunti di piero',
+        //                     'contenuto' => 'contenuto bello',
+        //                     'markdown' => '<title>daje</title>',
+        //                     'visibilita' => 'visibile',
+        //                     'autore_uuid' => 'f9588744-3410-11f0-ad98-088fc32680d9',
+        //                     'materia_uuid' => '0b196c51-3411-11f0-ad98-088fc32680d9',
+        //                     'data_creazione' => '2025-05-18 21:56:24',
+        //                     'stato'=>'revisionato'
+        // ],
+        // [
+        //                     'appunto_uuid' =>'9233df1c-3410-11f0-ad98-088fc32680d9',
+        //                     'titolo' => 'gli appunti di franco',
+        //                     'contenuto' => 'contenuto bello',
+        //                     'markdown' => '<title>daje</title>',
+        //                     'visibilita' => 'visibile',
+        //                     'autore_uuid' => '114759b3-37b0-11f0-a062-505a65fbd4fe',
+        //                     'materia_uuid' => '0b196c51-3411-11f0-ad98-088fc32680d9',
+        //                     'data_creazione' => '2025-05-18 21:56:24',
+        //                     'stato'=>'revisionato'
+        // ]]);
 
         $response->send();
     }
