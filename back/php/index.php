@@ -195,11 +195,11 @@ try {
                 }
                 Appunti::getAppuntiByMateria($materia, $classe);
             }else if ($action === 'UPDATE') {
-                $uuid = $_POST['autore_uuid'] ?? null;
+                $uuid = $_POST['uuid'] ?? null;
                 $titolo = $_POST['titolo'] ?? '';
                 $contenuto = $_POST['contenuto'] ?? '';
                 if(!$uuid || !$titolo || !$contenuto) {
-                    $response = new Response(400, "Missing uuid, titolo or contenuto".$uuid."sdfgwf:". $titolo."sdfgwf:".$contenuto);
+                    $response = new Response(400, "Missing uuid, titolo or contenuto");
                     $response->send();
                     exit;
                 }

@@ -308,6 +308,7 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
         action: 'UPDATE',
         method: 'POST',
         body: {
+          'uuid': widget.data['uuid'],
           'autore_uuid': autoreUUID,
           'titolo': title,
           'contenuto': content,

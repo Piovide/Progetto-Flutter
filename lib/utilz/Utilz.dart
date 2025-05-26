@@ -87,6 +87,14 @@ void saveUserData(Map<String, dynamic> userData) async {
   }
 }
 
+void refreshUserData() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.remove('nome');
+  await prefs.remove('cognome');
+  await prefs.remove('data_nascita');
+  await prefs.remove('sesso');
+}
+
 Future<Map<String, dynamic>> getUserData() async {
   final prefs = await SharedPreferences.getInstance();
   final keys = prefs.getKeys();

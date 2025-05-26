@@ -19,6 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String errorMessage = '';
   Color errorColor = Colors.red;
   bool _isObscure = true;
+  bool _isObscureRepeat = true;
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +140,7 @@ class _SignUpPageState extends State<SignUpPage> {
               onChanged: (value) {
                 checkPasswordInput(value);
               },
-              obscureText: _isObscure,
+              obscureText: _isObscureRepeat,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(100),
@@ -160,9 +161,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 prefixIcon: Icon(Icons.lock),
                 suffixIcon: IconButton(
                   icon: Icon(
-                      _isObscure ? Icons.visibility_off : Icons.visibility),
+                      _isObscureRepeat ? Icons.visibility_off : Icons.visibility),
                   onPressed: () {
-                    _isObscure = !_isObscure;
+                    _isObscureRepeat = !_isObscureRepeat;
                     (context as Element).markNeedsBuild();
                   },
                 ),

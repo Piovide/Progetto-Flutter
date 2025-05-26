@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/colors.dart';
+import 'package:wiki_appunti/utilz/WebUtilz.dart';
 import '../utilz/Utilz.dart';
 
 class ProfilePageFormWidget extends StatefulWidget {
@@ -12,13 +13,17 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
   bool showSaveButton = false;
   bool showPasswordConfirmation = false;
   bool _isInitialized = false;
+  bool _isObscure = true;
+  bool _isObscureNew = true;
+  bool _isObscureConfirm = true;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _dateOfBirthController = TextEditingController();
   final TextEditingController _genreController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +52,7 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
           // _genreController.text = genre;
           // _dateOfBirthController.text = dateOfBirth;
 
-          if(!_isInitialized){
+          if (!_isInitialized) {
             _nameController.text = name;
             _surnameController.text = surname;
             _genreController.text = genre;
@@ -160,6 +165,8 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _passwordController,
+                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: _isObscure,
                   enabled: setEnabled,
                   focusNode: FocusNode(),
                   decoration: InputDecoration(
@@ -171,6 +178,16 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                     ),
                     label: Text("Old password", style: TextStyle(color: black)),
                     prefixIcon: Icon(Icons.lock_outline_rounded, color: black),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isObscure ? Icons.visibility_off : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isObscure = !_isObscure;
+                        });
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -179,9 +196,10 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                     children: [
                       TextFormField(
                         controller: _newPasswordController,
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: _isObscure,
                         enabled: setEnabled,
                         focusNode: FocusNode(),
-                        obscureText: true,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100)),
@@ -193,25 +211,70 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                               style: TextStyle(color: black)),
                           prefixIcon:
                               Icon(Icons.lock_outline_rounded, color: black),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isObscureNew
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isObscureNew = !_isObscureNew;
+                              });
+                            },
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
                         controller: _confirmPasswordController,
-                        enabled: setEnabled,
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: _isObscureConfirm,
                         focusNode: FocusNode(),
-                        obscureText: true,
+                        enabled: setEnabled,
+                        onChanged: (value) {
+                          setState(() {
+                            checkPasswordInput(value);
+                          });
+                        },
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(100)),
-                          disabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(100),
-                            borderSide: BorderSide(color: black),
+                            borderSide: BorderSide(
+                              color: checkPasswordInput(
+                                  _confirmPasswordController.text),
+                            ),
                           ),
-                          label: Text("Confirm Password",
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(100),
+                            borderSide: BorderSide(
+                              color: checkPasswordInput(
+                                  _confirmPasswordController.text),
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(100),
+                            borderSide: BorderSide(
+                              color: checkPasswordInput(
+                                  _confirmPasswordController.text),
+                            ),
+                          ),
+                          label: Text('Repeat Password',
                               style: TextStyle(color: black)),
                           prefixIcon:
                               Icon(Icons.lock_outline_rounded, color: black),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isObscureConfirm
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isObscureConfirm = !_isObscureConfirm;
+                              });
+                            },
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -222,10 +285,12 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                         width: 200,
                         child: ElevatedButton(
                           onPressed: () {
+                            checkInputsAndChange();
                             setState(() {
                               showSaveButton = !showSaveButton;
                               setEnabled = !setEnabled;
-                              showPasswordConfirmation = !showPasswordConfirmation;
+                              showPasswordConfirmation =
+                                  !showPasswordConfirmation;
                             });
                           },
                           style: ElevatedButton.styleFrom(
@@ -265,5 +330,93 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
             ),
           );
         });
+  }
+
+  Color checkPasswordInput(value) {
+    String password = _newPasswordController.text;
+    String repeatPassword = value;
+    Color borderColor = Colors.grey;
+    if (value.toString().isNotEmpty) {
+      print("Password: $password");
+      print("Repeat Password: $repeatPassword");
+      if (password == repeatPassword) {
+        borderColor = Colors.green;
+      } else {
+        borderColor = Colors.red;
+      }
+    }
+    return borderColor;
+  }
+
+  Future<void> checkInputsAndChange() async {
+    String name = _nameController.text;
+    String surname = _surnameController.text;
+    String dateOfBirth = _dateOfBirthController.text;
+    String genre = _genreController.text;
+    String password = _passwordController.text;
+    String newPassword = _newPasswordController.text;
+    String confirmPassword = _confirmPasswordController.text;
+
+    if (name.isNotEmpty ||
+        surname.isNotEmpty ||
+        dateOfBirth.isNotEmpty ||
+        genre.isNotEmpty ||
+        (password.isNotEmpty &&
+        newPassword.isNotEmpty &&
+        confirmPassword.isNotEmpty)) {
+      if (newPassword == _confirmPasswordController.text) {
+        if (newPassword != password) {
+          final api = WebUtilz();
+          final result = await api.request(
+            endpoint: 'AUTH',
+            action: 'UPDATE',
+            method: 'POST',
+            body: {
+              'nome': name,
+              'cognome': surname,
+              'data_nascita': dateOfBirth,
+              'sesso': genre,
+              'password': password,
+              'new_password': newPassword,
+            },
+          );
+          if (result['status'] == 200) {
+            showSnackBar(
+              context,
+              "Profilo aggiornato con successo",
+              2,
+            );
+            saveUserData({
+              'nome': name,
+              'cognome': surname,
+              'data_nascita': dateOfBirth,
+              'sesso': genre,
+            });
+            refreshUserData();
+          }
+        } else {
+          showSnackBar(
+            context,
+            "La nuova password non può essere uguale alla vecchia",
+            2,
+            backgroundColor: Colors.blueGrey,
+          );
+        }
+      } else {
+        showSnackBar(
+          context,
+          "Le password non corrispondono",
+          2,
+          backgroundColor: Colors.blueGrey,
+        );
+      }
+    } else {
+      showSnackBar(
+        context,
+        "Riempire almeno un campo per procedere",
+        2,
+        backgroundColor: Colors.blueGrey,
+      );
+    }
   }
 }

@@ -142,6 +142,7 @@ class _HomepageState extends State<Homepage> {
                           final subjectInfo = classes[index];
                           return InkWell(
                               onTap: () {
+                                // print("sdjhgajasbdk ${subjectInfo['uuid']}");
                                 navigateToPage(context, 'notes', false,
                                     arguments: {
                                       'data': subjectInfo,

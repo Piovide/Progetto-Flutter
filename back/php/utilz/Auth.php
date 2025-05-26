@@ -184,6 +184,96 @@ class Auth {
         }
     }
 
+    public function updateUserData($uuid, $nome, $cognome, $dataNascita, $sesso, $old_password, $new_password){
+        if ($new_password !== null && $old_password !== null) {
+            $query = "SELECT password_hash FROM utenti WHERE uuid = ?";
+            $stmt = $this->conn->prepare($query);
+            if ($stmt === false) {
+                $response = new Response(500, "Errore interno del server.");
+                $response->send();
+                return;
+            }
+            $stmt->bind_param("s", $uuid);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($result->num_rows > 0) {
+                $utente = $result->fetch_assoc();
+                if (password_verify($old_password, $utente['password_hash'])) {
+                    $new_password_hash = password_hash($new_password, PASSWORD_BCRYPT);
+                    $query = "UPDATE utenti SET password_hash = ? WHERE uuid = ?";
+                    $stmt2 = $this->conn->prepare($query);
+                    if ($stmt2 === false) {
+                        $response = new Response(500, "Errore interno del server.");
+                        $response->send();
+                        return;
+                    }
+                    $stmt2->bind_param("ss", $new_password_hash, $uuid);
+                    $stmt2->execute();
+                    if ($stmt2->error) {
+                        $response = new Response(500, "Errore durante l'aggiornamento della password.");
+                        $response->send();
+                        return;
+                    }
+                    $stmt2->close();
+                } else {
+                    $response = new Response(401, "Password attuale non valida.");
+                    $response->send();
+                    return;
+                }
+            }
+            $stmt->close();
+        }
+
+        $fields = [];
+        $params = [];
+        $types = '';
+
+        if ($nome !== null) {
+            $fields[] = "nome = ?";
+            $params[] = $nome;
+            $types .= 's';
+        }
+        if ($cognome !== null) {
+            $fields[] = "cognome = ?";
+            $params[] = $cognome;
+            $types .= 's';
+        }
+        if ($dataNascita !== null) {
+            $fields[] = "data_nascita = ?";
+            $params[] = $dataNascita;
+            $types .= 's';
+        }
+        if ($sesso !== null) {
+            $fields[] = "sesso = ?";
+            $params[] = $sesso;
+            $types .= 's';
+        }
+
+        if (!empty($fields)) {
+            $query = "UPDATE utenti SET " . implode(', ', $fields) . " WHERE uuid = ?";
+            $params[] = $uuid;
+            $types .= 's';
+
+            $stmt = $this->conn->prepare($query);
+            if ($stmt === false) {
+                $response = new Response(500, "Errore interno del server.");
+                $response->send();
+                return;
+            }
+            $stmt->bind_param($types, ...$params);
+            $stmt->execute();
+            if ($stmt->error) {
+                $response = new Response(500, "Errore durante l'aggiornamento dei dati.");
+                $response->send();
+                return;
+            }
+            $stmt->close();
+        }
+        
+        $response = new Response(200, "Dati aggiornati con successo.");
+        $response->send();
+    }
+
     public function changePassword($uuid, $old_password, $new_password) {
         $query = "SELECT * FROM utenti WHERE email = ? OR username = ?";
         $stmt = $this->conn->prepare($query);
