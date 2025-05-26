@@ -389,13 +389,13 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
               "Profilo aggiornato con successo",
               2,
             );
+            refreshUserData();
             saveUserData({
               'nome': name,
               'cognome': surname,
               'data_nascita': dateOfBirth,
               'sesso': genre,
             });
-            refreshUserData();
           }
         } else {
           showSnackBar(
