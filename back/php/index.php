@@ -1,7 +1,7 @@
 <?php
 // Abilita CORS per tutti i domini (solo per test, poi limita con l'IP o dominio)
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, UPDATE, DELETE");
 header("Access-Control-Allow-Headers: *");
 // Gestisce preflight OPTIONS per richieste CORS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -195,11 +195,11 @@ try {
                 }
                 Appunti::getAppuntiByMateria($materia, $classe);
             }else if ($action === 'UPDATE') {
-                $uuid = $_POST['uuid'] ?? null;
+                $uuid = $_POST['autore_uuid'] ?? null;
                 $titolo = $_POST['titolo'] ?? '';
                 $contenuto = $_POST['contenuto'] ?? '';
                 if(!$uuid || !$titolo || !$contenuto) {
-                    $response = new Response(400, "Missing uuid, titolo or contenuto");
+                    $response = new Response(400, "Missing uuid, titolo or contenuto".$uuid."sdfgwf:". $titolo."sdfgwf:".$contenuto);
                     $response->send();
                     exit;
                 }

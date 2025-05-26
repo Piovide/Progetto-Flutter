@@ -242,7 +242,7 @@ class Appunti{
 
     public static function updateAppunto($titolo, $contenuto, $appunto_uuid){
         $conn = Database::getConnection();
-        $query = "UPDATE appunti SET titolo = ?, contenuto = ? WHERE appunto_uuid = ?";
+        $query = "UPDATE appunti SET titolo = ?, contenuto = ? WHERE uuid = ?";
         $stmt = $conn->prepare($query);
         if($stmt === false){
             // $response = new Response(500, "Errore lato server". $conn->error ."");
@@ -261,7 +261,7 @@ class Appunti{
 
         $stmt->close();
         $conn->close();
-        $response = new Response(200, "Appunto aggiornato con successo");
+        $response = new Response(200, "Appunto aggiornato con successo".$contenuto);
         $response->send();
         return;
     }
