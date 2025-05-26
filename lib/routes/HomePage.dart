@@ -34,7 +34,6 @@ class _HomepageState extends State<Homepage> {
   Future<List<Map<String, dynamic>>> getAppuntiUtente() async {
     final api = WebUtilz();
     final uuid = await getUUID();
-    print('UUID: $uuid');
     final result = await api.request(
       endpoint: 'NOTE',
       action: 'GET_BY_UUID',
@@ -96,6 +95,7 @@ class _HomepageState extends State<Homepage> {
                           'contenuto': '',
                           'autore_uuid': userData?['uuid'] ?? '',
                         },
+                        'accessedFor': 'create',
                       });
                     },
                   ),
@@ -145,11 +145,11 @@ class _HomepageState extends State<Homepage> {
                                 navigateToPage(context, 'notes', false,
                                     arguments: {
                                       'data': subjectInfo,
+                                      'accessedFor': 'edit',
                                     });
                               },
                               borderRadius: BorderRadius.circular(12),
-                              child:
-                                  NotesCardWidget(subjectInfo: subjectInfo));
+                              child: NotesCardWidget(subjectInfo: subjectInfo));
                         },
                       );
                     });

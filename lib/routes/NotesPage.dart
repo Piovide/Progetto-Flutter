@@ -5,7 +5,12 @@ import '../utilz/WebUtilz.dart';
 
 class Notespage extends StatefulWidget {
   final Map<String, dynamic> data;
-  const Notespage({super.key, this.data = const {}});
+  final String? accessedFor;
+  const Notespage({
+    super.key,
+    this.data = const {},
+    this.accessedFor = 'edit',
+  });
   @override
   State<Notespage> createState() => _NotesState();
 }
@@ -264,7 +269,7 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final isPhone = MediaQuery.of(context).size.width < 600;
-    void onSave() async {
+    void saveNote() async {
       final api = WebUtilz();
       final title = _titleController.text.trim();
       final content = _contentController.text.trim();
@@ -280,12 +285,41 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
           'titolo': title,
           'contenuto': content,
           'materia_uuid': materiaUUID,
-        },  
+        },
       );
-      if (result['status'] >= 200 && result['status'] < 300) {
-        showSnackBar(context, 'Nota salvata!', 2);
-      } else {
-        showSnackBar(context, 'Errore durante il salvataggio!', 2);
+      if (context.mounted) {
+        if (result['status'] >= 200 && result['status'] < 300) {
+          showSnackBar(context, 'Nota salvata!', 2);
+        } else {
+          showSnackBar(context, 'Errore durante il salvataggio!', 2);
+        }
+      }
+    }
+
+    void updateNote() async {
+      final api = WebUtilz();
+      final title = _titleController.text.trim();
+      final content = _contentController.text.trim();
+      final materiaUUID =
+          widget.data['materia_uuid'] ?? '415bf3c4-398b-11f0-8291-505a65fbd4fe';
+      final autoreUUID = await getUUID();
+      final result = await api.request(
+        endpoint: 'NOTE',
+        action: 'UPDATE',
+        method: 'POST',
+        body: {
+          'autore_uuid': autoreUUID,
+          'titolo': title,
+          'contenuto': content,
+          'materia_uuid': materiaUUID,
+        },
+      );
+      if (context.mounted) {
+        if (result['status'] >= 200 && result['status'] < 300) {
+          showSnackBar(context, 'Nota salvata!', 2);
+        } else {
+          showSnackBar(context, 'Errore durante il salvataggio!', 2);
+        }
       }
     }
 
@@ -344,8 +378,9 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
               ? [
                   IconButton(
                     icon: const Icon(Icons.save),
-                    tooltip: 'Salva',
-                    onPressed: onSave,
+                    tooltip: 'Salva ${widget.accessedFor}',
+                    onPressed:
+                        widget.accessedFor == "create" ? saveNote : updateNote,
                   ),
                 ]
               : [],
@@ -424,8 +459,9 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
               ? [
                   IconButton(
                     icon: const Icon(Icons.save),
-                    tooltip: 'Salva',
-                    onPressed: onSave,
+                    tooltip: 'Salva ${widget.accessedFor}',
+                    onPressed:
+                        widget.accessedFor == "create" ? saveNote : updateNote,
                   ),
                 ]
               : [],

@@ -3,7 +3,6 @@ import '../component/HeaderComp.dart';
 import '../component/ProfilePageMenuWidget.dart';
 import '../component/ProfilePageIconWidget.dart';
 import '../component/ProfilePageFormWidget.dart';
-import '../utilz/Utilz.dart';
 
 class ProfilePage extends StatefulWidget {
   @override

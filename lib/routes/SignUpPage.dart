@@ -167,6 +167,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   },
                 ),
               ),
+              onFieldSubmitted: (_) {
+                checkInputsAndLogin();
+              },
             ),
 
             //SizedBox for spacing
@@ -265,8 +268,7 @@ class _SignUpPageState extends State<SignUpPage> {
       setErrorMessage('Please fill in all fields');
     } else if (password != repeatPassword) {
       setErrorMessage('Passwords do not match');
-      }
-       else if (password.length < 6) {
+    } else if (password.length < 6) {
       setErrorMessage('Password must be at least 6 characters long');
       return;
     } else {

@@ -194,6 +194,16 @@ try {
                     exit;
                 }
                 Appunti::getAppuntiByMateria($materia, $classe);
+            }else if ($action === 'UPDATE') {
+                $uuid = $_POST['uuid'] ?? null;
+                $titolo = $_POST['titolo'] ?? '';
+                $contenuto = $_POST['contenuto'] ?? '';
+                if(!$uuid || !$titolo || !$contenuto) {
+                    $response = new Response(400, "Missing uuid, titolo or contenuto");
+                    $response->send();
+                    exit;
+                }
+                Appunti::updateAppunto($titolo, $contenuto, $uuid);
             }
             break;
         default:

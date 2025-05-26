@@ -36,17 +36,20 @@ class NotesCardWidget extends StatelessWidget {
                       fontSize: 16,
                     )),
               )),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              subjectInfo['contenuto']!,
-              style: TextStyle(
-                fontSize: 14,
-                color: grey,
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                subjectInfo['contenuto']!,
+                maxLines: 20,
+                overflow: TextOverflow.fade,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: grey,
+                ),
               ),
             ),
           ),
-          Spacer(),
           Align(
             alignment: Alignment.bottomRight,
             child: Padding(

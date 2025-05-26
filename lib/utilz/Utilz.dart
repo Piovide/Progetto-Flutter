@@ -31,7 +31,8 @@ void navigateToPage(BuildContext context, String pageName, bool replace,
       page = Subjectpage(materia: arguments?['materia']);
       break;
     case 'notes':
-      page = Notespage(data: arguments?['data']);
+      page = Notespage(
+          data: arguments?['data'], accessedFor: arguments?['accessedFor']);
       break;
     case 'settings':
       page = SettingsPage();

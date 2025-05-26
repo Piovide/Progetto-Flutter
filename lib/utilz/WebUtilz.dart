@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class WebUtilz {
@@ -34,9 +35,11 @@ class WebUtilz {
         case 'POST':
           response =
               await http.post(url, headers: defaultHeaders, body: encodedBody);
-          print("----------------------------------------------------------");
-          print(response.body);
-          print("----------------------------------------------------------");
+          if (kDebugMode) {
+            print("----------------------------------------------------------");
+            print(response.body);
+            print("----------------------------------------------------------");
+          }
           break;
         case 'PUT':
           response =
@@ -52,7 +55,9 @@ class WebUtilz {
 
       return json.decode(response.body);
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
 
       return {
         'success': false,

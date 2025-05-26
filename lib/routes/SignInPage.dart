@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../utilz/Utilz.dart';
@@ -19,10 +20,11 @@ class _SignInPageState extends State<SignInPage> {
     super.initState();
     getSessionToken().then((token) {
       if (token != null) {
-        print("questo é il token dafan: " + token.toString());
         validateToken(token);
       } else {
-        print("token nullo");
+        if (kDebugMode) {
+          print("token nullo");
+        }
       }
     });
   }
@@ -81,6 +83,9 @@ class _SignInPageState extends State<SignInPage> {
                       (context as Element).markNeedsBuild();
                     },
                   )),
+              onFieldSubmitted: (_) {
+                checkInputsAndLogin();
+              },
             ),
 
             //SizedBox for spacing
@@ -161,7 +166,9 @@ class _SignInPageState extends State<SignInPage> {
           "data_nascita": dati['data_nascita'] ?? '',
           "sesso": dati['sesso'] ?? ''
         });
-        navigateToPage(context, 'home', true);
+        if (mounted) {
+          navigateToPage(context, 'home', true);
+        }
       }
     }
   }
@@ -206,14 +213,10 @@ class _SignInPageState extends State<SignInPage> {
           dati = result['data'];
           if (dati['uuid'] != null) {
             saveUUID(dati['uuid']);
-            String? uuid = await getUUID();
-            print("questo é lo uuid: " + uuid.toString());
           }
 
           if (dati['token'] != null) {
             saveSessionToken(dati['token']);
-            String? token = await getSessionToken();
-            print("questo é il token: " + token.toString());
           }
           saveUserData({
             "uuid": dati['uuid'],

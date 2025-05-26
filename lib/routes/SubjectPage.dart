@@ -42,7 +42,7 @@ class _SubjectState extends State<Subjectpage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Benvenuto/a  Utente!',
+                'Appunti di ${widget.materia}',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -82,6 +82,7 @@ class _SubjectState extends State<Subjectpage> {
                                 navigateToPage(context, 'notes', false,
                                     arguments: {
                                       'data': subjectInfo,
+                                      'accessedFor': 'edit',
                                     });
                               },
                               borderRadius: BorderRadius.circular(12),

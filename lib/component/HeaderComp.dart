@@ -1,5 +1,6 @@
 // import 'dart:nativewrappers/_internal/vm/lib/ffi_patch.dart';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../utilz/Utilz.dart';
@@ -8,26 +9,25 @@ import '../utilz/WebUtilz.dart';
 class HeaderComp extends AppBar implements PreferredSizeWidget {
   HeaderComp(BuildContext context, bool showIcons)
       : super(
-            title: showIcons
+          title: showIcons
               ? Row(
-                children: [
-                Icon(
-                  Icons.note_alt,
-                  size: 40,
-                  color: black,
-                ),
-                SizedBox(width: 10),
-                Text(
-                  'Wiki Appunti',
-                  style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  ),
-                ),
-                ],
-              )
+                  children: [
+                    Icon(
+                      Icons.note_alt,
+                      size: 40,
+                      color: black,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Wiki Appunti',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                )
               : null,
-              
           backgroundColor: teal,
           centerTitle: false,
           actions: showIcons
@@ -39,13 +39,15 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                       size: 30,
                     ),
                     onPressed: () async {
+                      final BuildContext localContext = context;
                       final RenderBox renderBox =
-                          (context.findRenderObject() as RenderBox);
+                          (localContext.findRenderObject() as RenderBox);
                       final Offset offset = renderBox.localToGlobal(
                         Offset(renderBox.size.width, 0),
                       );
                       final api = WebUtilz();
-                      Future<List<Map<String, dynamic>>> getNotifications() async {
+                      Future<List<Map<String, dynamic>>>
+                          getNotifications() async {
                         String? uuid = await getUUID();
 
                         final result = await api.request(
@@ -56,19 +58,28 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                             'utente_uuid': uuid ?? '',
                           },
                         );
-                        print(result);
+                          if (kDebugMode) {
+                            print(result);
+                          }
+                        
                         if (result['status'] == 404) {
                           return [];
                         }
                         if (result['data'] is List) {
-                          return List<Map<String, dynamic>>.from(result['data']);
+                          return List<Map<String, dynamic>>.from(
+                              result['data']);
                         }
                         return [];
                       }
 
-                      List<Map<String, dynamic>> notifications = await getNotifications();
+                      List<Map<String, dynamic>> notifications =
+                          await getNotifications();
+
+                      // Check if context is still valid before using it
+                      if (!localContext.mounted) return;
+
                       showMenu(
-                        context: context,
+                        context: localContext,
                         position: RelativeRect.fromLTRB(
                           offset.dx,
                           offset.dy + 60,
@@ -100,8 +111,9 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                                       subtitle: Text(notification['messaggio']),
                                       onTap: () {
                                         // Handle notification tap
-                                        Navigator.pop(context);
-                                        navigateToPage(context, 'profile', false);
+                                        Navigator.pop(localContext);
+                                        navigateToPage(
+                                            localContext, 'profile', false);
                                       },
                                     );
                                   }),
@@ -181,7 +193,9 @@ class HeaderComp extends AppBar implements PreferredSizeWidget {
                                 logoutUser().then((value) {
                                   if (value) {
                                     clearSessionData();
-                                    navigateToPage(context, 'signin', true);
+                                    if (context.mounted) {
+                                      navigateToPage(context, 'signin', true);
+                                    }
                                   }
                                 });
                               },
