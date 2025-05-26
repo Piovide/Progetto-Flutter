@@ -190,8 +190,7 @@ class Appunti {
      */
     public static function getAppuntiByMateria(string $materia_uuid, string $classe) {
         $conn = Database::getConnection();
-        echo "Materia UUID: " . $materia_uuid . ", Classe: " . $classe;
-        $query = "SELECT * FROM appunti A INNER JOIN materie M ON A.materia_uuid = M.uuid WHERE materia_uuid = ? AND M.classe = ?";
+        $query = "SELECT * FROM appunti A INNER JOIN materie M ON A.materia_uuid = M.uuid WHERE M.nome = ? AND M.classe = ?";
         $stmt = $conn->prepare($query);
         if($stmt === false){
             $response = new Response(500, "Errore lato server riprovare più tardi");
@@ -217,7 +216,7 @@ class Appunti {
 
         while($row = $result->fetch_assoc()){
             $appunti[] = [
-                'appunto_uuid' => $row['appunto_uuid'],
+                'uuid' => $row['uuid'],
                 'titolo' => $row['titolo'],
                 'contenuto' => $row['contenuto'],
                 'markdown' => $row['markdown'],
@@ -230,6 +229,8 @@ class Appunti {
         }
         $response = new Response(200, "appunti recuperato con successo");
         $response->setData($appunti);
+        $response->send();
+        return;
     }
 
     /**
