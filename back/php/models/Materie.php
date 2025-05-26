@@ -87,5 +87,6 @@ class Materie {
         $response = new Response(200, "Materie recuperate con successo", $materie);
         $response->send();
     }
+    
 }
 ?>

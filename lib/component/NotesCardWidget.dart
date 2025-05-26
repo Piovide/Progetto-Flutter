@@ -88,6 +88,7 @@ class NotesCardWidget extends StatelessWidget {
                                                   context, subjectInfo['uuid']);
                                               if (context.mounted) {
                                                 Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
                                               }
                                             },
                                             child: Text('Elimina'),
@@ -121,7 +122,7 @@ class NotesCardWidget extends StatelessWidget {
     final result = await api.request(
       endpoint: 'NOTE',
       action: 'DELETE',
-      method: 'DELETE',
+      method: 'POST',
       body: {
         'uuid': uuid,
       },

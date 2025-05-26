@@ -74,15 +74,15 @@ class Notifica {
             [
                 'uuid' => '1a2b3c4d-0000-0000-0000-000000000002',
                 'utente_uuid' => $utente_uuid,
-                'messaggio' => 'Hai un nuovo messaggio.',
+                'messaggio' => 'Account creato con successo.',
                 'letta' => false,
-                'tipo' => 'messaggio',
+                'tipo' => 'miscellanea',
                 'data_invio' => '2024-06-02 12:30:00'
             ],
             [
                 'uuid' => '1a2b3c4d-0000-0000-0000-000000000003',
                 'utente_uuid' => $utente_uuid,
-                'messaggio' => 'La tua password è stata aggiornata.',
+                'messaggio' => 'Completa il tuo profilo.',
                 'letta' => true,
                 'tipo' => 'sicurezza',
                 'data_invio' => '2024-06-03 09:15:00'

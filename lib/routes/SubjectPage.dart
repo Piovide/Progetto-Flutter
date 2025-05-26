@@ -16,10 +16,11 @@ class _SubjectState extends State<Subjectpage> {
   Future<List<Map<String, dynamic>>> getAppunti() async {
     final api = WebUtilz();
     final result = await api.request(
-      endpoint: 'NOTE',
-      action: 'GET',
+      endpoint: 'SUBJECT',
+      action: 'GET_BY_MATERIA',
       method: 'POST',
       body: {
+        'classe': '5BII',
         'materia': widget.materia,
       },
     );

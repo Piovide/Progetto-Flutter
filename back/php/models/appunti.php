@@ -190,7 +190,8 @@ class Appunti {
      */
     public static function getAppuntiByMateria(string $materia_uuid, string $classe) {
         $conn = Database::getConnection();
-        $query = "SELECT * FROM appunti A INNER JOIN materie M WHERE materia_uuid = ? AND M.classe = ?";
+        echo "Materia UUID: " . $materia_uuid . ", Classe: " . $classe;
+        $query = "SELECT * FROM appunti A INNER JOIN materie M ON A.materia_uuid = M.uuid WHERE materia_uuid = ? AND M.classe = ?";
         $stmt = $conn->prepare($query);
         if($stmt === false){
             $response = new Response(500, "Errore lato server riprovare più tardi");

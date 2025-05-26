@@ -8,11 +8,8 @@ class ProfilePageIconWidget extends StatefulWidget {
 }
 
 class _ProfilePageIconWidgetState extends State<ProfilePageIconWidget> {
-  //TODO: implement image picker
-
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
         future: getUserData(),
         builder: (context, snapshot) {
@@ -55,6 +52,7 @@ class _ProfilePageIconWidgetState extends State<ProfilePageIconWidget> {
                             child: IconButton(
                               icon: Icon(Icons.camera_alt_outlined,
                                   color: white, size: 20),
+                              tooltip: '(coming soon) Modifica foto',
                               onPressed: () {},
                             )),
                       )

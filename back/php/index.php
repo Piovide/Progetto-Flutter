@@ -173,6 +173,15 @@ try {
             }
             if ($action === 'GET') {
                 Materie::getMaterie($classe);
+            } else if ($action === 'GET_BY_MATERIA') {
+                include_once './models/Appunti.php';
+                $materia = $_POST['materia'] ?? null;
+                if (!$materia) {
+                    $response = new Response(400, "Missing materia");
+                    $response->send();
+                    exit;
+                }
+                Appunti::getAppuntiByMateria($materia, $classe);
             } else {
                 $response = new Response(400, "Missing action");
                 $response->send();

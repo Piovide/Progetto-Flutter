@@ -337,8 +337,6 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
     String repeatPassword = value;
     Color borderColor = Colors.grey;
     if (value.toString().isNotEmpty) {
-      print("Password: $password");
-      print("Repeat Password: $repeatPassword");
       if (password == repeatPassword) {
         borderColor = Colors.green;
       } else {
@@ -384,11 +382,14 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
             },
           );
           if (result['status'] == 200) {
-            showSnackBar(
-              context,
-              "Profilo aggiornato con successo",
-              2,
-            );
+            if (mounted) {
+              Navigator.of(context).pop();
+              showSnackBar(
+                context,
+                "Profilo aggiornato con successo",
+                2,
+              );
+            }
             refreshUserData();
             saveUserData({
               'nome': name,

@@ -18,7 +18,6 @@ class _HomepageState extends State<Homepage> {
       action: 'GET',
       method: 'POST',
       body: {
-        //TODO da togliere
         'classe': '5BII',
       },
     );
