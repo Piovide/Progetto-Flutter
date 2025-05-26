@@ -99,6 +99,20 @@ try {
                     exit;
                 }
                 $auth->changePassword($uuid, $old_password, $new_password);
+            }else if($action === 'UPDATE') {
+                $uuid = $_POST['uuid'] != 'null' ? $_POST['uuid'] : null;
+                $nome = $_POST['nome'] != 'null' ? $_POST['nome'] : null;
+                $cognome = $_POST['cognome'] != 'null' ? $_POST['cognome'] : null;
+                $data_nascita = $_POST['data_nascita'] != 'null' ? $_POST['data_nascita'] : null;
+                $sesso = $_POST['sesso'] != 'null' ? $_POST['sesso'] : null;
+                $old_password = $_POST['password'] != null ? $_POST['password'] : null;
+                $new_password = $_POST['new_password'] != null ? $_POST['new_password'] : null;
+
+                // echo "parameters: uuid: $uuid, nome: $nome, cognome: $cognome, data_nascita: $data_nascita, sesso: $sesso, old_password: $old_password, new_password: $new_password";
+                $response = new Response(400, "parameters: uuid: $uuid, nome: $nome, cognome: $cognome, data_nascita: $data_nascita, sesso: $sesso, old_password: $old_password, new_password: $new_password");
+                // $response->send();
+                // exit;
+                $auth->updateUserData($uuid, $nome, $cognome, $data_nascita, $sesso, $old_password, $new_password);
             }else{
                 $response = new Response(400, "Missing action");
                 $response->send();

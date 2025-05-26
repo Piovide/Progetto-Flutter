@@ -362,22 +362,25 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
         dateOfBirth.isNotEmpty ||
         genre.isNotEmpty ||
         (password.isNotEmpty &&
-        newPassword.isNotEmpty &&
-        confirmPassword.isNotEmpty)) {
-      if (newPassword == _confirmPasswordController.text) {
-        if (newPassword != password) {
+            newPassword.isNotEmpty &&
+            confirmPassword.isNotEmpty)) {
+      if (newPassword == _confirmPasswordController.text ||
+          newPassword.isEmpty) {
+        if (newPassword != password || password.isEmpty) {
           final api = WebUtilz();
+          String? uuid = await getUUID();
           final result = await api.request(
             endpoint: 'AUTH',
             action: 'UPDATE',
             method: 'POST',
             body: {
-              'nome': name,
-              'cognome': surname,
-              'data_nascita': dateOfBirth,
-              'sesso': genre,
-              'password': password,
-              'new_password': newPassword,
+              'uuid': uuid,
+              'nome': name != '' ? name : null,
+              'cognome': surname != '' ? surname : null,
+              'data_nascita': dateOfBirth != '' ? dateOfBirth : null,
+              'sesso': genre != 'Seleziona il tuo genere' ? genre : null,
+              'password': password != '' ? password : null,
+              'new_password': newPassword != '' ? newPassword : null,
             },
           );
           if (result['status'] == 200) {
