@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:wiki_appunti/constants/colors.dart';
-import 'package:wiki_appunti/routes/HomePage.dart';
-import 'package:wiki_appunti/routes/NotesPage.dart';
-import 'package:wiki_appunti/routes/ProfilePage.dart';
-import 'package:wiki_appunti/routes/SignInPage.dart';
-import 'package:wiki_appunti/routes/SignUpPage.dart';
+import '../routes/SettingsPage.dart';
+import 'constants/colors.dart';
+import 'routes/HomePage.dart';
+import 'routes/NotesPage.dart';
+import 'routes/ProfilePage.dart';
+import 'routes/SignInPage.dart';
+import 'routes/SignUpPage.dart';
 // import 'package:wiki_appunti/routes/ProfilePage.dart';
 // import 'routes/SignInPage.dart';
 // import 'routes/SignUpPage.dart';

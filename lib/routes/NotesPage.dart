@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:wiki_appunti/utilz/Utilz.dart';
-import 'package:wiki_appunti/utilz/WebUtilz.dart';
+import '../utilz/Utilz.dart';
+import '../utilz/WebUtilz.dart';
 
 class Notespage extends StatefulWidget {
   final Map<String, dynamic> data;

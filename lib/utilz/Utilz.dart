@@ -6,6 +6,7 @@ import '../routes/HomePage.dart';
 import '../routes/ProfilePage.dart';
 import '../routes/SubjectPage.dart';
 import '../routes/NotesPage.dart';
+import '../routes/SettingsPage.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -30,6 +31,9 @@ void navigateToPage(BuildContext context, String pageName, bool replace,
       break;
     case 'notes':
       page = Notespage(data: arguments?['data']);
+      break;
+    case 'settings':
+      page = SettingsPage();
       break;
     default:
       throw Exception('Invalid page name: $pageName');
