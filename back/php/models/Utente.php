@@ -166,15 +166,22 @@ class Utente {
         $query = "DELETE FROM utenti WHERE uuid = ?";
         $stmt = $conn->prepare($query);
         if ($stmt === false) {
-            die("Errore preparazione query: " . $conn->error);
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
+            exit;
         }
         $stmt->bind_param("s", $utente_uuid);
         $stmt->execute();
         if ($stmt->error) {
-            die("Errore esecuzione query: " . $stmt->error);
+            $response = new Response(500, "Errore lato server riprovare più tardi");
+            $response->send();
+            exit;
         }
         $stmt->close();
         $conn->close();
+        $response = new Response(200, "Utente eliminato con successo");
+        $response->send();
+        exit;
     }
 
     /**

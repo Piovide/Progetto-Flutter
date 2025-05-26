@@ -113,12 +113,21 @@ try {
                 // $response->send();
                 // exit;
                 $auth->updateUserData($uuid, $nome, $cognome, $data_nascita, $sesso, $old_password, $new_password);
+            }if($action === 'DELETE_USER') {
+                $uuid = $_POST['uuid'] ?? null;
+                if (!$uuid) {
+                    $response = new Response(400, "uuid utente assente");
+                    $response->send();
+                    exit;
+                }
+                
+                Utente::deleteUser($uuid);
+                break;        
             }else{
                 $response = new Response(400, "Missing action");
                 $response->send();
                 exit;
             }
-            break;
         case 'NOTIFICATION':
             include_once './models/Notifiche.php';
             $utente_uuid = $_POST['utente_uuid'] ?? null;
@@ -218,23 +227,20 @@ try {
                     exit;
                 }
                 Appunti::updateAppunto($titolo, $contenuto, $uuid);
-            }
-            break;
-            case 'DELETE_USER':
-            include_once './utilz/Auth.php';
+            }else if ($action === 'DELETE') {
                 $uuid = $_POST['uuid'] ?? null;
                 if (!$uuid) {
-                    $response = new Response(400, "uuid utente assente");
+                    $response = new Response(400, "Missing uuid");
                     $response->send();
                     exit;
                 }
-                
-                if(Utente::deleteUser($uuid)) {
-                    $response = new Response(200, "Utente eliminato con successo");
-                } else {
-                    $response = new Response(500, "Errore durante l'eliminazione dell'utente");
-                }
-                break;
+                Appunti::deleteAppunto($uuid);
+            } else {
+                $response = new Response(400, "Missing action");
+                $response->send();
+                exit;
+            }
+            break;
         default:
             $response = new Response(400, "endpoint not implemented ".$endpoint);
             $response->send();

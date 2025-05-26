@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/colors.dart';
+import '../utilz/Utilz.dart';
+import '../utilz/WebUtilz.dart';
 
 class NotesCardWidget extends StatelessWidget {
   const NotesCardWidget({
@@ -55,7 +57,53 @@ class NotesCardWidget extends StatelessWidget {
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return SafeArea(
+                          child: Wrap(
+                            children: [
+                              ListTile(
+                                leading: Icon(Icons.delete, color: Colors.red),
+                                title: Text('Elimina appunto'),
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Conferma cancellazione'),
+                                        content: Text(
+                                            'Sei sicuro di voler cancellare questo appunto?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('Annulla'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              await deleteNote(
+                                                  context, subjectInfo['uuid']);
+                                              if (context.mounted) {
+                                                Navigator.of(context).pop();
+                                              }
+                                            },
+                                            child: Text('Elimina'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
                   icon: Icon(
                     Icons.info_outline_rounded,
                   ),
@@ -66,5 +114,35 @@ class NotesCardWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> deleteNote(BuildContext context, uuid) async {
+    final api = WebUtilz();
+    final result = await api.request(
+      endpoint: 'NOTE',
+      action: 'DELETE',
+      method: 'DELETE',
+      body: {
+        'uuid': uuid,
+      },
+    );
+    if (result['status'] == 200) {
+      if (context.mounted) {
+        showSnackBar(
+          context,
+          "Appunto eliminato con successo",
+          2,
+        );
+      }
+    } else {
+      if (context.mounted) {
+        showSnackBar(
+          context,
+          "Errore durante l'eliminazione dell'appunto",
+          2,
+          backgroundColor: Colors.blueGrey,
+        );
+      }
+    }
   }
 }
