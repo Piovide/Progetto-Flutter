@@ -52,7 +52,9 @@ class HomePageCardWidget extends StatelessWidget {
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    
+                  },
                   icon: Icon(
                     Icons.info_outline_rounded,
                   ),
