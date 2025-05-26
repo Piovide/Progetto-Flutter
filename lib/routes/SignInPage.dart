@@ -156,7 +156,6 @@ class _SignInPageState extends State<SignInPage> {
       );
       if (result['status'] == 200) {
         dati = result['data'];
-
         saveUserData({
           "uuid": dati['uuid'],
           "username": dati['username'],

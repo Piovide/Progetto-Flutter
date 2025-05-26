@@ -84,7 +84,9 @@ class Auth {
                 'username' => $utente['username'],
                 'nome' => $utente['nome'],
                 'cognome' => $utente['cognome'],
-                'email' => $utente['email']
+                'email' => $utente['email'],
+                'data_nascita' => isset($utente['data_nascita']) ? $utente['data_nascita'] : null,
+                'sesso' => isset($utente['sesso']) ? $utente['sesso'] : null,
             ]);
             $response->send();
         } else {

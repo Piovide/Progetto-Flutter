@@ -90,7 +90,6 @@ class _EnableFormState extends State<ProfilePageFormWidget> {
                 TextField(
                   controller: _dateOfBirthController,
                   enabled: setEnabled,
-                  focusNode: FocusNode(),
                   readOnly: true,
                   onTap: () async {
                     if (setEnabled) {
