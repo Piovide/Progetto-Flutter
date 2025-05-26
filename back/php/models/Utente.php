@@ -2,20 +2,24 @@
 
 use Dom\Text;
 
+/**
+ * Modello per la gestione degli utenti nel database.
+ */
 class Utente {
-    // private String $utente_uuid;
+    // Username dell'utente
     private String $username;
+    // Nome dell'utente
     private String $nome;
+    // Cognome dell'utente
     private String $cognome;
-    // private String $dataNascita;
-    // private String $sesso;
-    // private String $dataUltimoAccesso;
+    // Email dell'utente
     private String $email;
+    // Password hash dell'utente
     private String $password;
-    // private String $ruolo;
-    // private String $bio;
-    // private String $URI_immagineProfilo;
 
+    /**
+     * Costruttore della classe Utente
+     */
     public function __construct($username, $nome, $cognome, $email, $password) {
         $this->username = $username;
         $this->nome = $nome;
@@ -24,7 +28,9 @@ class Utente {
         $this->password = $password;
     }
 
-
+    /**
+     * Crea un utente temporaneo per la verifica email
+     */
     public function createTempUser($username, $nome, $cognome, $email, $password) {
         $conn = Database::getConnection();
         $token = bin2hex(random_bytes(16));
@@ -52,6 +58,9 @@ class Utente {
         return $token;
     }
 
+    /**
+     * Crea un nuovo utente definitivo nel database
+     */
     public  function createUser() {
         $conn = Database::getConnection();
         $query = "INSERT INTO utenti (uuid, username, nome, cognome, email, password_hash) VALUES (uuid(), ?, ?, ?, ?, ?)";
@@ -76,6 +85,9 @@ class Utente {
         $conn->close();
     }
 
+    /**
+     * Recupera un utente tramite il suo UUID
+     */
     public static function getUserById($utente_uuid) {
         $conn = Database::getConnection();
         $query = "SELECT * FROM utenti WHERE utente_uuid = ?";
@@ -99,6 +111,10 @@ class Utente {
             return null;
         }
     }
+
+    /**
+     * Recupera un utente tramite la sua email
+     */
     public static function getUserByEmail($email) {
         $conn = Database::getConnection();
         $query = "SELECT * FROM utenti WHERE email = ?";
@@ -119,6 +135,9 @@ class Utente {
         }
     }
 
+    /**
+     * Recupera un utente tramite il suo username
+     */
     public static function getUserByUsername($username) {
         $conn = Database::getConnection();
         $query = "SELECT * FROM utenti WHERE username = ?";
@@ -139,6 +158,9 @@ class Utente {
         }
     }
 
+    /**
+     * Elimina un utente tramite il suo UUID
+     */
     public static function deleteUser($utente_uuid) {
         $conn = Database::getConnection();
         $query = "DELETE FROM utenti WHERE uuid = ?";
@@ -155,6 +177,9 @@ class Utente {
         $conn->close();
     }
 
+    /**
+     * Modifica un singolo campo di un utente
+     */
     public static function changeSingleField($utente_uuid, $field, $value) {
         $conn = Database::getConnection();
         $query = "UPDATE utenti SET " . $field . " = ? WHERE utente_uuid = ?";
@@ -171,6 +196,9 @@ class Utente {
         $conn->close();
     }
 
+    /**
+     * Trova tutti gli amici di un utente
+     */
     public function findFriends($utente_uuid) {
         $conn = Database::getConnection();
         $query = "SELECT * FROM amici WHERE utente_id = ? OR amico_id = ?";
@@ -186,10 +214,6 @@ class Utente {
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
-
-
-
-    
 }
 
 ?>

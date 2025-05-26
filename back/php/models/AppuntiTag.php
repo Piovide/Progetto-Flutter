@@ -1,13 +1,24 @@
 <?php
+/**
+ * Modello per la gestione dell'associazione tra appunti e tag nel database.
+ */
 class AppuntiTag {
+    // UUID dell'appunto
     private string $appunto_uuid;
+    // UUID del tag
     private string $tag_uuid;
 
+    /**
+     * Costruttore della classe AppuntiTag
+     */
     public function __construct(string $appunto_uuid, string $tag_uuid) {
         $this->appunto_uuid = $appunto_uuid;
         $this->tag_uuid = $tag_uuid;
     }
 
+    /**
+     * Inserisce una nuova associazione tra appunto e tag nel database
+     */
     public function inserisciAppuntiTag() {
         $conn = Database::getConnection();
         $query = "INSERT INTO appunti_tag (appunto_uuid, tag_uuid) VALUES (?, ?)";

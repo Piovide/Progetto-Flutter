@@ -1,8 +1,10 @@
 <?php
+// Modello per la gestione degli appunti nel database
 include_once __DIR__ . '/../utilz/Database.php';
 
-class Appunti{
-    private String $appunto_uuid ;
+class Appunti {
+    // Proprietà dell'appunto
+    private String $appunto_uuid;
     private String $titolo;
     private String $contenuto;
     private int $markdown;
@@ -10,8 +12,10 @@ class Appunti{
     private String $autore_uuid;
     private String $materia_uuid;
 
-    public function __construct( String $titolo, String $contenuto, int $markdown, String $visibilita, String $autore_uuid, String $materia_uuid){
-       // $this->appunto_uuid = $appunto_uuid;
+    /**
+     * Costruttore della classe Appunti
+     */
+    public function __construct(String $titolo, String $contenuto, int $markdown, String $visibilita, String $autore_uuid, String $materia_uuid) {
         $this->titolo = $titolo;
         $this->contenuto = $contenuto;
         $this->markdown = $markdown;
@@ -20,12 +24,14 @@ class Appunti{
         $this->materia_uuid = $materia_uuid;
     }
 
-    public function inserisciAppunti(){
+    /**
+     * Inserisce un nuovo appunto nel database
+     */
+    public function inserisciAppunti() {
         $conn = Database::getConnection();
         $query = "INSERT INTO appunti (uuid, titolo, contenuto, markdown, visibilita, autore_uuid, materia_uuid) VALUES (UUID(), ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         if($stmt === false){
-            // $response = new Response(500, "Errore lato server". $conn->error ."");
             $response = new Response(500, "Errore lato server riprovare più tardi");
             $response->send();
             die("Errore lato server". $conn->error ."");
@@ -33,7 +39,6 @@ class Appunti{
         $stmt->bind_param("ssisss", $this->titolo, $this->contenuto, $this->markdown, $this->visibilta, $this->autore_uuid, $this->materia_uuid);
         $stmt->execute();
         if(!$stmt->error === false){
-            // $response = new Response(500, "Errore lato server". $stmt->error ."");
             $response = new Response(500, "Errore lato server riprovare più tardi");
             $response->send();
             die("Errore lato server ". $stmt->error ."");
@@ -45,7 +50,10 @@ class Appunti{
         $response->send();
     }
 
-    public static function getAppunti(){
+    /**
+     * Recupera tutti gli appunti dal database
+     */
+    public static function getAppunti() {
         $conn = database::getConnection();
         $query = "SELECT * FROM appunti";
         $stmt = $conn->prepare($query);
@@ -69,8 +77,8 @@ class Appunti{
 
         $appunti = [];
         while($row = $result->fetch_assoc()){
-            $appunti[]=[
-                'uuid' =>$row['uuid'],
+            $appunti[] = [
+                'uuid' => $row['uuid'],
                 'titolo' => $row['titolo'],
                 'contenuto' => $row['contenuto'],
                 'markdown' => $row['markdown'],
@@ -84,32 +92,13 @@ class Appunti{
 
         $response = new Response(200, "appunti recuperati con successo");
         $response->setData($appunti);
-        // $response->setData([[
-        //                     'appunto_uuid' =>'9233df1c-3410-11f0-ad98-088fc32680d9',
-        //                     'titolo' => 'gli appunti di piero',
-        //                     'contenuto' => 'contenuto bello',
-        //                     'markdown' => '<title>daje</title>',
-        //                     'visibilita' => 'visibile',
-        //                     'autore_uuid' => 'f9588744-3410-11f0-ad98-088fc32680d9',
-        //                     'materia_uuid' => '0b196c51-3411-11f0-ad98-088fc32680d9',
-        //                     'data_creazione' => '2025-05-18 21:56:24',
-        //                     'stato'=>'revisionato'
-        // ],
-        // [
-        //                     'appunto_uuid' =>'9233df1c-3410-11f0-ad98-088fc32680d9',
-        //                     'titolo' => 'gli appunti di franco',
-        //                     'contenuto' => 'contenuto bello',
-        //                     'markdown' => '<title>daje</title>',
-        //                     'visibilita' => 'visibile',
-        //                     'autore_uuid' => '114759b3-37b0-11f0-a062-505a65fbd4fe',
-        //                     'materia_uuid' => '0b196c51-3411-11f0-ad98-088fc32680d9',
-        //                     'data_creazione' => '2025-05-18 21:56:24',
-        //                     'stato'=>'revisionato'
-        // ]]);
-
         $response->send();
     }
-    public static function getAppuntiById(string $appunto_uuid){
+
+    /**
+     * Recupera un appunto tramite il suo UUID
+     */
+    public static function getAppuntiById(string $appunto_uuid) {
         $conn = Database::getConnection();
         $query = "SELECT * FROM appunti WHERE appunto_uuid = ?";
         $stmt = $conn->prepare($query);
@@ -132,8 +121,8 @@ class Appunti{
         }
 
         while($row = $result->fetch_assoc()){
-            $appunti[]=[
-                'appunto_uuid' =>$row['uuid'],
+            $appunti[] = [
+                'appunto_uuid' => $row['uuid'],
                 'titolo' => $row['titolo'],
                 'contenuto' => $row['contenuto'],
                 'markdown' => $row['markdown'],
@@ -148,12 +137,14 @@ class Appunti{
         $response->setData($appunti);
     }
 
-    public static function getAppuntiByAutore(string $autore_uuid){
+    /**
+     * Recupera tutti gli appunti di un autore tramite il suo UUID
+     */
+    public static function getAppuntiByAutore(string $autore_uuid) {
         $conn = Database::getConnection();
         $query = "SELECT * FROM appunti WHERE autore_uuid = ?";
         $stmt = $conn->prepare($query);
         if($stmt === false){
-            // $response = new Response(500, "Errore lato server". $conn->error ."");
             $response = new Response(500, "Errore lato server riprovare più tardi");
             $response->send();
             die("Errore lato server". $conn->error ."");
@@ -161,7 +152,6 @@ class Appunti{
         $stmt->bind_param("s", $autore_uuid);
         $stmt->execute();
         if(!$stmt->error === false){
-            // $response = new Response(500, "Errore lato server". $stmt->error ."");
             $response = new Response(500, "Errore lato server riprovare più tardi");
             $response->send();
             die("Errore lato server". $stmt->error ."");
@@ -177,8 +167,8 @@ class Appunti{
         }
 
         while($row = $result->fetch_assoc()){
-            $appunti[]=[
-                'uuid' =>$row['uuid'],
+            $appunti[] = [
+                'uuid' => $row['uuid'],
                 'titolo' => $row['titolo'],
                 'contenuto' => $row['contenuto'],
                 'markdown' => $row['markdown'],
@@ -195,12 +185,14 @@ class Appunti{
         return;
     }
 
-    public static function getAppuntiByMateria(string $materia_uuid, string $classe){
+    /**
+     * Recupera tutti gli appunti di una materia e classe specifica
+     */
+    public static function getAppuntiByMateria(string $materia_uuid, string $classe) {
         $conn = Database::getConnection();
         $query = "SELECT * FROM appunti A INNER JOIN materie M WHERE materia_uuid = ? AND M.classe = ?";
         $stmt = $conn->prepare($query);
         if($stmt === false){
-            // $response = new Response(500, "Errore lato server". $conn->error ."");
             $response = new Response(500, "Errore lato server riprovare più tardi");
             $response->send();
             die("Errore lato server". $conn->error ."");
@@ -208,7 +200,6 @@ class Appunti{
         $stmt->bind_param("ss", $materia_uuid, $classe);
         $stmt->execute();
         if(!$stmt->error === false){
-            // $response = new Response(500, "Errore lato server". $stmt->error ."");
             $response = new Response(500, "Errore lato server riprovare più tardi");
             $response->send();
             die("Errore lato server". $stmt->error ."");
@@ -224,8 +215,8 @@ class Appunti{
         }
 
         while($row = $result->fetch_assoc()){
-            $appunti[]=[
-                'appunto_uuid' =>$row['appunto_uuid'],
+            $appunti[] = [
+                'appunto_uuid' => $row['appunto_uuid'],
                 'titolo' => $row['titolo'],
                 'contenuto' => $row['contenuto'],
                 'markdown' => $row['markdown'],
@@ -240,12 +231,14 @@ class Appunti{
         $response->setData($appunti);
     }
 
-    public static function updateAppunto($titolo, $contenuto, $appunto_uuid){
+    /**
+     * Aggiorna titolo e contenuto di un appunto tramite il suo UUID
+     */
+    public static function updateAppunto($titolo, $contenuto, $appunto_uuid) {
         $conn = Database::getConnection();
         $query = "UPDATE appunti SET titolo = ?, contenuto = ? WHERE uuid = ?";
         $stmt = $conn->prepare($query);
         if($stmt === false){
-            // $response = new Response(500, "Errore lato server". $conn->error ."");
             $response = new Response(500, "Errore lato server riprovare più tardi");
             $response->send();
             return;
@@ -253,7 +246,6 @@ class Appunti{
         $stmt->bind_param("sss", $titolo, $contenuto, $appunto_uuid);
         $stmt->execute();
         if(!$stmt->error === false){
-            // $response = new Response(500, "Errore lato server". $stmt->error ."");
             $response = new Response(500, "Errore lato server riprovare più tardi");
             $response->send();
             return;
@@ -271,6 +263,5 @@ class Appunti{
         $response->send();
         return;
     }
-
 }
 ?>

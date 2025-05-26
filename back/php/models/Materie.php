@@ -1,11 +1,22 @@
 <?php
+/**
+ * Modello per la gestione delle materie nel database.
+ */
 include_once __DIR__ . '/../utilz/Database.php';
+
 class Materie {
+    // UUID della materia
     private string $uuid;
+    // Nome della materia
     private string $nome;
+    // Descrizione della materia (opzionale)
     private ?string $descrizione;
+    // Classe a cui appartiene la materia
     private string $classe;
 
+    /**
+     * Costruttore della classe Materie
+     */
     public function __construct(string $uuid, string $nome, ?string $descrizione, string $classe) {
         $this->uuid = $uuid;
         $this->nome = $nome;
@@ -13,6 +24,9 @@ class Materie {
         $this->classe = $classe;
     }
 
+    /**
+     * Inserisce una nuova materia nel database
+     */
     public function inserisciMateria() {
         $conn = Database::getConnection();
         $query = "INSERT INTO materie (uuid, nome, descrizione, classe) VALUES (?, ?, ?, ?)";
@@ -33,6 +47,9 @@ class Materie {
         $conn->close();
     }
 
+    /**
+     * Recupera tutte le materie di una classe specifica dal database
+     */
     public static function getMaterie($classe) {
         $conn = Database::getConnection();
         $query = "SELECT * FROM materie WHERE classe = ?";
@@ -52,6 +69,7 @@ class Materie {
         $result = $stmt->get_result();
         $materie = [];
 
+        // Cicla su tutte le materie trovate e le aggiunge all'array
         while ($row = $result->fetch_assoc()) {
             $materie[] = [
                 'uuid' => $row['uuid'],
@@ -64,12 +82,8 @@ class Materie {
 
         $stmt->close();
         $conn->close();
-        // $materie = [
-        //     ['uuid' => '1', 'nome' => 'Matematica', 'professore' => 'Chieppa', 'descrizione' => 'Studio dei numeri e delle forme', 'classe' => '5BII'],
-        //     ['uuid' => '2', 'nome' => 'TPS', 'professore' => 'Frigo', 'descrizione' => 'Tecnologie progettazione sistemi informatici', 'classe' => '5BII'],
-        //     ['uuid' => '3', 'nome' => 'Storia','professore' => 'Leone', 'descrizione' => 'Studio della storia mondiale', 'classe' => '5BII'],
-        //     ['uuid' => '4', 'nome' => 'Informatica', 'professore' => 'Mongelli', 'descrizione' => 'Studio dei computer e della programmazione', 'classe' => '5BII']
-        // ];
+
+        // Restituisce la risposta con tutte le materie trovate
         $response = new Response(200, "Materie recuperate con successo", $materie);
         $response->send();
     }

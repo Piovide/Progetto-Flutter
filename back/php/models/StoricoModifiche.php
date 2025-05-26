@@ -1,13 +1,26 @@
 <?php
+/**
+ * Modello per la gestione dello storico delle modifiche degli appunti nel database.
+ */
 class StoricoModifiche {
+    // UUID della modifica
     private string $uuid;
+    // Titolo dell'appunto modificato
     private string $titolo;
+    // Contenuto dell'appunto modificato
     private string $contenuto;
+    // Indica se il contenuto è in markdown
     private bool $markdown;
+    // Visibilità dell'appunto (opzionale)
     private ?string $visibilita;
+    // Stato dell'appunto (es: bozza, pubblicato)
     private string $stato;
-    private ?string $data_modifica; // Opzionale se si lascia gestire al DB
+    // Data della modifica (opzionale, può essere gestita dal DB)
+    private ?string $data_modifica;
 
+    /**
+     * Costruttore della classe StoricoModifiche
+     */
     public function __construct(string $uuid, string $titolo, string $contenuto, bool $markdown = true, ?string $visibilita = null, string $stato = 'bozza', ?string $data_modifica = null) {
         $this->uuid = $uuid;
         $this->titolo = $titolo;
@@ -18,6 +31,9 @@ class StoricoModifiche {
         $this->data_modifica = $data_modifica;
     }
 
+    /**
+     * Inserisce una nuova modifica nello storico nel database
+     */
     public function inserisciModifica() {
         $conn = Database::getConnection();
         $query = "INSERT INTO storico_modifiche (uuid, titolo, contenuto, markdown, visibilita, stato, data_modifica)
