@@ -12,7 +12,7 @@ class ProfilePageMenuWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ProfileMenuWidget(title: "Settings", icon: Icons.settings, onPress: (){navigateToPage(context, 'settigs', false);}),
+        ProfileMenuWidget(title: "Settings", icon: Icons.settings, onPress: (){navigateToPage(context, 'settings', false);}),
         const SizedBox(height: 30),
         ProfileMenuWidget(title: "Informations", icon: Icons.info, onPress: (){}),
         const SizedBox(height: 30),
