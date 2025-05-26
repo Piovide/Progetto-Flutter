@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../utilz/Utilz.dart';
 
+/// A widget that displays the user's profile picture, username, and email.
+/// Fetches user data asynchronously and shows a loading indicator while waiting.
+/// Includes a camera icon button for future image picker functionality.
 class ProfilePageIconWidget extends StatefulWidget {
   @override
   _ProfilePageIconWidgetState createState() => _ProfilePageIconWidgetState();

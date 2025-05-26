@@ -3,6 +3,9 @@ import '../constants/colors.dart';
 import '../utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
+/// Un widget che mostra una card per un appunto.
+/// Visualizza il titolo, il contenuto e un pulsante per info/eliminazione.
+/// Permette di eliminare l'appunto tramite un dialog di conferma.
 class NotesCardWidget extends StatelessWidget {
   const NotesCardWidget({
     super.key,

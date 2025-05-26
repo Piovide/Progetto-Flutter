@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wiki_appunti/constants/colors.dart';
 
+/// A settings menu component that displays a ListTile with an icon, title,
+/// and a switch to enable or disable the setting.
+/// 
+/// Tapping the ListTile or the switch toggles the enabled state.
 class SettingsMenuComponent extends StatefulWidget {
   
   const SettingsMenuComponent({

@@ -4,6 +4,11 @@ import '../constants/colors.dart';
 import '../utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
+/// Pagina di accesso (SignInPage) per l'app Flutter.
+/// Permette all'utente di inserire email/username e password per effettuare il login.
+/// Gestisce la validazione dei dati, la visualizzazione degli errori e la navigazione.
+/// Se il token di sessione è valido, reindirizza automaticamente alla home.
+/// Include anche un link per la registrazione di un nuovo account.
 class SignInPage extends StatefulWidget {
   @override
   _SignInPageState createState() => _SignInPageState();

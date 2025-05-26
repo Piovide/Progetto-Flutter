@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
+/// Classe di utilità per effettuare richieste HTTP verso il backend.
+/// Permette di inviare richieste GET, POST, PUT, DELETE specificando endpoint e azione.
+/// Restituisce la risposta come mappa (Map<String, dynamic>).
 class WebUtilz {
   final String baseUrl = 'http://localhost/Progetto-Flutter/back/php/index.php';
 

@@ -3,6 +3,11 @@ import '../constants/colors.dart';
 import '../utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
+/// Pagina di registrazione utente.
+/// Consente all'utente di inserire username, nome, cognome, email e password.
+/// Mostra messaggi di errore in caso di input non valido o registrazione fallita.
+/// Permette di mostrare/nascondere la password.
+/// Dopo la registrazione, invita l'utente a controllare l'email per la conferma.
 class SignUpPage extends StatefulWidget {
   @override
   _SignUpPageState createState() => _SignUpPageState();

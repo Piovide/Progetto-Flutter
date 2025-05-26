@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 
+
+/// Un widget che mostra una card con le informazioni di una materia,
+/// inclusi nome, professore e un pulsante per maggiori dettagli.
 class HomePageCardWidget extends StatelessWidget {
   const HomePageCardWidget({
     super.key,

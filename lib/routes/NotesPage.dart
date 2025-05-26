@@ -3,6 +3,9 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
+/// Pagina per la visualizzazione e modifica di una nota in formato Markdown.
+/// Permette di editare titolo e contenuto, visualizzare l'anteprima e salvare.
+/// L'editor è abilitato solo se l'utente è l'autore della nota.
 class Notespage extends StatefulWidget {
   final Map<String, dynamic> data;
   final String? accessedFor;

@@ -5,6 +5,9 @@ import '../component/HeaderComp.dart';
 import '../component/HomePageCardWidget.dart';
 import '../utilz/WebUtilz.dart';
 
+/// Pagina principale dell'app.
+/// Mostra un messaggio di benvenuto all'utente, la lista dei suoi appunti e delle sue materie.
+/// Permette di aggiungere nuovi appunti e di navigare ai dettagli di appunti e materie.
 class Homepage extends StatefulWidget {
   @override
   _HomepageState createState() => _HomepageState();

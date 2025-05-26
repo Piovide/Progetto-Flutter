@@ -4,6 +4,9 @@ import '../component/HeaderComp.dart';
 import '../component/NotesCardWidget.dart';
 import '../utilz/WebUtilz.dart';
 
+/// Pagina che mostra gli appunti relativi a una materia specifica.
+/// Recupera gli appunti tramite una chiamata API e li visualizza in una griglia.
+/// Permette di selezionare un appunto per modificarlo.
 class Subjectpage extends StatefulWidget {
   final String materia;
   const Subjectpage({super.key, required this.materia});

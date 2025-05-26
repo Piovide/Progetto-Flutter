@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:wiki_appunti/component/SettingsMenuComponent.dart';
 import '../component/HeaderComp.dart';
 
+/// Una semplice pagina delle impostazioni che mostra le opzioni per il tema scuro
+/// e le notifiche. Utilizza uno scroll view e un'intestazione personalizzata.
 class SettingsPage extends StatefulWidget {
   @override
   _SettingsPageState createState() => _SettingsPageState();

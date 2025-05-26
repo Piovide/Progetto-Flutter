@@ -6,6 +6,10 @@ import '../constants/colors.dart';
 import '../utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
+/// HeaderComp è un componente AppBar personalizzato che mostra il titolo e le icone.
+/// Se `showIcons` è true, visualizza le icone delle notifiche e del profilo.
+/// Gestisce la visualizzazione delle notifiche e le azioni di profilo/logout tramite menu popup.
+
 class HeaderComp extends AppBar implements PreferredSizeWidget {
   HeaderComp(BuildContext context, bool showIcons)
       : super(

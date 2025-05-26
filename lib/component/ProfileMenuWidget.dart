@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 
+
+/// Un widget personalizzato che mostra una voce di menu profilo.
+/// 
+/// Mostra un'icona, un titolo e opzionalmente un'icona alla fine.
+/// Esegue una funzione quando viene premuto.
 class ProfileMenuWidget extends StatelessWidget {
   const ProfileMenuWidget({
     super.key,
