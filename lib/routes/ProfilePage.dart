@@ -4,6 +4,11 @@ import '../component/ProfilePageMenuWidget.dart';
 import '../component/ProfilePageIconWidget.dart';
 import '../component/ProfilePageFormWidget.dart';
 
+/// Pagina profilo utente.
+/// 
+/// Mostra l'icona del profilo, un menu e un form.
+/// Utilizza uno scroll per adattarsi a schermi piccoli.
+/// Layout principale con due colonne affiancate.
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();

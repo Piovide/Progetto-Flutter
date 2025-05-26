@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Definizione di costanti di colore utilizzate nell'app.
+/// Include colori standard e personalizzati per temi chiari e scuri.
 const black = Colors.black;
 const teal = Colors.teal;
 const white = Colors.white;

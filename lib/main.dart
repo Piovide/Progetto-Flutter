@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-// import '../routes/SettingsPage.dart';
 import 'constants/colors.dart';
-// import 'routes/HomePage.dart';
-// import 'routes/NotesPage.dart';
-// import 'routes/ProfilePage.dart';
 import 'routes/SignInPage.dart';
-// import 'routes/SignUpPage.dart';
-// import 'package:wiki_appunti/routes/ProfilePage.dart';
-// import 'routes/SignInPage.dart';
-// import 'routes/SignUpPage.dart';
-// import 'routes/HomePage.dart';
-// import 'routes/ProfilePage.dart';
 
+/// Punto di ingresso principale dell'app Wiki Appunti.
+/// Avvia l'applicazione con il tema principale e la pagina di accesso.
+/// 
+/// - Usa `MaterialApp` come contenitore.
+/// - Imposta il tema principale e rimuove il banner di debug.
+/// - La schermata iniziale è `SignInPage`.
 void main() {
   runApp(WikiApp());
 }

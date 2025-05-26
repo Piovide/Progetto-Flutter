@@ -3,6 +3,10 @@ import '../constants/colors.dart';
 import 'package:wiki_appunti/utilz/WebUtilz.dart';
 import '../utilz/Utilz.dart';
 
+/// Un widget che mostra un modulo per visualizzare e modificare i dati del profilo utente.
+/// Permette di modificare nome, cognome, data di nascita, genere e password.
+/// Mostra i dati correnti dell'utente e consente di aggiornarli tramite un pulsante.
+/// Include la conferma della nuova password e controlli di validazione base.
 class ProfilePageFormWidget extends StatefulWidget {
   @override
   _EnableFormState createState() => _EnableFormState();

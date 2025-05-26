@@ -11,6 +11,15 @@ import '../routes/SettingsPage.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+/// Utility functions for navigation, user data management, and platform checks.
+///
+/// - `navigateToPage`: Navigates to a specified page, with optional replacement and arguments.
+/// - `showSnackBar`: Shows a customizable snackbar message.
+/// - `saveUserData`, `getUserData`, `refreshUserData`: Manage user data in shared preferences.
+/// - `saveUUID`, `getUUID`: Save and retrieve a UUID from shared preferences.
+/// - `saveSessionToken`, `getSessionToken`: Save and retrieve a session token.
+/// - `isMobile`, `isDesktop`: Check if the app is running on mobile or desktop.
+/// - `clearSessionData`: Clears all stored session data.
 void navigateToPage(BuildContext context, String pageName, bool replace,
     {Map<String, dynamic>? arguments}) {
   Widget page;

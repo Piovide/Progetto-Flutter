@@ -4,6 +4,9 @@ import 'ProfileMenuWidget.dart';
 import '../utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
+/// Un widget che mostra il menu della pagina profilo.
+/// Include le opzioni per accedere alle impostazioni, alle informazioni
+/// e per eliminare l'account dell'utente.
 class ProfilePageMenuWidget extends StatelessWidget {
   const ProfilePageMenuWidget({
     super.key,

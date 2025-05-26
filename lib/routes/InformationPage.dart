@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wiki_appunti/component/HeaderComp.dart';
 
+/// Pagina informativa dell'applicazione.
+/// 
+/// Mostra una descrizione di WikiAppunti, gli autori, le tecnologie usate
+/// e gli obiettivi principali del progetto.
 class InformationPage extends StatelessWidget {
   const InformationPage({
     super.key,
@@ -39,7 +43,7 @@ class InformationPage extends StatelessWidget {
               '- Furlan Marco\n'
               '- Piovesan Davide',
               style: TextStyle(fontSize: 16),
-            ),
+            ),  
             SizedBox(height: 10),
             Text(
               'Siamo tre studenti di informatica che hanno realizzato questo progetto per migliorare la collaborazione e la comunicazione nella scuola.',
