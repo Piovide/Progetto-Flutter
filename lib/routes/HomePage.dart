@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wiki_appunti/component/NotesCardWidget.dart';
 import '../utilz/Utilz.dart';
 import '../component/HeaderComp.dart';
 import '../component/HomePageCardWidget.dart';
@@ -32,7 +33,8 @@ class _HomepageState extends State<Homepage> {
 
   Future<List<Map<String, dynamic>>> getAppuntiUtente() async {
     final api = WebUtilz();
-    final uuid = getUUID();
+    final uuid = await getUUID();
+    print('UUID: $uuid');
     final result = await api.request(
       endpoint: 'NOTE',
       action: 'GET_BY_UUID',
@@ -147,7 +149,7 @@ class _HomepageState extends State<Homepage> {
                               },
                               borderRadius: BorderRadius.circular(12),
                               child:
-                                  HomePageCardWidget(subjectInfo: subjectInfo));
+                                  NotesCardWidget(subjectInfo: subjectInfo));
                         },
                       );
                     });

@@ -133,7 +133,7 @@ class Appunti{
 
         while($row = $result->fetch_assoc()){
             $appunti[]=[
-                'appunto_uuid' =>$row['appunto_uuid'],
+                'appunto_uuid' =>$row['uuid'],
                 'titolo' => $row['titolo'],
                 'contenuto' => $row['contenuto'],
                 'markdown' => $row['markdown'],
@@ -178,7 +178,7 @@ class Appunti{
 
         while($row = $result->fetch_assoc()){
             $appunti[]=[
-                'appunto_uuid' =>$row['appunto_uuid'],
+                'uuid' =>$row['uuid'],
                 'titolo' => $row['titolo'],
                 'contenuto' => $row['contenuto'],
                 'markdown' => $row['markdown'],
