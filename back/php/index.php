@@ -206,6 +206,21 @@ try {
                 Appunti::updateAppunto($titolo, $contenuto, $uuid);
             }
             break;
+            case 'DELETE_USER':
+            include_once './utilz/Auth.php';
+                $uuid = $_POST['uuid'] ?? null;
+                if (!$uuid) {
+                    $response = new Response(400, "uuid utente assente");
+                    $response->send();
+                    exit;
+                }
+                
+                if(Utente::deleteUser($uuid)) {
+                    $response = new Response(200, "Utente eliminato con successo");
+                } else {
+                    $response = new Response(500, "Errore durante l'eliminazione dell'utente");
+                }
+                break;
         default:
             $response = new Response(400, "endpoint not implemented ".$endpoint);
             $response->send();

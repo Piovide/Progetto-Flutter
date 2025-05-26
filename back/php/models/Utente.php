@@ -24,6 +24,7 @@ class Utente {
         $this->password = $password;
     }
 
+
     public function createTempUser($username, $nome, $cognome, $email, $password) {
         $conn = Database::getConnection();
         $token = bin2hex(random_bytes(16));
@@ -140,12 +141,12 @@ class Utente {
 
     public static function deleteUser($utente_uuid) {
         $conn = Database::getConnection();
-        $query = "DELETE FROM utenti WHERE utente_uuid = ?";
+        $query = "DELETE FROM utenti WHERE uuid = ?";
         $stmt = $conn->prepare($query);
         if ($stmt === false) {
             die("Errore preparazione query: " . $conn->error);
         }
-        $stmt->bind_param("i", $utente_uuid);
+        $stmt->bind_param("s", $utente_uuid);
         $stmt->execute();
         if ($stmt->error) {
             die("Errore esecuzione query: " . $stmt->error);
@@ -185,6 +186,9 @@ class Utente {
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+
+
+
     
 }
 
