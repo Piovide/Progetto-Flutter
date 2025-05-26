@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wiki_appunti/constants/colors.dart';
-import 'package:wiki_appunti/utilz/Utilz.dart';
+import '../constants/colors.dart';
+import '../utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
 class SignInPage extends StatefulWidget {

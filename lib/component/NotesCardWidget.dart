@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wiki_appunti/constants/colors.dart';
+import '../constants/colors.dart';
 
 class NotesCardWidget extends StatelessWidget {
   const NotesCardWidget({

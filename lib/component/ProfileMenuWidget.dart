@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wiki_appunti/constants/colors.dart';
+import '../constants/colors.dart';
 
 class ProfileMenuWidget extends StatelessWidget {
   const ProfileMenuWidget({
