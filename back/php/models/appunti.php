@@ -258,7 +258,13 @@ class Appunti{
             $response->send();
             return;
         }
-
+        if($stmt->affected_rows === 0){
+            $stmt->close();
+            $conn->close();
+            $response = new Response(404, "Nessun appunto trovato con l'uuid specificato".$appunto_uuid);
+            $response->send();
+            return;
+        }
         $stmt->close();
         $conn->close();
         $response = new Response(200, "Appunto aggiornato con successo".$contenuto);
