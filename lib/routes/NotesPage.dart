@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:wiki_appunti/constants/colors.dart';
 import '../utilz/Utilz.dart';
 import '../utilz/WebUtilz.dart';
 
@@ -330,6 +331,7 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
     if (isPhone) {
       return Scaffold(
         appBar: AppBar(
+          backgroundColor: teal,
           title: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -411,6 +413,7 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
     } else {
       return Scaffold(
         appBar: AppBar(
+          backgroundColor: teal,
           title: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
