@@ -298,6 +298,22 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
           showSnackBar(context, 'Errore durante il salvataggio!', 2);
         }
       }
+      setState(() {
+        if (widget.accessedFor == 'create') {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => Notespage(
+                data: {
+                  ...widget.data,
+                  'titolo': title,
+                  'contenuto': content,
+                },
+                accessedFor: 'edit',
+              ),
+            ),
+          );
+        }
+      });
     }
 
     void updateNote() async {
@@ -384,7 +400,7 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
               ? [
                   IconButton(
                     icon: const Icon(Icons.save),
-                    tooltip: 'Salva ${widget.accessedFor}',
+                    tooltip: 'Salva',
                     onPressed:
                         widget.accessedFor == "create" ? saveNote : updateNote,
                   ),
@@ -466,7 +482,7 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
               ? [
                   IconButton(
                     icon: const Icon(Icons.save),
-                    tooltip: 'Salva ${widget.accessedFor}',
+                    tooltip: 'Salva',
                     onPressed:
                         widget.accessedFor == "create" ? saveNote : updateNote,
                   ),
