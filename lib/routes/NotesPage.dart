@@ -410,8 +410,18 @@ class _NotesState extends State<Notespage> with SingleTickerProviderStateMixin {
               ? TabBar(
                   controller: _tabController,
                   tabs: const [
-                    Tab(text: 'Editor'),
-                    Tab(text: 'Preview'),
+                    Tab(
+                      child: Text(
+                        'Editor',
+                        style: TextStyle(color: white),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'Preview',
+                        style: TextStyle(color: white),
+                      ),
+                    ),
                   ],
                 )
               : null,
